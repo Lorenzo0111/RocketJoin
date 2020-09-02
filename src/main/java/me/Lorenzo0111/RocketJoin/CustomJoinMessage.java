@@ -124,13 +124,13 @@ public class CustomJoinMessage extends JavaPlugin implements Listener {
 
         if (e.getPlayer().hasPermission("rocketjoin.vip")) {
             if (getConfig().getBoolean("enable_vip_features")) {
+                if (getConfig().getBoolean("vip_firework")) {
+                    spawnFireworks(e.getPlayer().getLocation(), getConfig().getInt("vip_firework_to_spawn"));
+                }
                 if (getConfig().getBoolean("vip_join")) {
                     String joinText = getConfig().getString("vip_join_message").replace("&", "§").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName());
                     joinText = PlaceholderAPI.setPlaceholders(p, joinText);
                     e.setJoinMessage(joinText);
-                    if (getConfig().getBoolean("vip_firework")) {
-                        spawnFireworks(e.getPlayer().getLocation(), getConfig().getInt("vip_firework_to_spawn"));
-                    }
                     return;
                 }
             }

@@ -1,7 +1,7 @@
 name: RocketJoin
 author: Lorenzo0111
 main: me.Lorenzo0111.RocketJoin.CustomJoinMessage
-version: 1.4
+version: 1.5
 api-version: 1.14
 softdepend: [PlaceholderAPI]
 commands:
