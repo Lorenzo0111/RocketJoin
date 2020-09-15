@@ -29,6 +29,8 @@ enable_vip_features: true
 vip_join: true
 # enable vip custom leave.
 vip_leave: true
+# enable vip sound on join. All players can listen this sound
+vip_sound: true
 # enable vip join firework.
 vip_firework: false
 # fireworks to spawn on join. WARNING: IF "vip_firework" IS SET TO false THIS FUNCTION IS DISABLED!
