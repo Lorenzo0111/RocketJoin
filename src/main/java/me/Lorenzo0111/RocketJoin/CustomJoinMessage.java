@@ -14,8 +14,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.logging.Logger;
 
@@ -58,7 +58,7 @@ public class CustomJoinMessage extends JavaPlugin implements Listener {
 
     //  Command(Info and reload)
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, Command cmd, @NotNull String label, String[] args) {
         if (cmd.getName().equalsIgnoreCase("rocketjoin")) {
             if (sender instanceof Player) {
                 if (sender.hasPermission("rocketjoin.command")) {
@@ -67,8 +67,7 @@ public class CustomJoinMessage extends JavaPlugin implements Listener {
                         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "%prefix%&r &7Use &8/rocketjoin reload &7to reload the plugin!".replace("%prefix%", getConfig().getString("prefix"))));
                     } else if (args.length == 1) {
                         if (args[0].equalsIgnoreCase("reload")) {
-                            final Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("RocketJoin");
-                            plugin.reloadConfig();
+                            reloadConfig();
                             Logger logger = this.getLogger();
                             new UpdateChecker(this, 82520).getVersion(version -> {
                                 if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
@@ -86,7 +85,7 @@ public class CustomJoinMessage extends JavaPlugin implements Listener {
                         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "%prefix%&r &7Use &8/rocketjoin reload &7to reload the plugin!".replace("%prefix%", getConfig().getString("prefix"))));
                     }
                 } else {
-                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', getConfig().getString("prefix").replace("&", "§") + " " + getConfig().getString("no_permission")));
+                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', getConfig().getString("prefix") + " " + getConfig().getString("no_permission")));
                 }
             } else {
                 if (args.length == 0) {
@@ -94,8 +93,7 @@ public class CustomJoinMessage extends JavaPlugin implements Listener {
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "%prefix%&r &7Use &8/rocketjoin reload &7to reload the plugin!".replace("%prefix%", getConfig().getString("prefix"))));
                 } else if (args.length == 1) {
                     if (args[0].equalsIgnoreCase("reload")) {
-                        final Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("RocketJoin");
-                        plugin.reloadConfig();
+                        reloadConfig();
                         Logger logger = this.getLogger();
                         new UpdateChecker(this, 82520).getVersion(version -> {
                             if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
@@ -143,7 +141,7 @@ public class CustomJoinMessage extends JavaPlugin implements Listener {
         if (getConfig().getBoolean("enable_join_message")) {
 
 
-            String joinText = ChatColor.translateAlternateColorCodes('&', getConfig().getString("join_message").replace("&", "§").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
+            String joinText = ChatColor.translateAlternateColorCodes('&', getConfig().getString("join_message").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
             joinText = PlaceholderAPI.setPlaceholders(p, joinText);
             e.setJoinMessage(joinText);
         } else {
@@ -152,21 +150,19 @@ public class CustomJoinMessage extends JavaPlugin implements Listener {
 
         if (e.getPlayer().hasPermission("rocketjoin.update")) {
             new UpdateChecker(this, 82520).getVersion(version -> {
-                if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
-                    return;
-                } else {
-                    p.sendMessage("&e&l&m---------------------------------------".replace("&", "§"));
-                    p.sendMessage("&c&lRocket&e&lJoin &f&l» &7There is a new update available.".replace("&", "§"));
-                    p.sendMessage("&c&lRocket&e&lJoin &f&l» &7Download it from: &ehttps://bit.ly/RocketJoin".replace("&", "§"));
-                    p.sendMessage("&e&l&m---------------------------------------".replace("&", "§"));
+                if (!this.getDescription().getVersion().equalsIgnoreCase(version)) {
+                    p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e&l&m---------------------------------------"));
+                    p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&lRocket&e&lJoin &f&l» &7There is a new update available."));
+                    p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&lRocket&e&lJoin &f&l» &7Download it from: &ehttps://bit.ly/RocketJoin"));
+                    p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e&l&m---------------------------------------"));
                 }
             });
         }
 
-        /** TODO: if (getConfig().getBoolean("display_title")) {
+        /* TODO: if (getConfig().getBoolean("display_title")) {
          p.sendTitle(getConfig().getString("join_title").replace("&", "§").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()), getConfig().getString("join_subtitle").replace("&", "§").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()), 1, 20, 1);
          Bukkit.broadcastMessage("true");
-         } **/
+         } */
 
     }
 
@@ -199,8 +195,7 @@ public class CustomJoinMessage extends JavaPlugin implements Listener {
 
 
     public static void spawnFireworks(Location location, int amount){
-        Location loc = location;
-        Firework fw = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
+        Firework fw = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
         FireworkMeta fwm = fw.getFireworkMeta();
 
         fwm.setPower(2);
@@ -210,7 +205,7 @@ public class CustomJoinMessage extends JavaPlugin implements Listener {
         fw.detonate();
 
         for(int i = 0;i<amount; i++){
-            Firework fw2 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
+            Firework fw2 = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
             fw2.setFireworkMeta(fwm);
         }
     }
