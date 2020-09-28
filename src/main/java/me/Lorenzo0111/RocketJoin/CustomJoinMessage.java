@@ -149,6 +149,9 @@ public class CustomJoinMessage extends JavaPlugin implements Listener {
         }
 
         if (e.getPlayer().hasPermission("rocketjoin.update")) {
+            if (!getConfig().getBoolean("update-message")) {
+                return;
+            }
             new UpdateChecker(this, 82520).getVersion(version -> {
                 if (!this.getDescription().getVersion().equalsIgnoreCase(version)) {
                     p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e&l&m---------------------------------------"));

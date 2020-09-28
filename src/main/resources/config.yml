@@ -9,6 +9,9 @@
 prefix: "&c&lRocket&e&lJoin &f&l»"
 no_permission: "&cYou do not have permission to use this command!"
 
+#Enable Update Message on Join. Default: true
+update-message: true
+
 #Placeholders: {Player} (Name) and {DisplayPlayer} (Display Name)
 #PlaceholderAPI Support! Download it from tinyurl.com/PlaceholderAPI
 
