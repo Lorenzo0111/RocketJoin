@@ -1,8 +1,7 @@
 name: RocketJoin
 author: Lorenzo0111
 main: me.Lorenzo0111.RocketJoin.CustomJoinMessage
-version: 1.6.1
-api-version: 1.14
+version: 1.7
 softdepend: [PlaceholderAPI]
 commands:
   rocketjoin:
@@ -11,3 +10,7 @@ commands:
 permissions:
   rocketjoin.command:
     description: RocketJoin command permission!
+  rocketjoin.update:
+    description: Player with this permission can view available update message on join. If update-message is disabled in the config this permission doesn't work.
+  rocketjoin.vip:
+    description: RocketJoin vip permission
