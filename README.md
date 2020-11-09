@@ -8,10 +8,11 @@
 
 [logo]: https://i.ibb.co/61FpRdt/Full.png
 
+[downloads]: http://badge.henrya.org/spigotbukkit/downloads?spigot=82520
 
 [![logo]][spigot]
 
-[![relase]][releaselink]
+[![relase]][releaselink] [![downloads]][spigot]
 
 
 # Information 
