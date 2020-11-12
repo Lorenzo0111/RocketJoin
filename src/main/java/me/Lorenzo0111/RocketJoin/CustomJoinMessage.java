@@ -3,6 +3,7 @@ package me.Lorenzo0111.RocketJoin;
 import me.Lorenzo0111.RocketJoin.Command.MainCommand;
 import me.Lorenzo0111.RocketJoin.Listener.JoinLeave;
 import me.Lorenzo0111.RocketJoin.Updater.UpdateChecker;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -12,6 +13,9 @@ import org.bukkit.entity.Firework;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.concurrent.Callable;
 
 public class CustomJoinMessage extends JavaPlugin implements Listener {
 
@@ -36,6 +40,14 @@ public class CustomJoinMessage extends JavaPlugin implements Listener {
         Bukkit.getServer().getPluginManager().registerEvents(new JoinLeave(this), this);
         this.getCommand("rocketjoin").setExecutor(new MainCommand(this));
         this.getCommand("rocketjoin").setTabCompleter(new MainCommand(this));
+
+        Metrics metrics = new Metrics(this, 9382);
+        metrics.addCustomChart(new Metrics.SimplePie("vip_features", () -> {
+            if (getConfig().getBoolean("enable_vip_features")) {
+                return "Yes";
+            }
+            return "No";
+        }));
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             getLogger().info("PlaceholderAPI hooked!");
