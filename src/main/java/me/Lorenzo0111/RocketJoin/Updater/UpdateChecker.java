@@ -19,11 +19,11 @@ public class UpdateChecker {
 
      */
 
-    private static JavaPlugin plugin;
+    private final JavaPlugin plugin;
     private final int resourceId;
 
     public UpdateChecker(JavaPlugin plugin, int resourceId) {
-        UpdateChecker.plugin = plugin;
+        this.plugin = plugin;
         this.resourceId = resourceId;
     }
 
@@ -39,13 +39,23 @@ public class UpdateChecker {
         });
     }
 
-    public static void playerUpdateCheck(Player player) {
-        new UpdateChecker(plugin, 82520).getVersion(version -> {
+    public void playerUpdateCheck(Player player) {
+        new UpdateChecker(plugin, resourceId).getVersion(version -> {
             if (!plugin.getDescription().getVersion().equalsIgnoreCase(version)) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e&l&m---------------------------------------"));
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&lRocket&e&lJoin &f&l» &7There is a new update available."));
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&lRocket&e&lJoin &f&l» &7Download it from: &ehttps://bit.ly/RocketJoin"));
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e&l&m---------------------------------------"));
+            }
+        });
+    }
+
+    public void updateCheck() {
+        new UpdateChecker(plugin, resourceId).getVersion(version -> {
+            if (plugin.getDescription().getVersion().equalsIgnoreCase(version)) {
+                plugin.getLogger().info("There is not a new update available.");
+            } else {
+                plugin.getLogger().info("There is a new update available. Download it from: https://bit.ly/RocketJoin");
             }
         });
     }
