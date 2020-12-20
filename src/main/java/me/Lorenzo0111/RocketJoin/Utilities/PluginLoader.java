@@ -2,6 +2,7 @@ package me.Lorenzo0111.RocketJoin.Utilities;
 
 import me.Lorenzo0111.RocketJoin.Command.MainCommand;
 import me.Lorenzo0111.RocketJoin.CustomJoinMessage;
+import me.Lorenzo0111.RocketJoin.Listener.Join;
 import me.Lorenzo0111.RocketJoin.Listener.Leave;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -27,6 +28,7 @@ public class PluginLoader {
 
     public void registerEvents() {
         Bukkit.getServer().getPluginManager().registerEvents(new Leave(plugin,this), plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new Join(plugin,this), plugin);
 
         plugin.getCommand("rocketjoin").setExecutor(new MainCommand(plugin));
 
