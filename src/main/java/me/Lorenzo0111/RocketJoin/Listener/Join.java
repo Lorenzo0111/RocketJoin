@@ -2,6 +2,8 @@ package me.Lorenzo0111.RocketJoin.Listener;
 
 import me.Lorenzo0111.RocketJoin.CustomJoinMessage;
 import me.Lorenzo0111.RocketJoin.Updater.UpdateChecker;
+import me.Lorenzo0111.RocketJoin.Utilities.FireworkSpawner;
+import me.Lorenzo0111.RocketJoin.Utilities.PluginLoader;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,44 +12,20 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
 import static org.bukkit.Sound.ENTITY_EXPERIENCE_ORB_PICKUP;
 
-public class JoinLeave implements Listener {
+public class Join implements Listener {
 
-    public final CustomJoinMessage plugin;
+    private final CustomJoinMessage plugin;
+    private final PluginLoader loader;
+    private final FireworkSpawner fireworkSpawner = new FireworkSpawner();
+    private final UpdateChecker updateChecker;
 
-    public JoinLeave(CustomJoinMessage plugin) {
+    public Join(CustomJoinMessage plugin, PluginLoader loader) {
         this.plugin = plugin;
-    }
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent e) {
-        Player p = e.getPlayer();
-
-        if (e.getPlayer().hasPermission("rocketjoin.vip")) {
-            if (plugin.getConfig().getBoolean("enable_vip_features")) {
-                if (plugin.getConfig().getBoolean("vip_leave")) {
-                    String quitText = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("vip_leave_message").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
-                    if (CustomJoinMessage.placeholderapi) {
-                        quitText = PlaceholderAPI.setPlaceholders(p, quitText);
-                    }
-                    e.setQuitMessage(quitText);
-                    return;
-                }
-            }
-        }
-
-        if (plugin.getConfig().getBoolean("enable_leave_message")) {
-            String quitText = ChatColor.translateAlternateColorCodes('&',plugin.getConfig().getString("leave_message").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
-            if (CustomJoinMessage.placeholderapi) {
-                quitText = PlaceholderAPI.setPlaceholders(p, quitText);
-            }
-            e.setQuitMessage(quitText);
-        } else {
-            e.setQuitMessage(null);
-        }
+        this.loader = loader;
+        this.updateChecker = new UpdateChecker(this.plugin, 82520);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -62,7 +40,7 @@ public class JoinLeave implements Listener {
         if(!e.getPlayer().hasPlayedBefore()) {
             if (plugin.getConfig().getBoolean("enable_fist_join")) {
                 String joinText = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("first_join").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
-                if (CustomJoinMessage.placeholderapi) {
+                if (loader.placeholderapi) {
                     joinText = PlaceholderAPI.setPlaceholders(p, joinText);
                 }
                 e.setJoinMessage(joinText);
@@ -73,7 +51,7 @@ public class JoinLeave implements Listener {
         if (e.getPlayer().hasPermission("rocketjoin.vip")) {
             if (plugin.getConfig().getBoolean("enable_vip_features")) {
                 if (plugin.getConfig().getBoolean("vip_firework")) {
-                    CustomJoinMessage.spawnFireworks(e.getPlayer().getLocation(), plugin.getConfig().getInt("vip_firework_to_spawn"));
+                    fireworkSpawner.spawnFireworks(e.getPlayer().getLocation(), plugin.getConfig().getInt("vip_firework_to_spawn"));
                 }
                 if (plugin.getConfig().getBoolean("vip_sound")) {
                     for (Player xplayer : Bukkit.getOnlinePlayers()) {
@@ -82,7 +60,7 @@ public class JoinLeave implements Listener {
                 }
                 if (plugin.getConfig().getBoolean("vip_join")) {
                     String joinText = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("vip_join_message").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
-                    if (CustomJoinMessage.placeholderapi) {
+                    if (loader.placeholderapi) {
                         joinText = PlaceholderAPI.setPlaceholders(p, joinText);
                     }
                     e.setJoinMessage(joinText);
@@ -93,7 +71,7 @@ public class JoinLeave implements Listener {
 
         if (plugin.getConfig().getBoolean("enable_join_message")) {
             String joinText = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("join_message").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
-            if (CustomJoinMessage.placeholderapi) {
+            if (loader.placeholderapi) {
                 joinText = PlaceholderAPI.setPlaceholders(p, joinText);
             }
             e.setJoinMessage(joinText);
@@ -105,7 +83,7 @@ public class JoinLeave implements Listener {
             if (!plugin.getConfig().getBoolean("update-message")) {
                 return;
             }
-            UpdateChecker.playerUpdateCheck(p);
+            updateChecker.playerUpdateCheck(p);
         }
 
     }
