@@ -1,4 +1,4 @@
-
+---
 name: Feature request
 about: Suggest an idea for my plugin
 title: "[Feature] "
