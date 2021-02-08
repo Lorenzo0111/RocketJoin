@@ -1,5 +1,5 @@
 /*
- *  This file is part of RocketPlaceholders, licensed under the MIT License.
+ *  This file is part of RocketJoin, licensed under the MIT License.
  *
  *  Copyright (c) Lorenzo0111
  *
