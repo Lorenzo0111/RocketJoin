@@ -22,37 +22,31 @@
  * SOFTWARE.
  */
 
-package me.Lorenzo0111.RocketJoin;
+package me.lorenzo0111.rocketjoin.utilities;
 
-import me.Lorenzo0111.RocketJoin.Updater.UpdateChecker;
-import me.Lorenzo0111.RocketJoin.Utilities.PluginLoader;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
+import org.bukkit.inventory.meta.FireworkMeta;
 
-public class CustomJoinMessage extends JavaPlugin implements Listener {
+public class FireworkSpawner {
 
-    /*
+    public void spawnFireworks(Location location, int amount) {
+        Firework fw = (org.bukkit.entity.Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
+        FireworkMeta fwm = fw.getFireworkMeta();
 
-    Plugin by Lorenzo0111 - https://github.com/Lorenzo0111
+        fwm.setPower(2);
+        fwm.addEffect(FireworkEffect.builder().withColor(Color.ORANGE).flicker(true).build());
 
-     */
+        fw.setFireworkMeta(fwm);
+        fw.detonate();
 
-    public void onEnable() {
-
-        // Load the plugin
-        PluginLoader loader = new PluginLoader(this);
-        loader.loadMetrics();
-        loader.placeholderHook();
-        loader.registerEvents();
-
-        // Check for updates
-        UpdateChecker checker = new UpdateChecker(this, 82520);
-        checker.updateCheck();
-
-        saveDefaultConfig();
+        for(int i = 0;i<amount; i++){
+            org.bukkit.entity.Firework fw2 = (org.bukkit.entity.Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
+            fw2.setFireworkMeta(fwm);
+        }
     }
 
-    public void onDisable() {
-        getLogger().info("Plugin disabled!");
-    }
 }

@@ -95,6 +95,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Maven and gradle
 target/
 
 pom.xml.tag
@@ -109,9 +110,7 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 .flattened-pom.xml
 
-# Gradle
-gradlew
-gradlew.bat
+
 
 .gradle
 **/build/

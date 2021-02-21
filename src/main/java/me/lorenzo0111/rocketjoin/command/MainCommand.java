@@ -22,10 +22,9 @@
  * SOFTWARE.
  */
 
-package me.Lorenzo0111.RocketJoin.Command;
+package me.lorenzo0111.rocketjoin.command;
 
-import me.Lorenzo0111.RocketJoin.CustomJoinMessage;
-import me.Lorenzo0111.RocketJoin.Updater.UpdateChecker;
+import me.lorenzo0111.rocketjoin.CustomJoinMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -61,13 +60,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("reload")) {
                     plugin.reloadConfig();
-                    new UpdateChecker(plugin, 82520).getVersion(version -> {
-                        if (plugin.getDescription().getVersion().equalsIgnoreCase(version)) {
-                            plugin.getLogger().info("There is not a new update available.");
-                        } else {
-                            plugin.getLogger().info("There is a new update available. Download it from: https://bit.ly/RocketJoin");
-                        }
-                    });
+                    plugin.getLoader().getUpdater().updateCheck();
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("prefix") + "&r &7Plugin reloaded!"));
                     return true;
                 }

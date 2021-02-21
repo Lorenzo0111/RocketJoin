@@ -22,19 +22,21 @@
  * SOFTWARE.
  */
 
-package me.Lorenzo0111.RocketJoin.Utilities;
+package me.lorenzo0111.rocketjoin.utilities;
 
-import me.Lorenzo0111.RocketJoin.Command.MainCommand;
-import me.Lorenzo0111.RocketJoin.CustomJoinMessage;
-import me.Lorenzo0111.RocketJoin.Listener.Join;
-import me.Lorenzo0111.RocketJoin.Listener.Leave;
+import me.lorenzo0111.rocketjoin.CustomJoinMessage;
+import me.lorenzo0111.rocketjoin.command.MainCommand;
+import me.lorenzo0111.rocketjoin.listener.Join;
+import me.lorenzo0111.rocketjoin.listener.Leave;
+import me.lorenzo0111.rocketjoin.updater.UpdateChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 
 public class PluginLoader {
 
     private final CustomJoinMessage plugin;
-    public boolean placeholderapi = true;
+    private boolean placeholderapi = true;
+    private UpdateChecker updateChecker;
 
     public PluginLoader(CustomJoinMessage plugin) {
         this.plugin = plugin;
@@ -48,6 +50,11 @@ public class PluginLoader {
             }
             return "No";
         }));
+    }
+
+    public void loadUpdater() {
+        this.updateChecker = new UpdateChecker(plugin, 82520);
+        this.updateChecker.updateCheck();
     }
 
     public void registerEvents() {
@@ -75,4 +82,11 @@ public class PluginLoader {
         plugin.getLogger().info(plugin.getDescription().getName() + " v" + plugin.getDescription().getVersion() + " by Lorenzo0111 is now enabled!");
     }
 
+    public UpdateChecker getUpdater() {
+        return updateChecker;
+    }
+
+    public boolean isPlaceholderapi() {
+        return placeholderapi;
+    }
 }

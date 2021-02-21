@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-package me.Lorenzo0111.RocketJoin.Listener;
+package me.lorenzo0111.rocketjoin.listener;
 
-import me.Lorenzo0111.RocketJoin.CustomJoinMessage;
-import me.Lorenzo0111.RocketJoin.Updater.UpdateChecker;
-import me.Lorenzo0111.RocketJoin.Utilities.FireworkSpawner;
-import me.Lorenzo0111.RocketJoin.Utilities.PluginLoader;
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.lorenzo0111.rocketjoin.CustomJoinMessage;
+import me.lorenzo0111.rocketjoin.updater.UpdateChecker;
+import me.lorenzo0111.rocketjoin.utilities.FireworkSpawner;
+import me.lorenzo0111.rocketjoin.utilities.PluginLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -49,7 +49,7 @@ public class Join implements Listener {
     public Join(CustomJoinMessage plugin, PluginLoader loader) {
         this.plugin = plugin;
         this.loader = loader;
-        this.updateChecker = new UpdateChecker(this.plugin, 82520);
+        this.updateChecker = loader.getUpdater();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -64,7 +64,7 @@ public class Join implements Listener {
         if(!e.getPlayer().hasPlayedBefore()) {
             if (plugin.getConfig().getBoolean("enable_fist_join")) {
                 String joinText = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("first_join").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
-                if (loader.placeholderapi) {
+                if (loader.isPlaceholderapi()) {
                     joinText = PlaceholderAPI.setPlaceholders(p, joinText);
                 }
                 e.setJoinMessage(joinText);
@@ -84,7 +84,7 @@ public class Join implements Listener {
                 }
                 if (plugin.getConfig().getBoolean("vip_join")) {
                     String joinText = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("vip_join_message").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
-                    if (loader.placeholderapi) {
+                    if (loader.isPlaceholderapi()) {
                         joinText = PlaceholderAPI.setPlaceholders(p, joinText);
                     }
                     e.setJoinMessage(joinText);
@@ -95,7 +95,7 @@ public class Join implements Listener {
 
         if (plugin.getConfig().getBoolean("enable_join_message")) {
             String joinText = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("join_message").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
-            if (loader.placeholderapi) {
+            if (loader.isPlaceholderapi()) {
                 joinText = PlaceholderAPI.setPlaceholders(p, joinText);
             }
             e.setJoinMessage(joinText);
@@ -107,7 +107,7 @@ public class Join implements Listener {
             if (!plugin.getConfig().getBoolean("update-message")) {
                 return;
             }
-            updateChecker.playerUpdateCheck(p);
+            updateChecker.sendUpdateCheck(p);
         }
 
     }
