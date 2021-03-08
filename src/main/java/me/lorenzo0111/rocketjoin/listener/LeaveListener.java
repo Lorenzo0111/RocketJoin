@@ -25,7 +25,7 @@
 package me.lorenzo0111.rocketjoin.listener;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.lorenzo0111.rocketjoin.CustomJoinMessage;
+import me.lorenzo0111.rocketjoin.RocketJoin;
 import me.lorenzo0111.rocketjoin.utilities.PluginLoader;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -33,12 +33,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class Leave implements Listener {
+public class LeaveListener implements Listener {
 
-    private final CustomJoinMessage plugin;
+    private final RocketJoin plugin;
     private final PluginLoader loader;
 
-    public Leave(CustomJoinMessage plugin, PluginLoader loader) {
+    public LeaveListener(RocketJoin plugin, PluginLoader loader) {
         this.plugin = plugin;
         this.loader = loader;
     }

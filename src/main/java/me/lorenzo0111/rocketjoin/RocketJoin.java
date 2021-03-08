@@ -22,13 +22,40 @@
  * SOFTWARE.
  */
 
-plugins {
-    id 'java'
-    id "com.github.johnrengelman.shadow" version "5.2.0"
+package me.lorenzo0111.rocketjoin;
+
+import me.lorenzo0111.rocketjoin.utilities.PluginLoader;
+import org.bukkit.plugin.java.JavaPlugin;
+
+public class RocketJoin extends JavaPlugin {
+
+    /*
+
+    Plugin by Lorenzo0111 - https://github.com/Lorenzo0111
+
+     */
+
+    private PluginLoader loader;
+
+    public void onEnable() {
+
+        // Load the plugin
+        this.loader = new PluginLoader(this);
+        this.loader.loadMetrics();
+        this.loader.placeholderHook();
+        this.loader.registerEvents();
+
+        // Check for updates
+        loader.loadUpdater();
+
+        saveDefaultConfig();
+    }
+
+    public void onDisable() {
+        getLogger().info("Plugin disabled!");
+    }
+
+    public PluginLoader getLoader() {
+        return loader;
+    }
 }
-
-apply from: "https://cdn.rocketplugins.space/spigot"
-
-group = 'me.Lorenzo0111'
-version = '1.8.1'
-description = 'RocketJoin'

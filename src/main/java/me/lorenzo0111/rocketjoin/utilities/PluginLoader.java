@@ -24,32 +24,29 @@
 
 package me.lorenzo0111.rocketjoin.utilities;
 
-import me.lorenzo0111.rocketjoin.CustomJoinMessage;
-import me.lorenzo0111.rocketjoin.command.MainCommand;
-import me.lorenzo0111.rocketjoin.listener.Join;
-import me.lorenzo0111.rocketjoin.listener.Leave;
+import me.lorenzo0111.rocketjoin.RocketJoin;
+import me.lorenzo0111.rocketjoin.command.RocketJoinCommand;
+import me.lorenzo0111.rocketjoin.listener.JoinListener;
+import me.lorenzo0111.rocketjoin.listener.LeaveListener;
 import me.lorenzo0111.rocketjoin.updater.UpdateChecker;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
 
 public class PluginLoader {
 
-    private final CustomJoinMessage plugin;
+    private final RocketJoin plugin;
     private boolean placeholderapi = true;
     private UpdateChecker updateChecker;
 
-    public PluginLoader(CustomJoinMessage plugin) {
+    public PluginLoader(RocketJoin plugin) {
         this.plugin = plugin;
     }
 
     public void loadMetrics() {
         Metrics metrics = new Metrics(plugin, 9382);
-        metrics.addCustomChart(new Metrics.SimplePie("vip_features", () -> {
-            if (plugin.getConfig().getBoolean("enable_vip_features")) {
-                return "Yes";
-            }
-            return "No";
-        }));
+        metrics.addCustomChart(new SimplePie("vip_features", () -> plugin.getConfig().getBoolean("enable_vip_features") ? "Yes" : "No"));
     }
 
     public void loadUpdater() {
@@ -58,12 +55,18 @@ public class PluginLoader {
     }
 
     public void registerEvents() {
-        Bukkit.getServer().getPluginManager().registerEvents(new Leave(plugin,this), plugin);
-        Bukkit.getServer().getPluginManager().registerEvents(new Join(plugin,this), plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new LeaveListener(plugin,this), plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new JoinListener(plugin,this), plugin);
 
-        plugin.getCommand("rocketjoin").setExecutor(new MainCommand(plugin));
+        PluginCommand command = plugin.getCommand("rocketjoin");
 
-        plugin.getCommand("rocketjoin").setTabCompleter(new MainCommand(plugin));
+        if (command == null) {
+            return;
+        }
+
+        command.setExecutor(new RocketJoinCommand(plugin,updateChecker));
+
+        command.setTabCompleter(new RocketJoinCommand(plugin,updateChecker));
     }
 
     public void placeholderHook() {

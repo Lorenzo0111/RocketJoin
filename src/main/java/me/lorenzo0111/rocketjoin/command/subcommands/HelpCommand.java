@@ -22,13 +22,28 @@
  * SOFTWARE.
  */
 
-plugins {
-    id 'java'
-    id "com.github.johnrengelman.shadow" version "5.2.0"
+package me.lorenzo0111.rocketjoin.command.subcommands;
+
+import me.lorenzo0111.rocketjoin.command.RocketJoinCommand;
+import me.lorenzo0111.rocketjoin.command.SubCommand;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+
+public class HelpCommand extends SubCommand {
+
+    public HelpCommand(RocketJoinCommand command) {
+        super(command);
+    }
+
+    @Override
+    public String getName() {
+        return "help";
+    }
+
+    @Override
+    public void perform(CommandSender sender, String[] args) {
+        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getCommand().getPlugin().getConfig().getString("prefix") + "&r &8/rocketjoin help » &7Show this message!"));
+        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getCommand().getPlugin().getConfig().getString("prefix") + "&r &8/rocketjoin reload » &7Reload the plugin!"));
+        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getCommand().getPlugin().getConfig().getString("prefix") + "&r &8/rocketjoin debug » &7Print debug message!"));
+    }
 }
-
-apply from: "https://cdn.rocketplugins.space/spigot"
-
-group = 'me.Lorenzo0111'
-version = '1.8.1'
-description = 'RocketJoin'

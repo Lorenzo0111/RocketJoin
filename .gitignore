@@ -113,7 +113,7 @@ buildNumber.properties
 
 
 .gradle
-**/build/
+build/
 !src/**/build/
 
 gradle-app.setting

@@ -22,40 +22,24 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin;
+package me.lorenzo0111.rocketjoin.command;
 
-import me.lorenzo0111.rocketjoin.utilities.PluginLoader;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.command.CommandSender;
 
-public class CustomJoinMessage extends JavaPlugin {
+public abstract class SubCommand {
 
-    /*
+    protected RocketJoinCommand command;
 
-    Plugin by Lorenzo0111 - https://github.com/Lorenzo0111
-
-     */
-
-    private PluginLoader loader;
-
-    public void onEnable() {
-
-        // Load the plugin
-        this.loader = new PluginLoader(this);
-        this.loader.loadMetrics();
-        this.loader.placeholderHook();
-        this.loader.registerEvents();
-
-        // Check for updates
-        loader.loadUpdater();
-
-        saveDefaultConfig();
+    public SubCommand(RocketJoinCommand command) {
+        this.command = command;
     }
 
-    public void onDisable() {
-        getLogger().info("Plugin disabled!");
+    public abstract String getName();
+
+    public RocketJoinCommand getCommand() {
+        return command;
     }
 
-    public PluginLoader getLoader() {
-        return loader;
-    }
+    public abstract void perform(CommandSender sender, String[] args);
+
 }

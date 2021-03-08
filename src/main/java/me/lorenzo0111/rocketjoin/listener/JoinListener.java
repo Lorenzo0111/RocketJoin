@@ -25,7 +25,7 @@
 package me.lorenzo0111.rocketjoin.listener;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.lorenzo0111.rocketjoin.CustomJoinMessage;
+import me.lorenzo0111.rocketjoin.RocketJoin;
 import me.lorenzo0111.rocketjoin.updater.UpdateChecker;
 import me.lorenzo0111.rocketjoin.utilities.FireworkSpawner;
 import me.lorenzo0111.rocketjoin.utilities.PluginLoader;
@@ -39,14 +39,14 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import static org.bukkit.Sound.ENTITY_EXPERIENCE_ORB_PICKUP;
 
-public class Join implements Listener {
+public class JoinListener implements Listener {
 
-    private final CustomJoinMessage plugin;
+    private final RocketJoin plugin;
     private final PluginLoader loader;
     private final FireworkSpawner fireworkSpawner = new FireworkSpawner();
     private final UpdateChecker updateChecker;
 
-    public Join(CustomJoinMessage plugin, PluginLoader loader) {
+    public JoinListener(RocketJoin plugin, PluginLoader loader) {
         this.plugin = plugin;
         this.loader = loader;
         this.updateChecker = loader.getUpdater();

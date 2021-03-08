@@ -53,7 +53,7 @@ public class UpdateChecker {
         this.fetch();
     }
 
-    private void fetch() {
+    public void fetch() {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try (InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + this.resourceId).openStream(); Scanner scanner = new Scanner(inputStream)) {
                 if (scanner.hasNext()) {
