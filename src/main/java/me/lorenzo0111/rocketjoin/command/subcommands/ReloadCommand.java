@@ -43,7 +43,6 @@ public class ReloadCommand extends SubCommand {
     @Override
     public void perform(CommandSender sender, String[] args) {
         this.getCommand().getPlugin().reloadConfig();
-        this.getCommand().getUpdater().updateCheck();
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getCommand().getPlugin().getConfig().getString("prefix") + "&r &7Plugin reloaded!"));
     }
 }
