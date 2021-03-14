@@ -41,12 +41,10 @@ public class RocketJoin extends JavaPlugin {
 
         // Load the plugin
         this.loader = new PluginLoader(this);
+        this.loader.loadUpdater();
         this.loader.loadMetrics();
         this.loader.placeholderHook();
         this.loader.registerEvents();
-
-        // Check for updates
-        loader.loadUpdater();
 
         saveDefaultConfig();
     }
