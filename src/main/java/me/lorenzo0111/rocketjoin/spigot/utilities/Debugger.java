@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.utilities;
+package me.lorenzo0111.rocketjoin.spigot.utilities;
 
-import me.lorenzo0111.rocketjoin.RocketJoin;
+import me.lorenzo0111.rocketjoin.spigot.RocketJoin;
 import org.bukkit.Bukkit;
 
 import java.util.Arrays;

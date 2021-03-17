@@ -22,23 +22,27 @@
  * SOFTWARE.
  */
 
-plugins {
-    id 'java'
-    id "com.github.johnrengelman.shadow" version "5.2.0"
+package me.lorenzo0111.rocketjoin.spigot.command.subcommands;
+
+import me.lorenzo0111.rocketjoin.spigot.command.RocketJoinCommand;
+import me.lorenzo0111.rocketjoin.spigot.command.SubCommand;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+
+public class ReloadCommand extends SubCommand {
+
+    public ReloadCommand(RocketJoinCommand command) {
+        super(command);
+    }
+
+    @Override
+    public String getName() {
+        return "reload";
+    }
+
+    @Override
+    public void perform(CommandSender sender, String[] args) {
+        this.getCommand().getPlugin().reloadConfig();
+        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getCommand().getPlugin().getConfig().getString("prefix") + "&r &7Plugin reloaded!"));
+    }
 }
-
-repositories {
-    mavenCentral()
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-}
-
-dependencies {
-    compileOnly 'net.md-5:bungeecord-api:1.16-R0.4-SNAPSHOT'
-    compile 'org.bstats:bstats-bungeecord:2.2.1'
-}
-
-apply from: "https://cdn.rocketplugins.space/spigot"
-
-group = 'me.Lorenzo0111'
-version = '1.9'
-description = 'RocketJoin'

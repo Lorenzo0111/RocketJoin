@@ -22,23 +22,38 @@
  * SOFTWARE.
  */
 
-plugins {
-    id 'java'
-    id "com.github.johnrengelman.shadow" version "5.2.0"
+package me.lorenzo0111.rocketjoin.spigot;
+
+import me.lorenzo0111.rocketjoin.spigot.utilities.PluginLoader;
+import org.bukkit.plugin.java.JavaPlugin;
+
+public class RocketJoin extends JavaPlugin {
+
+    /*
+
+    Plugin by Lorenzo0111 - https://github.com/Lorenzo0111
+
+     */
+
+    private PluginLoader loader;
+
+    public void onEnable() {
+
+        // Load the plugin
+        this.loader = new PluginLoader(this);
+        this.loader.loadUpdater();
+        this.loader.loadMetrics();
+        this.loader.placeholderHook();
+        this.loader.registerEvents();
+
+        saveDefaultConfig();
+    }
+
+    public void onDisable() {
+        getLogger().info("Plugin disabled!");
+    }
+
+    public PluginLoader getLoader() {
+        return loader;
+    }
 }
-
-repositories {
-    mavenCentral()
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-}
-
-dependencies {
-    compileOnly 'net.md-5:bungeecord-api:1.16-R0.4-SNAPSHOT'
-    compile 'org.bstats:bstats-bungeecord:2.2.1'
-}
-
-apply from: "https://cdn.rocketplugins.space/spigot"
-
-group = 'me.Lorenzo0111'
-version = '1.9'
-description = 'RocketJoin'

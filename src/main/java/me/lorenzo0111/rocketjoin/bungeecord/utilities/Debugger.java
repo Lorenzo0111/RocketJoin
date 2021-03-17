@@ -22,24 +22,43 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.command;
+package me.lorenzo0111.rocketjoin.bungeecord.utilities;
 
-import org.bukkit.command.CommandSender;
+import me.lorenzo0111.rocketjoin.bungeecord.RocketJoinBungee;
 
-public abstract class SubCommand {
+import java.util.logging.Logger;
 
-    protected RocketJoinCommand command;
+public class Debugger {
 
-    public SubCommand(RocketJoinCommand command) {
-        this.command = command;
+    private final RocketJoinBungee plugin;
+    private final Logger logger;
+
+    public Debugger(RocketJoinBungee plugin) {
+        this.plugin = plugin;
+        this.logger = plugin.getLogger();
     }
 
-    public abstract String getName();
+    public void debug() {
+        this.log("-----------[ RocketPlugins Debugger ]-----------");
 
-    public RocketJoinCommand getCommand() {
-        return command;
+        this.log("Server Information:");
+        this.logData("Server Version", plugin.getProxy().getVersion());
+
+        this.log("");
+
+        this.log("Plugin Information");
+        this.logData("Plugin Name", plugin.getDescription().getName());
+        this.logData("Plugin Version", plugin.getDescription().getVersion());
+
+        this.log("-----------[ RocketPlugins Debugger ]-----------");
     }
 
-    public abstract void perform(CommandSender sender, String[] args);
+    private void logData(String prefix, String message) {
+        this.log(prefix + ": " + message);
+    }
 
+    private void log(String message) {
+        logger.info(message);
+    }
 }
+

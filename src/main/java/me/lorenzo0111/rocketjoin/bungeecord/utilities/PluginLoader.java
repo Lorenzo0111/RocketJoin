@@ -22,30 +22,27 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.utilities;
+package me.lorenzo0111.rocketjoin.bungeecord.utilities;
 
-import me.lorenzo0111.rocketjoin.RocketJoin;
-import me.lorenzo0111.rocketjoin.command.RocketJoinCommand;
-import me.lorenzo0111.rocketjoin.listener.JoinListener;
-import me.lorenzo0111.rocketjoin.listener.LeaveListener;
-import me.lorenzo0111.rocketjoin.updater.UpdateChecker;
-import org.bstats.bukkit.Metrics;
+import me.lorenzo0111.rocketjoin.bungeecord.RocketJoinBungee;
+import me.lorenzo0111.rocketjoin.bungeecord.command.RocketJoinBungeeCommand;
+import me.lorenzo0111.rocketjoin.bungeecord.listener.JoinListener;
+import me.lorenzo0111.rocketjoin.bungeecord.listener.LeaveListener;
+import me.lorenzo0111.rocketjoin.bungeecord.updater.UpdateChecker;
+import org.bstats.bungeecord.Metrics;
 import org.bstats.charts.SimplePie;
-import org.bukkit.Bukkit;
-import org.bukkit.command.PluginCommand;
 
 public class PluginLoader {
 
-    private final RocketJoin plugin;
-    private boolean placeholderapi = true;
+    private final RocketJoinBungee plugin;
     private UpdateChecker updateChecker;
 
-    public PluginLoader(RocketJoin plugin) {
+    public PluginLoader(RocketJoinBungee plugin) {
         this.plugin = plugin;
     }
 
     public void loadMetrics() {
-        Metrics metrics = new Metrics(plugin, 9382);
+        Metrics metrics = new Metrics(plugin, 10698);
         metrics.addCustomChart(new SimplePie("vip_features", () -> plugin.getConfig().getBoolean("enable_vip_features") ? "Yes" : "No"));
     }
 
@@ -55,41 +52,19 @@ public class PluginLoader {
     }
 
     public void registerEvents() {
-        Bukkit.getServer().getPluginManager().registerEvents(new LeaveListener(plugin,this), plugin);
-        Bukkit.getServer().getPluginManager().registerEvents(new JoinListener(plugin,this), plugin);
+        plugin.getProxy().getPluginManager().registerListener(plugin,new LeaveListener(plugin));
+        plugin.getProxy().getPluginManager().registerListener(plugin,new JoinListener(plugin,this));
 
-        PluginCommand command = plugin.getCommand("rocketjoin");
-
-        if (command == null) {
-            return;
-        }
-
-        command.setExecutor(new RocketJoinCommand(plugin,updateChecker));
-
-        command.setTabCompleter(new RocketJoinCommand(plugin,updateChecker));
+        plugin.getProxy().getPluginManager().registerCommand(plugin, new RocketJoinBungeeCommand(plugin,this.getUpdater()));
     }
 
     public void placeholderHook() {
-
-        // Check if PlaceholderAPI is enabled
-        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            plugin.getLogger().info("PlaceholderAPI hooked!");
-            placeholderapi = true;
-            plugin.getLogger().info(plugin.getDescription().getName() + " v" + plugin.getDescription().getVersion() + " by Lorenzo0111 is now enabled!");
-            return;
-        }
-
-        placeholderapi = false;
-        plugin.getLogger().warning("Could not find PlaceholderAPI! Whitout PlaceholderAPI you can't use placeholders.");
+        plugin.getLogger().warning("PlaceholdersAPI is not supported on bungeecord.");
         plugin.getLogger().info("Loaded internal placeholers: {Player} and {DisplayPlayer}");
         plugin.getLogger().info(plugin.getDescription().getName() + " v" + plugin.getDescription().getVersion() + " by Lorenzo0111 is now enabled!");
     }
 
     public UpdateChecker getUpdater() {
         return updateChecker;
-    }
-
-    public boolean isPlaceholderapi() {
-        return placeholderapi;
     }
 }

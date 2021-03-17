@@ -22,28 +22,31 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.command.subcommands;
+package me.lorenzo0111.rocketjoin.spigot.utilities;
 
-import me.lorenzo0111.rocketjoin.command.RocketJoinCommand;
-import me.lorenzo0111.rocketjoin.command.SubCommand;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
+import org.bukkit.inventory.meta.FireworkMeta;
 
-public class HelpCommand extends SubCommand {
+public class FireworkSpawner {
 
-    public HelpCommand(RocketJoinCommand command) {
-        super(command);
+    public void spawnFireworks(Location location, int amount) {
+        Firework fw = (org.bukkit.entity.Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
+        FireworkMeta fwm = fw.getFireworkMeta();
+
+        fwm.setPower(2);
+        fwm.addEffect(FireworkEffect.builder().withColor(Color.ORANGE).flicker(true).build());
+
+        fw.setFireworkMeta(fwm);
+        fw.detonate();
+
+        for(int i = 0;i<amount; i++){
+            org.bukkit.entity.Firework fw2 = (org.bukkit.entity.Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
+            fw2.setFireworkMeta(fwm);
+        }
     }
 
-    @Override
-    public String getName() {
-        return "help";
-    }
-
-    @Override
-    public void perform(CommandSender sender, String[] args) {
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getCommand().getPlugin().getConfig().getString("prefix") + "&r &8/rocketjoin help » &7Show this message!"));
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getCommand().getPlugin().getConfig().getString("prefix") + "&r &8/rocketjoin reload » &7Reload the plugin!"));
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getCommand().getPlugin().getConfig().getString("prefix") + "&r &8/rocketjoin debug » &7Print debug message!"));
-    }
 }

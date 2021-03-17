@@ -22,14 +22,14 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.command;
+package me.lorenzo0111.rocketjoin.spigot.command;
 
-import me.lorenzo0111.rocketjoin.RocketJoin;
-import me.lorenzo0111.rocketjoin.command.subcommands.DebugCommand;
-import me.lorenzo0111.rocketjoin.command.subcommands.HelpCommand;
-import me.lorenzo0111.rocketjoin.command.subcommands.ReloadCommand;
-import me.lorenzo0111.rocketjoin.updater.UpdateChecker;
-import me.lorenzo0111.rocketjoin.utilities.Debugger;
+import me.lorenzo0111.rocketjoin.spigot.RocketJoin;
+import me.lorenzo0111.rocketjoin.spigot.command.subcommands.DebugCommand;
+import me.lorenzo0111.rocketjoin.spigot.command.subcommands.HelpCommand;
+import me.lorenzo0111.rocketjoin.spigot.command.subcommands.ReloadCommand;
+import me.lorenzo0111.rocketjoin.spigot.updater.UpdateChecker;
+import me.lorenzo0111.rocketjoin.spigot.utilities.Debugger;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

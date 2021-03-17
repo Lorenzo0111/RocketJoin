@@ -54,3 +54,5 @@ vip_firework_to_spawn: 3
 vip_join_message: "&e&l» &6&lVIP &7{player} joined!"
 # WARNING: IF "vip_leave" IS SET TO false THIS FUNCTION IS DISABLED!
 vip_leave_message: "&e&l» &6&lVIP &7{player} left!"
+
+# WARNING: If this plugin is running on bungeecord please read https://docs.rocketplugins.space/rocketjoin/bungeecord

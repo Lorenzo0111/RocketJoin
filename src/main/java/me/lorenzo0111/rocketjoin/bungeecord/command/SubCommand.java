@@ -22,23 +22,24 @@
  * SOFTWARE.
  */
 
-plugins {
-    id 'java'
-    id "com.github.johnrengelman.shadow" version "5.2.0"
+package me.lorenzo0111.rocketjoin.bungeecord.command;
+
+import net.md_5.bungee.api.CommandSender;
+
+public abstract class SubCommand {
+
+    protected RocketJoinBungeeCommand command;
+
+    public SubCommand(RocketJoinBungeeCommand command) {
+        this.command = command;
+    }
+
+    public abstract String getName();
+
+    public RocketJoinBungeeCommand getCommand() {
+        return command;
+    }
+
+    public abstract void perform(CommandSender sender, String[] args);
+
 }
-
-repositories {
-    mavenCentral()
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-}
-
-dependencies {
-    compileOnly 'net.md-5:bungeecord-api:1.16-R0.4-SNAPSHOT'
-    compile 'org.bstats:bstats-bungeecord:2.2.1'
-}
-
-apply from: "https://cdn.rocketplugins.space/spigot"
-
-group = 'me.Lorenzo0111'
-version = '1.9'
-description = 'RocketJoin'

@@ -22,23 +22,29 @@
  * SOFTWARE.
  */
 
-plugins {
-    id 'java'
-    id "com.github.johnrengelman.shadow" version "5.2.0"
+package me.lorenzo0111.rocketjoin.bungeecord.command.subcommands;
+
+import me.lorenzo0111.rocketjoin.bungeecord.command.RocketJoinBungeeCommand;
+import me.lorenzo0111.rocketjoin.bungeecord.command.SubCommand;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
+
+public class DebugCommand extends SubCommand {
+
+    public DebugCommand(RocketJoinBungeeCommand command) {
+        super(command);
+    }
+
+    @Override
+    public String getName() {
+        return "debug";
+    }
+
+    @Override
+    public void perform(CommandSender sender, String[] args) {
+        this.getCommand().getDebugger().debug();
+        sender.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', this.getCommand().getPlugin().getConfig().getString("prefix") + "&r &7Debug informations printed in the console.")));
+
+    }
 }
-
-repositories {
-    mavenCentral()
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-}
-
-dependencies {
-    compileOnly 'net.md-5:bungeecord-api:1.16-R0.4-SNAPSHOT'
-    compile 'org.bstats:bstats-bungeecord:2.2.1'
-}
-
-apply from: "https://cdn.rocketplugins.space/spigot"
-
-group = 'me.Lorenzo0111'
-version = '1.9'
-description = 'RocketJoin'

@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.command.subcommands;
+package me.lorenzo0111.rocketjoin.spigot.command.subcommands;
 
-import me.lorenzo0111.rocketjoin.command.RocketJoinCommand;
-import me.lorenzo0111.rocketjoin.command.SubCommand;
+import me.lorenzo0111.rocketjoin.spigot.command.RocketJoinCommand;
+import me.lorenzo0111.rocketjoin.spigot.command.SubCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 

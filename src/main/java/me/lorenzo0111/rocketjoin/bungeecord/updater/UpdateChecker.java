@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.updater;
+package me.lorenzo0111.rocketjoin.bungeecord.updater;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.java.JavaPlugin;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,10 +43,10 @@ public class UpdateChecker {
      */
 
     private boolean updateAvailable;
-    private final JavaPlugin plugin;
+    private final Plugin plugin;
     private final int resourceId;
 
-    public UpdateChecker(JavaPlugin plugin, int resourceId) {
+    public UpdateChecker(Plugin plugin, int resourceId) {
         this.plugin = plugin;
         this.resourceId = resourceId;
 
@@ -54,7 +54,7 @@ public class UpdateChecker {
     }
 
     public void fetch() {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+        plugin.getProxy().getScheduler().runAsync(plugin, () -> {
             try (InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + this.resourceId).openStream(); Scanner scanner = new Scanner(inputStream)) {
                 if (scanner.hasNext()) {
                     String version = scanner.next();
@@ -69,10 +69,10 @@ public class UpdateChecker {
 
     public void sendUpdateCheck(CommandSender player) {
         if (updateAvailable) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e&l&m---------------------------------------"));
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&lRocket&e&lJoin &f&l» &7There is a new update available."));
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&lRocket&e&lJoin &f&l» &7Download it from: &ehttps://bit.ly/RocketJoin"));
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e&l&m---------------------------------------"));
+            player.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', "&e&l&m---------------------------------------")));
+            player.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', "&c&lRocket&e&lJoin &f&l» &7There is a new update available.")));
+            player.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', "&c&lRocket&e&lJoin &f&l» &7Download it from: &ehttps://bit.ly/RocketJoin")));
+            player.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', "&e&l&m---------------------------------------")));
         }
     }
 

@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.listener;
+package me.lorenzo0111.rocketjoin.spigot.listener;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.lorenzo0111.rocketjoin.RocketJoin;
-import me.lorenzo0111.rocketjoin.utilities.PluginLoader;
+import me.lorenzo0111.rocketjoin.spigot.RocketJoin;
+import me.lorenzo0111.rocketjoin.spigot.utilities.PluginLoader;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

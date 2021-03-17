@@ -22,31 +22,28 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.utilities;
+package me.lorenzo0111.rocketjoin.bungeecord.command.subcommands;
 
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Location;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Firework;
-import org.bukkit.inventory.meta.FireworkMeta;
+import me.lorenzo0111.rocketjoin.bungeecord.command.RocketJoinBungeeCommand;
+import me.lorenzo0111.rocketjoin.bungeecord.command.SubCommand;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 
-public class FireworkSpawner {
+public class ReloadCommand extends SubCommand {
 
-    public void spawnFireworks(Location location, int amount) {
-        Firework fw = (org.bukkit.entity.Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
-        FireworkMeta fwm = fw.getFireworkMeta();
-
-        fwm.setPower(2);
-        fwm.addEffect(FireworkEffect.builder().withColor(Color.ORANGE).flicker(true).build());
-
-        fw.setFireworkMeta(fwm);
-        fw.detonate();
-
-        for(int i = 0;i<amount; i++){
-            org.bukkit.entity.Firework fw2 = (org.bukkit.entity.Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
-            fw2.setFireworkMeta(fwm);
-        }
+    public ReloadCommand(RocketJoinBungeeCommand command) {
+        super(command);
     }
 
+    @Override
+    public String getName() {
+        return "reload";
+    }
+
+    @Override
+    public void perform(CommandSender sender, String[] args) {
+        this.getCommand().getPlugin().reloadConfig();
+        sender.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', this.getCommand().getPlugin().getConfig().getString("prefix") + "&r &7Plugin reloaded!")));
+    }
 }

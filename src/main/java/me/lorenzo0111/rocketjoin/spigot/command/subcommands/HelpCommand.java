@@ -22,27 +22,28 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.command.subcommands;
+package me.lorenzo0111.rocketjoin.spigot.command.subcommands;
 
-import me.lorenzo0111.rocketjoin.command.RocketJoinCommand;
-import me.lorenzo0111.rocketjoin.command.SubCommand;
+import me.lorenzo0111.rocketjoin.spigot.command.RocketJoinCommand;
+import me.lorenzo0111.rocketjoin.spigot.command.SubCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-public class ReloadCommand extends SubCommand {
+public class HelpCommand extends SubCommand {
 
-    public ReloadCommand(RocketJoinCommand command) {
+    public HelpCommand(RocketJoinCommand command) {
         super(command);
     }
 
     @Override
     public String getName() {
-        return "reload";
+        return "help";
     }
 
     @Override
     public void perform(CommandSender sender, String[] args) {
-        this.getCommand().getPlugin().reloadConfig();
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getCommand().getPlugin().getConfig().getString("prefix") + "&r &7Plugin reloaded!"));
+        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getCommand().getPlugin().getConfig().getString("prefix") + "&r &8/rocketjoin help » &7Show this message!"));
+        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getCommand().getPlugin().getConfig().getString("prefix") + "&r &8/rocketjoin reload » &7Reload the plugin!"));
+        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getCommand().getPlugin().getConfig().getString("prefix") + "&r &8/rocketjoin debug » &7Print debug message!"));
     }
 }
