@@ -34,7 +34,7 @@ import org.bukkit.inventory.meta.FireworkMeta;
 public class FireworkSpawner {
 
     public void spawnFireworks(Location location, int amount) {
-        Firework fw = (org.bukkit.entity.Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
+        Firework fw = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
         FireworkMeta fwm = fw.getFireworkMeta();
 
         fwm.setPower(2);
@@ -44,7 +44,7 @@ public class FireworkSpawner {
         fw.detonate();
 
         for(int i = 0;i<amount; i++){
-            org.bukkit.entity.Firework fw2 = (org.bukkit.entity.Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
+            Firework fw2 = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
             fw2.setFireworkMeta(fwm);
         }
     }
