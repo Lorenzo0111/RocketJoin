@@ -59,12 +59,10 @@ public class JoinListener implements Listener {
                     .fadeOut(15));
         }
 
-        if (e.getPlayer().hasPermission("rocketjoin.vip") && plugin.getConfig().getBoolean("enable_vip_features")) {
-            if (plugin.getConfig().getBoolean("vip_join")) {
-                String joinText = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("vip_join_message").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
-                plugin.getProxy().broadcast(new TextComponent(joinText));
-                return;
-            }
+        if (e.getPlayer().hasPermission("rocketjoin.vip") && plugin.getConfig().getBoolean("enable_vip_features") && plugin.getConfig().getBoolean("vip_join")) {
+            String joinText = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("vip_join_message").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
+            plugin.getProxy().broadcast(new TextComponent(joinText));
+            return;
         }
 
         if (plugin.getConfig().getBoolean("enable_join_message")) {

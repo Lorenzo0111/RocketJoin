@@ -47,15 +47,13 @@ public class LeaveListener implements Listener {
     public void onQuit(PlayerQuitEvent e) {
         Player p = e.getPlayer();
 
-        if (e.getPlayer().hasPermission("rocketjoin.vip") && plugin.getConfig().getBoolean("enable_vip_features")) {
-            if (plugin.getConfig().getBoolean("vip_leave")) {
-                String quitText = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("vip_leave_message").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
-                if (loader.isPlaceholderapi()) {
-                    quitText = PlaceholderAPI.setPlaceholders(p, quitText);
-                }
-                e.setQuitMessage(quitText);
-                return;
+        if (e.getPlayer().hasPermission("rocketjoin.vip") && plugin.getConfig().getBoolean("enable_vip_features") && plugin.getConfig().getBoolean("vip_leave")) {
+            String quitText = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("vip_leave_message").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
+            if (loader.isPlaceholderapi()) {
+                quitText = PlaceholderAPI.setPlaceholders(p, quitText);
             }
+            e.setQuitMessage(quitText);
+            return;
         }
 
         if (plugin.getConfig().getBoolean("enable_leave_message")) {
