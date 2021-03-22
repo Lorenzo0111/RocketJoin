@@ -37,6 +37,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.util.Objects;
+
 import static org.bukkit.Sound.ENTITY_EXPERIENCE_ORB_PICKUP;
 
 public class JoinListener implements Listener {
@@ -57,56 +59,72 @@ public class JoinListener implements Listener {
 
         Player p = e.getPlayer();
 
-        if (plugin.getConfig().getBoolean("display_title")) {
-            p.sendTitle(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("join_title").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName())), ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("join_subtitle").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName())), 15, 40, 15);
+        if (this.handleFirstJoin(e)) {
+            return;
         }
 
-        if(!e.getPlayer().hasPlayedBefore() && plugin.getConfig().getBoolean("enable_fist_join")) {
-            String joinText = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("first_join").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
+        this.handleUpdate(e);
+
+        if (plugin.getConfig().getBoolean("display_title")) {
+            p.sendTitle(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("join_title")).replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName())), ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("join_subtitle")).replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName())), 15, 40, 15);
+        }
+
+        if (e.getPlayer().hasPermission("rocketjoin.vip") && plugin.getConfig().getBoolean("enable_vip_features") && this.handleVipEvent(e,p)) {
+            return;
+        }
+
+        if (plugin.getConfig().getBoolean("enable_join_message")) {
+            String joinText = ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("join_message")).replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
             if (loader.isPlaceholderapi()) {
                 joinText = PlaceholderAPI.setPlaceholders(p, joinText);
             }
             e.setJoinMessage(joinText);
             return;
-
         }
 
-        if (e.getPlayer().hasPermission("rocketjoin.vip") && plugin.getConfig().getBoolean("enable_vip_features")) {
-            if (plugin.getConfig().getBoolean("vip_firework")) {
-                fireworkSpawner.spawnFireworks(e.getPlayer().getLocation(), plugin.getConfig().getInt("vip_firework_to_spawn"));
-            }
-            if (plugin.getConfig().getBoolean("vip_sound")) {
-                for (Player xplayer : Bukkit.getOnlinePlayers()) {
-                    xplayer.playSound(xplayer.getLocation(), ENTITY_EXPERIENCE_ORB_PICKUP, 60f, 1f);
-                }
-            }
-            if (plugin.getConfig().getBoolean("vip_join")) {
-                String joinText = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("vip_join_message").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
-                if (loader.isPlaceholderapi()) {
-                    joinText = PlaceholderAPI.setPlaceholders(p, joinText);
-                }
-                e.setJoinMessage(joinText);
-                return;
-            }
-        }
+        e.setJoinMessage(null);
+    }
 
-        if (plugin.getConfig().getBoolean("enable_join_message")) {
-            String joinText = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("join_message").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
+    private boolean handleFirstJoin(PlayerJoinEvent event) {
+        if(!event.getPlayer().hasPlayedBefore() && plugin.getConfig().getBoolean("enable_fist_join")) {
+            String joinText = ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("first_join")).replace("{player}", event.getPlayer().getName()).replace("{DisplayPlayer}", event.getPlayer().getDisplayName()));
             if (loader.isPlaceholderapi()) {
-                joinText = PlaceholderAPI.setPlaceholders(p, joinText);
+                joinText = PlaceholderAPI.setPlaceholders(event.getPlayer(), joinText);
             }
-            e.setJoinMessage(joinText);
-        } else {
-            e.setJoinMessage(null);
+            event.setJoinMessage(joinText);
+            return true;
         }
+        return false;
+    }
 
-        if (e.getPlayer().hasPermission("rocketjoin.update")) {
+    private void handleUpdate(PlayerJoinEvent event) {
+        if (event.getPlayer().hasPermission("rocketjoin.update")) {
             if (!plugin.getConfig().getBoolean("update-message")) {
                 return;
             }
-            updateChecker.sendUpdateCheck(p);
+            updateChecker.sendUpdateCheck(event.getPlayer());
+        }
+    }
+
+    private boolean handleVipEvent(PlayerJoinEvent event, Player player) {
+        if (plugin.getConfig().getBoolean("vip_firework")) {
+            fireworkSpawner.spawnFireworks(player.getLocation(), plugin.getConfig().getInt("vip_firework_to_spawn"));
+        }
+        if (plugin.getConfig().getBoolean("vip_sound")) {
+            for (Player xplayer : Bukkit.getOnlinePlayers()) {
+                xplayer.playSound(xplayer.getLocation(), ENTITY_EXPERIENCE_ORB_PICKUP, 60f, 1f);
+            }
+        }
+        if (plugin.getConfig().getBoolean("vip_join")) {
+            String joinText = ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("vip_join_message")).replace("{player}", player.getName()).replace("{DisplayPlayer}", player.getDisplayName()));
+            if (loader.isPlaceholderapi()) {
+                joinText = PlaceholderAPI.setPlaceholders(player, joinText);
+            }
+            event.setJoinMessage(joinText);
+            return true;
         }
 
+        return false;
     }
 
 }

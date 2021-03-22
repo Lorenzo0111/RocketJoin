@@ -64,10 +64,6 @@ public class RocketJoinBungee extends Plugin {
         loader.placeholderHook();
     }
 
-    @Override
-    public void onDisable() {
-    }
-
     public void loadConfig() {
         try {
             this.configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(getDataFolder(), "config.yml"));
