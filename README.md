@@ -16,6 +16,9 @@
 
 
 # Information 
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/650abf4b749e4ac3927481ad96973093)](https://app.codacy.com/gh/Lorenzo0111/RocketJoin?utm_source=github.com&utm_medium=referral&utm_content=Lorenzo0111/RocketJoin&utm_campaign=Badge_Grade_Settings)
+
 [RocketJoin][spigot] is a CustomJoinMessage plugin!
 With this plugin you can change the join and leave message and you can use PlaceholderAPI!
 
