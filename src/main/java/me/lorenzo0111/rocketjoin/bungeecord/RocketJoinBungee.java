@@ -41,7 +41,6 @@ public class RocketJoinBungee extends Plugin {
 
     @Override
     public void onEnable() {
-        this.loadConfig();
 
         if (!getDataFolder().exists())
             getDataFolder().mkdir();
@@ -57,6 +56,7 @@ public class RocketJoinBungee extends Plugin {
             }
         }
 
+        this.loadConfig();
         PluginLoader loader = new PluginLoader(this);
         loader.loadUpdater();
         loader.loadMetrics();
