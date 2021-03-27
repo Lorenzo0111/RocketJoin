@@ -1,5 +1,6 @@
 language: java
 jdk: [ openjdk8 ]
-sudo: false
+dist: xenial
+os: linux
 script:
-  - ./gradlew shadowJar
+  - gradle shadowJar
