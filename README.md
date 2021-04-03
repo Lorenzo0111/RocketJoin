@@ -1,6 +1,6 @@
 [![logo]][spigot]
 
-[![release]][releaseLink] [![downloads]][spigot] [![Codacy Badge](https://img.shields.io/codacy/grade/eace45ea8bac439bb66e81ace3465c71?style=for-the-badge)](https://www.codacy.com/gh/Lorenzo0111/RocketJoin/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Lorenzo0111/RocketJoin&amp;utm_campaign=Badge_Grade)
+[![release]][releaseLink] [![downloads]][spigot] ![Travis (.com)](https://img.shields.io/travis/com/Lorenzo0111/RocketJoin?style=for-the-badge) [![Codacy Badge](https://img.shields.io/codacy/grade/eace45ea8bac439bb66e81ace3465c71?style=for-the-badge)](https://www.codacy.com/gh/Lorenzo0111/RocketJoin/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Lorenzo0111/RocketJoin&amp;utm_campaign=Badge_Grade)
 
 # Information 
 [RocketJoin][spigot] is a CustomJoinMessage plugin!
