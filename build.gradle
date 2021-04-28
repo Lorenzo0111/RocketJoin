@@ -29,12 +29,12 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 }
 
 dependencies {
     compileOnly 'net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT'
-    compile 'org.bstats:bstats-bungeecord:2.2.1'
+    implementation 'org.bstats:bstats-bungeecord:2.2.1'
 }
 
 apply from: "https://cdn.rocketplugins.space/spigot"
