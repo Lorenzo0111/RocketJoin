@@ -22,39 +22,34 @@
  * SOFTWARE.
  */
 
-plugins {
-    id 'java'
-    id "com.github.johnrengelman.shadow" version "7.0.0"
+package me.lorenzo0111.rocketjoin.velocity.utilities;
+
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.TextColor;
+import net.md_5.bungee.api.ChatColor;
+import org.jetbrains.annotations.Nullable;
+
+public class ChatUtils {
+    public static final String ALL_CODES = "0123456789AaBbCcDdEeFfKkLlMmNnOoRrXx";
+
+    public static String colorize(String textToTranslate) {
+        char[] b = textToTranslate.toCharArray();
+        for ( int i = 0; i < b.length - 1; i++ )
+        {
+            if ( b[i] == '&' && ALL_CODES.indexOf( b[i + 1] ) > -1 )
+            {
+                b[i] = ChatColor.COLOR_CHAR;
+                b[i + 1] = Character.toLowerCase( b[i + 1] );
+            }
+        }
+        return new String( b );
+    }
+
+    public static TextComponent colorize(String textToTranslate, @Nullable TextColor color) {
+        String result = colorize(textToTranslate);
+
+        return Component.text(result, color);
+    }
+
 }
-
-repositories {
-    mavenCentral()
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-    maven { url 'https://repo.repsy.io/mvn/lorenzo0111/public' }
-    maven { url 'https://nexus.velocitypowered.com/repository/maven-public/' }
-    maven { url 'https://repo.spongepowered.org/repository/maven-public/' }
-}
-
-dependencies {
-    compileOnly 'com.velocitypowered:velocity-api:1.1.5'
-    annotationProcessor 'com.velocitypowered:velocity-api:1.1.5'
-    compileOnly 'net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT'
-    implementation 'org.bstats:bstats-bungeecord:2.2.1'
-    implementation 'org.bstats:bstats-velocity:2.2.1'
-    implementation 'me.lorenzo0111:PluginsLib:1.1'
-    implementation 'org.spongepowered:configurate-yaml:4.1.1'
-}
-
-shadowJar {
-    relocate('org.spongepowered.configurate', 'me.lorenzo0111.lib.configurate')
-}
-
-apply from: "https://cdn.rocketplugins.space/spigot"
-
-group = 'me.Lorenzo0111'
-version = '1.9.1'
-description = 'RocketJoin'
-
-// This code is used for shadowJar
-jar.setEnabled(false)
-tasks.build.dependsOn tasks.shadowJar

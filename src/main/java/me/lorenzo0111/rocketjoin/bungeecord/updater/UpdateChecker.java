@@ -36,24 +36,24 @@ import java.util.Scanner;
 
 public class UpdateChecker {
 
-    /*
-
-    Plugin by Lorenzo0111 - https://github.com/Lorenzo0111
-
-     */
-
     private boolean updateAvailable;
     private final Plugin plugin;
     private final int resourceId;
+    private final String url;
 
-    public UpdateChecker(Plugin plugin, int resourceId) {
+    public UpdateChecker(Plugin plugin, int resourceId, String url) {
         this.plugin = plugin;
         this.resourceId = resourceId;
+        this.url = url;
+
+        if (this.plugin.getDescription().getVersion().endsWith("-SNAPSHOT") || this.plugin.getDescription().getVersion().endsWith("-BETA")) {
+            this.plugin.getLogger().info("Running a SNAPSHOT or BETA version, the updater may be bugged here.");
+        }
 
         this.fetch();
     }
 
-    public void fetch() {
+    private void fetch() {
         plugin.getProxy().getScheduler().runAsync(plugin, () -> {
             try (InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + this.resourceId).openStream(); Scanner scanner = new Scanner(inputStream)) {
                 if (scanner.hasNext()) {
@@ -69,16 +69,7 @@ public class UpdateChecker {
 
     public void sendUpdateCheck(CommandSender player) {
         if (updateAvailable) {
-            player.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', "&e&l&m---------------------------------------")));
-            player.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', "&c&lRocket&e&lJoin &f&l» &7There is a new update available.")));
-            player.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', "&c&lRocket&e&lJoin &f&l» &7Download it from: &ehttps://bit.ly/RocketJoin")));
-            player.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', "&e&l&m---------------------------------------")));
-        }
-    }
-
-    public void updateCheck() {
-        if (updateAvailable) {
-            this.plugin.getLogger().info("There is a new update available. Download it from: https://bit.ly/RocketJoin");
+            player.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', String.format("&8[&eRocketUpdater&8] &7An update of %s is available. Download it from %s",plugin.getDescription().getName(),url))));
         }
     }
 }

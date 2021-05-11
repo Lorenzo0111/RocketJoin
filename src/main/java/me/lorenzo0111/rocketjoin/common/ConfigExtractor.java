@@ -22,49 +22,53 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.bungeecord;
+package me.lorenzo0111.rocketjoin.common;
 
-import me.lorenzo0111.rocketjoin.bungeecord.utilities.PluginLoader;
-import me.lorenzo0111.rocketjoin.common.ConfigExtractor;
-import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.util.Objects;
 
-public class RocketJoinBungee extends Plugin {
-    private Configuration configuration;
-    private File config;
+public class ConfigExtractor {
+    private final File directory;
+    private final String name;
+    private final Class<?> pluginClass;
 
-    @Override
-    public void onEnable() {
-
-        this.config = new ConfigExtractor(this.getClass(), this.getDataFolder(), "config.yml")
-            .extract();
-
-        this.loadConfig();
-        PluginLoader loader = new PluginLoader(this);
-        loader.loadUpdater();
-        loader.loadMetrics();
-        loader.registerEvents();
-        loader.placeholderHook();
+    public ConfigExtractor(Class<?> pluginClass, File directory, String name) {
+        this.directory = directory;
+        this.name = name;
+        this.pluginClass = pluginClass;
     }
 
-    public void loadConfig() {
-        try {
-            this.configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(config);
-        } catch (IOException e) {
-            e.printStackTrace();
+    @Nullable
+    public File extract() {
+        if (!directory.exists() && !directory.mkdir()) {
+            return null;
         }
+
+        File result = new File(directory, name);
+        if (!result.exists()) {
+            try (InputStream in = pluginClass.getClassLoader().getResourceAsStream( name )) {
+                Objects.requireNonNull(in);
+
+                Files.copy(in, result.toPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        return result;
     }
 
-    public void reloadConfig() {
-        this.loadConfig();
+    public File getDirectory() {
+        return directory;
     }
 
-    public Configuration getConfig() {
-        return configuration;
+    public String getName() {
+        return name;
     }
 }

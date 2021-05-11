@@ -37,6 +37,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.util.List;
 import java.util.Objects;
 
 import static org.bukkit.Sound.ENTITY_EXPERIENCE_ORB_PICKUP;
@@ -64,6 +65,8 @@ public class JoinListener implements Listener {
         }
 
         this.handleUpdate(e);
+
+        this.executeCommands(e.getPlayer().hasPermission("rocketjoin.vip"), e.getPlayer());
 
         if (plugin.getConfig().getBoolean("display_title")) {
             p.sendTitle(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("join_title")).replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName())), ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("join_subtitle")).replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName())), 15, 40, 15);
@@ -125,6 +128,14 @@ public class JoinListener implements Listener {
         }
 
         return false;
+    }
+
+    private void executeCommands(boolean vip, Player player) {
+        final List<String> commands = plugin.getConfig().getStringList(vip ? "vip-commands" : "commands");
+
+        for (String command : commands) {
+            plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), command.replace("{player}", player.getName()));
+        }
     }
 
 }

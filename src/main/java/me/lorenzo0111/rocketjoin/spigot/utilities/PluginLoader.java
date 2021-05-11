@@ -50,8 +50,8 @@ public class PluginLoader {
     }
 
     public void loadUpdater() {
-        this.updateChecker = new UpdateChecker(plugin, 82520);
-        this.updateChecker.updateCheck();
+        this.updateChecker = new UpdateChecker(plugin, 82520, "https://bit.ly/RocketJoin");
+        this.updateChecker.sendUpdateCheck(Bukkit.getConsoleSender());
     }
 
     public void registerEvents() {

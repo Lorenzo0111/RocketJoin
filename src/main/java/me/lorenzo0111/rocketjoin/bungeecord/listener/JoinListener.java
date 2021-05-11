@@ -32,11 +32,10 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.event.EventHandler;
-import net.md_5.bungee.event.EventPriority;
+
+import java.util.List;
 
 public class JoinListener implements Listener {
-
     private final RocketJoinBungee plugin;
     private final UpdateChecker updateChecker;
 
@@ -45,10 +44,11 @@ public class JoinListener implements Listener {
         this.updateChecker = loader.getUpdater();
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(PostLoginEvent e) {
 
         ProxiedPlayer p = e.getPlayer();
+
+        this.executeCommands(e.getPlayer().hasPermission("rocketjoin.vip"), e.getPlayer());
 
         if (plugin.getConfig().getBoolean("display_title")) {
             p.sendTitle(plugin.getProxy().createTitle()
@@ -76,7 +76,14 @@ public class JoinListener implements Listener {
             }
             updateChecker.sendUpdateCheck(p);
         }
+    }
 
+    private void executeCommands(boolean vip, ProxiedPlayer player) {
+        final List<String> commands = plugin.getConfig().getStringList(vip ? "vip-commands" : "commands");
+
+        for (String command : commands) {
+            plugin.getProxy().getPluginManager().dispatchCommand(plugin.getProxy().getConsole(), command.replace("{player}", player.getName()));
+        }
     }
 
 }

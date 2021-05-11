@@ -22,39 +22,28 @@
  * SOFTWARE.
  */
 
-plugins {
-    id 'java'
-    id "com.github.johnrengelman.shadow" version "7.0.0"
+package me.lorenzo0111.rocketjoin.velocity.command.subcommands;
+
+import com.velocitypowered.api.command.CommandSource;
+import me.lorenzo0111.rocketjoin.velocity.command.RocketJoinVelocityCommand;
+import me.lorenzo0111.rocketjoin.velocity.command.SubCommand;
+import me.lorenzo0111.rocketjoin.velocity.utilities.ChatUtils;
+
+public class HelpCommand extends SubCommand {
+
+    public HelpCommand(RocketJoinVelocityCommand command) {
+        super(command);
+    }
+
+    @Override
+    public String getName() {
+        return "help";
+    }
+
+    @Override
+    public void perform(CommandSource sender, String[] args) {
+        sender.sendMessage(ChatUtils.colorize(this.getCommand().getPlugin().getConfig().node("prefix").getString() + "&r &8/rocketjoin help » &7Show this message!", null));
+        sender.sendMessage(ChatUtils.colorize(this.getCommand().getPlugin().getConfig().node("prefix").getString() + "&r &8/rocketjoin reload » &7Reload the plugin!", null));
+        sender.sendMessage(ChatUtils.colorize(this.getCommand().getPlugin().getConfig().node("prefix").getString() + "&r &8/rocketjoin debug » &7Print debug message!", null));
+    }
 }
-
-repositories {
-    mavenCentral()
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-    maven { url 'https://repo.repsy.io/mvn/lorenzo0111/public' }
-    maven { url 'https://nexus.velocitypowered.com/repository/maven-public/' }
-    maven { url 'https://repo.spongepowered.org/repository/maven-public/' }
-}
-
-dependencies {
-    compileOnly 'com.velocitypowered:velocity-api:1.1.5'
-    annotationProcessor 'com.velocitypowered:velocity-api:1.1.5'
-    compileOnly 'net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT'
-    implementation 'org.bstats:bstats-bungeecord:2.2.1'
-    implementation 'org.bstats:bstats-velocity:2.2.1'
-    implementation 'me.lorenzo0111:PluginsLib:1.1'
-    implementation 'org.spongepowered:configurate-yaml:4.1.1'
-}
-
-shadowJar {
-    relocate('org.spongepowered.configurate', 'me.lorenzo0111.lib.configurate')
-}
-
-apply from: "https://cdn.rocketplugins.space/spigot"
-
-group = 'me.Lorenzo0111'
-version = '1.9.1'
-description = 'RocketJoin'
-
-// This code is used for shadowJar
-jar.setEnabled(false)
-tasks.build.dependsOn tasks.shadowJar

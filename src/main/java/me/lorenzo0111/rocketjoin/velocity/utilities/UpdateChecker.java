@@ -22,54 +22,66 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.spigot.updater;
+package me.lorenzo0111.rocketjoin.velocity.utilities;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.java.JavaPlugin;
+import me.lorenzo0111.rocketjoin.velocity.RocketJoinVelocity;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Scanner;
+import java.util.concurrent.CompletableFuture;
 
 public class UpdateChecker {
 
     private boolean updateAvailable;
-    private final JavaPlugin plugin;
+    private final RocketJoinVelocity plugin;
     private final int resourceId;
     private final String url;
 
-    public UpdateChecker(JavaPlugin plugin, int resourceId, String url) {
+    public UpdateChecker(RocketJoinVelocity plugin, int resourceId, String url) {
         this.plugin = plugin;
         this.resourceId = resourceId;
         this.url = url;
 
-        if (this.plugin.getDescription().getVersion().endsWith("-SNAPSHOT") || this.plugin.getDescription().getVersion().endsWith("-BETA")) {
+        if (this.plugin.getVersion().endsWith("-SNAPSHOT") || this.plugin.getVersion().endsWith("-BETA")) {
             this.plugin.getLogger().info("Running a SNAPSHOT or BETA version, the updater may be bugged here.");
         }
 
         this.fetch();
     }
 
-    private void fetch() {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+    public CompletableFuture<Boolean> fetch() {
+        CompletableFuture<Boolean> completableFuture = new CompletableFuture<>();
+
+        plugin.getServer().getScheduler().buildTask(plugin, () -> {
             try (InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + this.resourceId).openStream(); Scanner scanner = new Scanner(inputStream)) {
                 if (scanner.hasNext()) {
                     String version = scanner.next();
 
-                    this.updateAvailable = !this.plugin.getDescription().getVersion().equalsIgnoreCase(version);
+                    this.updateAvailable = !this.plugin.getVersion().equalsIgnoreCase(version);
                 }
+
+                completableFuture.complete(this.updateAvailable);
             } catch (IOException exception) {
                 this.plugin.getLogger().info("Cannot look for updates: " + exception.getMessage());
             }
-        });
+        }).schedule();
+
+        return completableFuture;
     }
 
-    public void sendUpdateCheck(CommandSender player) {
-        if (updateAvailable) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', String.format("&8[&eRocketUpdater&8] &7An update of %s is available. Download it from %s",plugin.getDescription().getName(),url)));
+    public void sendUpdateCheck(Audience player) {
+        this.sendUpdateCheck(player,this.updateAvailable);
+    }
+
+    public void sendUpdateCheck(Audience player, boolean available) {
+        if (available) {
+            TextComponent component = Component.text(ChatUtils.colorize(String.format("&8[&eRocketUpdater&8] &7An update of %s is available. Download it from %s",plugin.getPlugin().getDescription().getName(),url)));
+            player.sendMessage(component);
         }
     }
 }
