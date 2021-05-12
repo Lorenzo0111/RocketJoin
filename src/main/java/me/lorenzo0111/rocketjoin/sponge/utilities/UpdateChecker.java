@@ -24,6 +24,8 @@
 
 package me.lorenzo0111.rocketjoin.sponge.utilities;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import me.lorenzo0111.rocketjoin.sponge.RocketJoinSponge;
 import me.lorenzo0111.rocketjoin.velocity.utilities.ChatUtils;
 import org.spongepowered.api.command.CommandSource;
@@ -39,10 +41,10 @@ public class UpdateChecker {
 
     private boolean updateAvailable;
     private final RocketJoinSponge plugin;
-    private final int resourceId;
+    private final String resourceId;
     private final String url;
 
-    public UpdateChecker(RocketJoinSponge plugin, int resourceId, String url) {
+    public UpdateChecker(RocketJoinSponge plugin, String resourceId, String url) {
         this.plugin = plugin;
         this.resourceId = resourceId;
         this.url = url;
@@ -60,9 +62,10 @@ public class UpdateChecker {
         plugin.getGame().getScheduler().createTaskBuilder()
                 .async()
                 .execute(() -> {
-                        try (InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + this.resourceId).openStream(); Scanner scanner = new Scanner(inputStream)) {
+                        try (InputStream inputStream = new URL("https://ore.spongepowered.org/api/v1/projects/" + this.resourceId).openStream(); Scanner scanner = new Scanner(inputStream)) {
                             if (scanner.hasNext()) {
-                                String version = scanner.next();
+                                final JsonObject json = (JsonObject) JsonParser.parseString(scanner.next());
+                                String version = json.get("recommended").getAsJsonObject().get("name").getAsString();
 
                                 this.updateAvailable = !this.plugin.getVersion().equalsIgnoreCase(version);
                             }

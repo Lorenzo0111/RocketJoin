@@ -78,7 +78,7 @@ public class RocketJoinSponge {
 
         this.plugin = pluginContainer.get();
 
-        this.updater = new UpdateChecker(this,82520, "https://bit.ly/RocketJoin");
+        this.updater = new UpdateChecker(this,"rocketjoin", "https://bit.ly/RocketJoin");
         this.updater.fetch().thenAccept((available) -> this.updater.sendUpdateCheck(this.game.getServer().getConsole(),available));
 
         this.config = new ConfigExtractor(this.getClass(),path.toFile(),"config.yml")
