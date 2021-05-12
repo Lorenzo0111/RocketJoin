@@ -20,6 +20,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: my-artifact
-          path: build/libs
-        
+          name: RocketJoin
+          path: build/libs/RocketJoin-*-all.jar
