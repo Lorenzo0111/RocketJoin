@@ -88,12 +88,7 @@ public class RocketJoinVelocity {
 
         Objects.requireNonNull(config);
 
-        final YamlConfigurationLoader loader = YamlConfigurationLoader.builder().path(config.toPath()).build();
-        try {
-            this.conf = loader.load();
-        } catch (ConfigurateException e) {
-            logger.error("Unable to load config: ", e);
-        }
+        this.reloadConfig();
 
         server.getEventManager().register(this, new JoinListener(this));
         server.getEventManager().register(this, new LeaveListener(this));

@@ -5,8 +5,11 @@
 #    | | \ \ (_) | (__|   <  __/ |_  | |__| | (_) | | | | |
 #    |_|  \_\___/ \___|_|\_\___|\__|  \____/ \___/|_|_| |_|
 
-# Do not change this value
-config-version: 1.9
+# Do not change these values
+config-version: 1.9.1
+already-asked: false
+
+# Start of the configuration
 
 prefix: "&c&lRocket&e&lJoin &f&l»"
 no_permission: "&cYou do not have permission to use this command!"
@@ -67,6 +70,6 @@ vip_leave_message: "&e&l» &6&lVIP &7{player} left!"
 # See https://docs.rocketplugins.space/rocketjoin/execute-commands for more information
 # vip-commands: []
 vip-commands:
-  - "give %player% diamond 1"
+  - "give {player} diamond 1"
 
-# WARNING: If this plugin is running on bungeecord please read https://docs.rocketplugins.space/rocketjoin/bungeecord
+# WARNING: If this plugin is running on bungeecord or velocity please read https://docs.rocketplugins.space/rocketjoin/bungeecord
