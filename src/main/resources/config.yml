@@ -68,8 +68,8 @@ vip_leave_message: "&e&l» &6&lVIP &7{player} left!"
 # Commands that will be executed from console when a vip user joins the server
 # If you want to disable this just set it to []
 # See https://docs.rocketplugins.space/rocketjoin/execute-commands for more information
-# vip-commands: []
-vip-commands:
-  - "give {player} diamond 1"
+# vip-commands:
+#   - "give {player} diamond 1"
+vip-commands: []
 
 # WARNING: If this plugin is running on bungeecord or velocity please read https://docs.rocketplugins.space/rocketjoin/bungeecord
