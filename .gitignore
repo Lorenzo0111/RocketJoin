@@ -99,6 +99,9 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Maven and gradle
+build/
+.gradle/
 target/
 
 pom.xml.tag
