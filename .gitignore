@@ -1,3 +1,7 @@
+# Minecraft.gitignore
+# You can download it here: git.io/McIgnore
+# Version: 1.1
+
 # User-specific stuff
 .idea/
 
@@ -95,7 +99,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# Maven and gradle
 target/
 
 pom.xml.tag
@@ -110,19 +113,9 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 .flattened-pom.xml
 
-
-
-.gradle
-build/
-!src/**/build/
-
-gradle-app.setting
-
-!gradle-wrapper.jar
-
-# Cache of project
-.gradletasknamecache
-
-
 # Common working directory
 run/
+
+# Database and server directory
+db/
+server/
