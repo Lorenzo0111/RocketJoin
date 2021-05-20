@@ -31,8 +31,7 @@ import me.lorenzo0111.rocketjoin.sponge.listener.JoinListener;
 import me.lorenzo0111.rocketjoin.sponge.listener.LeaveListener;
 import me.lorenzo0111.rocketjoin.sponge.utilities.UpdateChecker;
 import me.lorenzo0111.rocketjoin.velocity.exception.LoadException;
-import org.bstats.charts.SimplePie;
-import org.bstats.sponge.Metrics;
+import org.bstats.sponge.Metrics2;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.command.CommandSource;
@@ -64,7 +63,7 @@ public class RocketJoinSponge {
     private ConfigurationNode conf;
     @Inject private Game game;
     @Inject private MetricsConfigManager metricsConfigManager;
-    @Inject private Metrics.Factory factory;
+    @Inject private Metrics2.Factory factory;
     private PluginContainer plugin;
     private UpdateChecker updater;
 
@@ -94,8 +93,8 @@ public class RocketJoinSponge {
         CommandSpec myCommandSpec = CommandSpec.builder()
                 .description(Text.of("RocketJoin main command"))
                 .arguments(
-                        GenericArguments.onlyOne(GenericArguments.string(Text.of("subcommand"))),
-                        GenericArguments.onlyOne(GenericArguments.string(Text.of("metrics")))
+                        GenericArguments.optional(GenericArguments.string(Text.of("subcommand"))),
+                        GenericArguments.optional(GenericArguments.string(Text.of("metrics")))
                         )
                 .executor(new RocketJoinSpongeCommand(this))
                 .build();
@@ -147,8 +146,8 @@ public class RocketJoinSponge {
     private void loadMetrics() {
         if (canMetrics()) {
             this.getLogger().info("Thanks for allowing metrics. Loading bStats..");
-            Metrics metrics = factory.make(9382);
-            metrics.addCustomChart(new SimplePie("vip_features", () -> this.getConfig().node("enable_vip_features").getBoolean() ? "Yes" : "No"));
+            Metrics2 metrics = factory.make(9382);
+            metrics.addCustomChart(new Metrics2.SimplePie("vip_features", () -> this.getConfig().node("enable_vip_features").getBoolean() ? "Yes" : "No"));
         }
     }
 

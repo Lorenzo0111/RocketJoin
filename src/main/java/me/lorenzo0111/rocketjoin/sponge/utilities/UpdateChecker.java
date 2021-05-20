@@ -31,10 +31,12 @@ import me.lorenzo0111.rocketjoin.velocity.utilities.ChatUtils;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.text.Text;
 
+import javax.net.ssl.HttpsURLConnection;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.Scanner;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
 
 public class UpdateChecker {
@@ -62,14 +64,26 @@ public class UpdateChecker {
         plugin.getGame().getScheduler().createTaskBuilder()
                 .async()
                 .execute(() -> {
-                        try (InputStream inputStream = new URL("https://ore.spongepowered.org/api/v1/projects/" + this.resourceId).openStream(); Scanner scanner = new Scanner(inputStream)) {
-                            if (scanner.hasNext()) {
-                                final JsonObject json = (JsonObject) JsonParser.parseString(scanner.next());
-                                String version = json.get("recommended").getAsJsonObject().get("name").getAsString();
+                        try {
+                            HttpsURLConnection connection = (HttpsURLConnection) new URL("https://ore.spongepowered.org/api/v1/projects/" + this.resourceId).openConnection();
+                            connection.setRequestMethod("GET");
+                            connection.setRequestProperty("Content-Type", "application/json; utf-8");
+                            connection.setRequestProperty("Accept", "application/json");
+                            connection.setRequestProperty("User-Agent", "RocketPlugins Update Checker");
 
-                                this.updateAvailable = !this.plugin.getVersion().equalsIgnoreCase(version);
+                            BufferedReader br = new BufferedReader(
+                                    new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+
+                            StringBuilder response = new StringBuilder();
+                            String responseLine;
+                            while ((responseLine = br.readLine()) != null) {
+                                response.append(responseLine.trim());
                             }
 
+                            final JsonObject json = (JsonObject) JsonParser.parseString(response.toString());
+                            String version = json.get("recommended").getAsJsonObject().get("name").getAsString();
+
+                            this.updateAvailable = !this.plugin.getVersion().equalsIgnoreCase(version);
                             completableFuture.complete(this.updateAvailable);
                         } catch (IOException exception) {
                             this.plugin.getLogger().info("Cannot look for updates: " + exception.getMessage());
