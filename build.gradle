@@ -42,7 +42,7 @@ dependencies {
     compileOnly 'net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT'
     implementation 'org.bstats:bstats-bungeecord:2.2.1'
     implementation 'org.bstats:bstats-velocity:2.2.1'
-    implementation 'org.bstats:bstats-sponge:1.7'
+    implementation 'org.bstats:bstats-sponge:2.1.0'
     implementation 'com.google.code.gson:gson:2.8.7'
     implementation 'org.spongepowered:configurate-yaml:4.1.1'
 }
