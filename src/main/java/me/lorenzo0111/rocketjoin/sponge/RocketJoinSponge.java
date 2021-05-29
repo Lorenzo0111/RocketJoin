@@ -54,7 +54,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
 
-@Plugin(id = "rocketjoin", name = "RocketJoin", version = "1.9.1.1",
+@Plugin(id = "rocketjoin", name = "RocketJoin", version = "1.9.1.2",
         description = "Custom Join Messages Plugin", authors = {"Lorenzo0111"})
 public class RocketJoinSponge {
     @Inject private Logger logger;

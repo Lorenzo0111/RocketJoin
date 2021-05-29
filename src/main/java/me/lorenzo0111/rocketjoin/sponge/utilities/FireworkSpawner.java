@@ -37,11 +37,19 @@ import java.util.Collections;
 public class FireworkSpawner {
 
     public static void spawnFireworks(Location<World> location, int amount) {
-        Firework firework = (Firework) location.createEntity(EntityTypes.FIREWORK);
-
-        firework.offer(Keys.FIREWORK_EFFECTS, Collections.singletonList(FireworkEffect.builder().color(Color.YELLOW).flicker(true).build()));
-
         for(int i = 0;i<amount; i++){
+            Firework firework = (Firework) location.createEntity(EntityTypes.FIREWORK);
+
+            firework.offer(Keys.FIREWORK_EFFECTS,
+                    Collections.singletonList(
+                            FireworkEffect
+                                    .builder()
+                                    .color(Color.YELLOW)
+                                    .flicker(true)
+                                    .build()
+                    )
+            );
+
             location.spawnEntity(firework);
         }
     }
