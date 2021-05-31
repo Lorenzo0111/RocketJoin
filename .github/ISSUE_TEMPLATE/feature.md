@@ -1,17 +1,16 @@
-***
-
+---
 name: Feature request
 about: Suggest an idea for my plugin
-title: "\[Feature] "
+title: "[Feature] "
 labels: Feature Request
 
-***
+---
 
 **What type of feature is it?**
-*Put an x in a option, like \[x]*
+_Put an x in a option, like [x]_
 
-*   \[ ] New Command
-*   \[ ] Config option
-*   \[ ] Other
+- [ ] New Command
+- [ ] Config option
+- [ ] Other
 
 **Describe your feature**
