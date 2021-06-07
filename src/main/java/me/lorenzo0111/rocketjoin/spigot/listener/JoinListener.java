@@ -29,8 +29,8 @@ import me.lorenzo0111.rocketjoin.spigot.RocketJoin;
 import me.lorenzo0111.rocketjoin.spigot.updater.UpdateChecker;
 import me.lorenzo0111.rocketjoin.spigot.utilities.FireworkSpawner;
 import me.lorenzo0111.rocketjoin.spigot.utilities.PluginLoader;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -39,6 +39,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.bukkit.Sound.ENTITY_EXPERIENCE_ORB_PICKUP;
 
@@ -48,6 +50,7 @@ public class JoinListener implements Listener {
     private final PluginLoader loader;
     private final FireworkSpawner fireworkSpawner = new FireworkSpawner();
     private final UpdateChecker updateChecker;
+    private static final Pattern PATTERN = Pattern.compile("(?<!\\\\)(&#[a-fA-F0-9]{6})");
 
     public JoinListener(RocketJoin plugin, PluginLoader loader) {
         this.plugin = plugin;
@@ -69,7 +72,7 @@ public class JoinListener implements Listener {
         this.executeCommands(e.getPlayer().hasPermission("rocketjoin.vip"), e.getPlayer());
 
         if (plugin.getConfig().getBoolean("display_title")) {
-            p.sendTitle(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("join_title")).replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName())), ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("join_subtitle")).replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName())), 15, 40, 15);
+            p.sendTitle(translate(Objects.requireNonNull(plugin.getConfig().getString("join_title")).replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName())), translate(Objects.requireNonNull(plugin.getConfig().getString("join_subtitle")).replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName())), 15, 40, 15);
         }
 
         if (e.getPlayer().hasPermission("rocketjoin.vip") && plugin.getConfig().getBoolean("enable_vip_features") && this.handleVipEvent(e,p)) {
@@ -77,7 +80,7 @@ public class JoinListener implements Listener {
         }
 
         if (plugin.getConfig().getBoolean("enable_join_message")) {
-            String joinText = ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("join_message")).replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
+            String joinText = translate(Objects.requireNonNull(plugin.getConfig().getString("join_message")).replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
             if (loader.isPlaceholderapi()) {
                 joinText = PlaceholderAPI.setPlaceholders(p, joinText);
             }
@@ -90,7 +93,7 @@ public class JoinListener implements Listener {
 
     private boolean handleFirstJoin(PlayerJoinEvent event) {
         if(!event.getPlayer().hasPlayedBefore() && plugin.getConfig().getBoolean("enable_fist_join")) {
-            String joinText = ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("first_join")).replace("{player}", event.getPlayer().getName()).replace("{DisplayPlayer}", event.getPlayer().getDisplayName()));
+            String joinText = translate(Objects.requireNonNull(plugin.getConfig().getString("first_join")).replace("{player}", event.getPlayer().getName()).replace("{DisplayPlayer}", event.getPlayer().getDisplayName()));
             if (loader.isPlaceholderapi()) {
                 joinText = PlaceholderAPI.setPlaceholders(event.getPlayer(), joinText);
             }
@@ -119,7 +122,7 @@ public class JoinListener implements Listener {
             }
         }
         if (plugin.getConfig().getBoolean("vip_join")) {
-            String joinText = ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("vip_join_message")).replace("{player}", player.getName()).replace("{DisplayPlayer}", player.getDisplayName()));
+            String joinText = translate(Objects.requireNonNull(plugin.getConfig().getString("vip_join_message")).replace("{player}", player.getName()).replace("{DisplayPlayer}", player.getDisplayName()));
             if (loader.isPlaceholderapi()) {
                 joinText = PlaceholderAPI.setPlaceholders(player, joinText);
             }
@@ -136,6 +139,26 @@ public class JoinListener implements Listener {
         for (String command : commands) {
             plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), command.replace("{player}", player.getName()));
         }
+    }
+
+    public static String translate(String string) {
+        string = ChatColor.translateAlternateColorCodes('&', string);
+
+        if (isCompatible()) {
+            Matcher matcher = PATTERN.matcher(string);
+            while (matcher.find()) {
+                String color = string.substring(matcher.start(), matcher.end());
+                string = string.replace(color, "" + ChatColor.of(color.replace("&", "")));
+            }
+        }
+
+        return string;
+    }
+
+    private static boolean isCompatible() {
+        String[] split = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
+        String minorVer = split[1];
+        return Integer.parseInt(minorVer) >= 16;
     }
 
 }

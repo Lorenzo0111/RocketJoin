@@ -47,6 +47,15 @@ dependencies {
     implementation 'org.spongepowered:configurate-yaml:4.1.1'
 }
 
+apply from: "https://cdn.rocketplugins.space/spigot"
+
+group = 'me.Lorenzo0111'
+version = '1.9.2'
+description = 'RocketJoin'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 shadowJar {
     relocate('org.spongepowered.configurate', 'me.lorenzo0111.lib.configurate')
     relocate('org.yaml', 'me.lorenzo0111.lib.yaml')
@@ -55,15 +64,8 @@ shadowJar {
 
     // Remove META-INF
     exclude 'META-INF', 'META-INF/**'
+
+    archiveFileName.set("${baseName}-${version}.${extension}")
 }
-
-apply from: "https://cdn.rocketplugins.space/spigot"
-
-group = 'me.Lorenzo0111'
-version = '1.9.1'
-description = 'RocketJoin'
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
 tasks.build.dependsOn tasks.shadowJar

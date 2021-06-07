@@ -27,7 +27,6 @@ package me.lorenzo0111.rocketjoin.spigot.listener;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.lorenzo0111.rocketjoin.spigot.RocketJoin;
 import me.lorenzo0111.rocketjoin.spigot.utilities.PluginLoader;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -48,7 +47,7 @@ public class LeaveListener implements Listener {
         Player p = e.getPlayer();
 
         if (e.getPlayer().hasPermission("rocketjoin.vip") && plugin.getConfig().getBoolean("enable_vip_features") && plugin.getConfig().getBoolean("vip_leave")) {
-            String quitText = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("vip_leave_message").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
+            String quitText = JoinListener.translate(plugin.getConfig().getString("vip_leave_message", "").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
             if (loader.isPlaceholderapi()) {
                 quitText = PlaceholderAPI.setPlaceholders(p, quitText);
             }
@@ -57,7 +56,7 @@ public class LeaveListener implements Listener {
         }
 
         if (plugin.getConfig().getBoolean("enable_leave_message")) {
-            String quitText = ChatColor.translateAlternateColorCodes('&',plugin.getConfig().getString("leave_message").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
+            String quitText = JoinListener.translate(plugin.getConfig().getString("leave_message", "").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
             if (loader.isPlaceholderapi()) {
                 quitText = PlaceholderAPI.setPlaceholders(p, quitText);
             }
