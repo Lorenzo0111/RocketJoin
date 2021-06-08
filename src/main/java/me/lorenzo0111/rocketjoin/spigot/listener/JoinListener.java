@@ -50,7 +50,6 @@ public class JoinListener implements Listener {
     private final PluginLoader loader;
     private final FireworkSpawner fireworkSpawner = new FireworkSpawner();
     private final UpdateChecker updateChecker;
-    private static final Pattern PATTERN = Pattern.compile("(?<!\\\\)(&#[a-fA-F0-9]{6})");
 
     public JoinListener(RocketJoin plugin, PluginLoader loader) {
         this.plugin = plugin;
@@ -132,6 +131,27 @@ public class JoinListener implements Listener {
         }
     }
 
+
+    private static String translateHexColorCodes(final String message) {
+        final Pattern hexPattern = Pattern.compile("&#([A-Fa-f0-9]{6})");
+        final char colorChar = ChatColor.COLOR_CHAR;
+
+        final Matcher matcher = hexPattern.matcher(message);
+        final StringBuffer buffer = new StringBuffer(message.length() + 4 * 8);
+
+        while (matcher.find()) {
+            final String group = matcher.group(1);
+
+            matcher.appendReplacement(buffer, colorChar + "x"
+                    + colorChar + group.charAt(0) + colorChar + group.charAt(1)
+                    + colorChar + group.charAt(2) + colorChar + group.charAt(3)
+                    + colorChar + group.charAt(4) + colorChar + group.charAt(5));
+        }
+
+        return matcher.appendTail(buffer).toString();
+    }
+
+
     public static String translate(String string, Player player, boolean placeholderApi) {
         if (placeholderApi) {
             string = PlaceholderAPI.setPlaceholders(player,string);
@@ -139,11 +159,7 @@ public class JoinListener implements Listener {
         string = ChatColor.translateAlternateColorCodes('&', string);
 
         if (isCompatible()) {
-            Matcher matcher = PATTERN.matcher(string);
-            while (matcher.find()) {
-                String color = string.substring(matcher.start(), matcher.end());
-                string = string.replace(color, "" + ChatColor.of(color.replace("&", "")));
-            }
+            string = translateHexColorCodes(string);
         }
 
         return string;
