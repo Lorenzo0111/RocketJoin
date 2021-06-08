@@ -80,7 +80,7 @@ public class PluginLoader {
         }
 
         placeholderapi = false;
-        plugin.getLogger().warning("Could not find PlaceholderAPI! Whitout PlaceholderAPI you can't use placeholders.");
+        plugin.getLogger().info("Could not find PlaceholderAPI! Whitout PlaceholderAPI you can't use placeholders.");
         plugin.getLogger().info("Loaded internal placeholers: {Player} and {DisplayPlayer}");
         plugin.getLogger().info(plugin.getDescription().getName() + " v" + plugin.getDescription().getVersion() + " by Lorenzo0111 is now enabled!");
     }

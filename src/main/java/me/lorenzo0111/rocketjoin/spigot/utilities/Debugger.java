@@ -25,6 +25,7 @@
 package me.lorenzo0111.rocketjoin.spigot.utilities;
 
 import me.lorenzo0111.rocketjoin.spigot.RocketJoin;
+import me.lorenzo0111.rocketjoin.spigot.listener.JoinListener;
 import org.bukkit.Bukkit;
 
 import java.util.Arrays;
@@ -53,6 +54,7 @@ public class Debugger {
         this.log("Plugin Information");
         this.logData("Plugin Name", plugin.getDescription().getName());
         this.logData("Plugin Version", plugin.getDescription().getVersion());
+        this.logData("HEX Compatibility", JoinListener.isCompatible() ? "Yes" : "No");
 
         this.log("-----------[ RocketPlugins Debugger ]-----------");
     }

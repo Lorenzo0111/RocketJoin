@@ -72,7 +72,7 @@ public class JoinListener implements Listener {
         this.executeCommands(e.getPlayer().hasPermission("rocketjoin.vip"), e.getPlayer());
 
         if (plugin.getConfig().getBoolean("display_title")) {
-            p.sendTitle(translate(Objects.requireNonNull(plugin.getConfig().getString("join_title")).replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName())), translate(Objects.requireNonNull(plugin.getConfig().getString("join_subtitle")).replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName())), 15, 40, 15);
+            p.sendTitle(translate(Objects.requireNonNull(plugin.getConfig().getString("join_title")).replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()), e.getPlayer(), loader.isPlaceholderapi()), translate(Objects.requireNonNull(plugin.getConfig().getString("join_subtitle")).replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()), e.getPlayer(), loader.isPlaceholderapi()), 15, 40, 15);
         }
 
         if (e.getPlayer().hasPermission("rocketjoin.vip") && plugin.getConfig().getBoolean("enable_vip_features") && this.handleVipEvent(e,p)) {
@@ -80,10 +80,7 @@ public class JoinListener implements Listener {
         }
 
         if (plugin.getConfig().getBoolean("enable_join_message")) {
-            String joinText = translate(Objects.requireNonNull(plugin.getConfig().getString("join_message")).replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
-            if (loader.isPlaceholderapi()) {
-                joinText = PlaceholderAPI.setPlaceholders(p, joinText);
-            }
+            String joinText = translate(Objects.requireNonNull(plugin.getConfig().getString("join_message")).replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()), e.getPlayer(), loader.isPlaceholderapi());
             e.setJoinMessage(joinText);
             return;
         }
@@ -93,10 +90,7 @@ public class JoinListener implements Listener {
 
     private boolean handleFirstJoin(PlayerJoinEvent event) {
         if(!event.getPlayer().hasPlayedBefore() && plugin.getConfig().getBoolean("enable_fist_join")) {
-            String joinText = translate(Objects.requireNonNull(plugin.getConfig().getString("first_join")).replace("{player}", event.getPlayer().getName()).replace("{DisplayPlayer}", event.getPlayer().getDisplayName()));
-            if (loader.isPlaceholderapi()) {
-                joinText = PlaceholderAPI.setPlaceholders(event.getPlayer(), joinText);
-            }
+            String joinText = translate(Objects.requireNonNull(plugin.getConfig().getString("first_join")).replace("{player}", event.getPlayer().getName()).replace("{DisplayPlayer}", event.getPlayer().getDisplayName()), event.getPlayer(), loader.isPlaceholderapi());
             event.setJoinMessage(joinText);
             return true;
         }
@@ -122,10 +116,7 @@ public class JoinListener implements Listener {
             }
         }
         if (plugin.getConfig().getBoolean("vip_join")) {
-            String joinText = translate(Objects.requireNonNull(plugin.getConfig().getString("vip_join_message")).replace("{player}", player.getName()).replace("{DisplayPlayer}", player.getDisplayName()));
-            if (loader.isPlaceholderapi()) {
-                joinText = PlaceholderAPI.setPlaceholders(player, joinText);
-            }
+            String joinText = translate(Objects.requireNonNull(plugin.getConfig().getString("vip_join_message")).replace("{player}", player.getName()).replace("{DisplayPlayer}", player.getDisplayName()), event.getPlayer(), loader.isPlaceholderapi());
             event.setJoinMessage(joinText);
             return true;
         }
@@ -141,7 +132,10 @@ public class JoinListener implements Listener {
         }
     }
 
-    public static String translate(String string) {
+    public static String translate(String string, Player player, boolean placeholderApi) {
+        if (placeholderApi) {
+            string = PlaceholderAPI.setPlaceholders(player,string);
+        }
         string = ChatColor.translateAlternateColorCodes('&', string);
 
         if (isCompatible()) {
@@ -155,7 +149,7 @@ public class JoinListener implements Listener {
         return string;
     }
 
-    private static boolean isCompatible() {
+    public static boolean isCompatible() {
         String[] split = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
         String minorVer = split[1];
         return Integer.parseInt(minorVer) >= 16;

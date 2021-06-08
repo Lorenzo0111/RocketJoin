@@ -24,7 +24,6 @@
 
 package me.lorenzo0111.rocketjoin.spigot.listener;
 
-import me.clip.placeholderapi.PlaceholderAPI;
 import me.lorenzo0111.rocketjoin.spigot.RocketJoin;
 import me.lorenzo0111.rocketjoin.spigot.utilities.PluginLoader;
 import org.bukkit.entity.Player;
@@ -47,19 +46,13 @@ public class LeaveListener implements Listener {
         Player p = e.getPlayer();
 
         if (e.getPlayer().hasPermission("rocketjoin.vip") && plugin.getConfig().getBoolean("enable_vip_features") && plugin.getConfig().getBoolean("vip_leave")) {
-            String quitText = JoinListener.translate(plugin.getConfig().getString("vip_leave_message", "").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
-            if (loader.isPlaceholderapi()) {
-                quitText = PlaceholderAPI.setPlaceholders(p, quitText);
-            }
+            String quitText = JoinListener.translate(plugin.getConfig().getString("vip_leave_message", "").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()), p, loader.isPlaceholderapi());
             e.setQuitMessage(quitText);
             return;
         }
 
         if (plugin.getConfig().getBoolean("enable_leave_message")) {
-            String quitText = JoinListener.translate(plugin.getConfig().getString("leave_message", "").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
-            if (loader.isPlaceholderapi()) {
-                quitText = PlaceholderAPI.setPlaceholders(p, quitText);
-            }
+            String quitText = JoinListener.translate(plugin.getConfig().getString("leave_message", "").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()), p, loader.isPlaceholderapi());
             e.setQuitMessage(quitText);
         } else {
             e.setQuitMessage(null);
