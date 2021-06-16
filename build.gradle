@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id 'java'
@@ -36,36 +37,43 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'org.spongepowered:spongeapi:7.3.0'
-    compileOnly 'com.velocitypowered:velocity-api:1.1.8'
-    annotationProcessor 'com.velocitypowered:velocity-api:1.1.8'
-    compileOnly 'net.md-5:bungeecord-api:1.17-R0.1-SNAPSHOT'
-    implementation 'org.bstats:bstats-bungeecord:2.2.1'
-    implementation 'org.bstats:bstats-velocity:2.2.1'
-    implementation 'org.bstats:bstats-sponge:1.7'
-    implementation 'com.google.code.gson:gson:2.8.7'
-    implementation 'org.spongepowered:configurate-yaml:4.1.1'
+    annotationProcessor('com.velocitypowered:velocity-api:1.1.8')
+    compileOnly('com.velocitypowered:velocity-api:1.1.8')
+    compileOnly('org.spongepowered:spongeapi:7.3.0')
+    compileOnly('net.md-5:bungeecord-api:1.17-R0.1-SNAPSHOT')
+    implementation('org.bstats:bstats-bungeecord:2.2.1')
+    implementation('org.bstats:bstats-velocity:2.2.1')
+    implementation('org.bstats:bstats-sponge:1.7')
+    implementation('com.google.code.gson:gson:2.8.7')
+    implementation('org.spongepowered:configurate-yaml:4.1.1')
 }
 
 apply from: "https://cdn.rocketplugins.space/spigot"
 
 group = 'me.Lorenzo0111'
-version = '1.9.2'
+version = '1.9.3'
 description = 'RocketJoin'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 shadowJar {
-    relocate('org.spongepowered.configurate', 'me.lorenzo0111.lib.configurate')
-    relocate('org.yaml', 'me.lorenzo0111.lib.yaml')
-    relocate('io.leangen', 'me.lorenzo0111.lib.leangen')
-    relocate('com.google.gson', 'me.lorenzo0111.lib.gson')
+    relocate('org.spongepowered.configurate', 'me.lorenzo0111.rocketjoin.libs.configurate')
+    relocate('org.yaml', 'me.lorenzo0111.rocketjoin.libs.yaml')
+    relocate('io.leangen', 'me.lorenzo0111.rocketjoin.libs.leangen')
+    relocate('com.google.gson', 'me.lorenzo0111.rocketjoin.libs.gson')
 
     // Remove META-INF
     exclude 'META-INF', 'META-INF/**'
 
-    archiveFileName.set("${baseName}-${version}.${extension}")
+    archiveFileName = "${project.name}-${project.version}.jar"
+}
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        duplicatesStrategy DuplicatesStrategy.INCLUDE
+        filter ReplaceTokens, tokens: [version: version]
+    }
 }
 
 tasks.build.dependsOn tasks.shadowJar

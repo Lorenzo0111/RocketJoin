@@ -50,7 +50,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
 
-@Plugin(id = "rocketjoin", name = "RocketJoin", version = "1.9.1",
+@Plugin(id = "rocketjoin", name = "RocketJoin", version = "1.9.3",
         description = "Custom Join Messages Plugin", authors = {"Lorenzo0111"})
 public class RocketJoinVelocity {
     private final ProxyServer server;

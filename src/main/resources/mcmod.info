@@ -1,7 +1,7 @@
 [{
   "modid": "rocketjoin",
   "name": "RocketJoin",
-  "version": "1.9.3",
+  "version": "@version@",
   "description": "Custom Join Messages Plugin",
   "authorList": [
     "Lorenzo0111"

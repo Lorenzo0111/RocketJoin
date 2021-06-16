@@ -6,7 +6,7 @@
 #    |_|  \_\___/ \___|_|\_\___|\__|  \____/ \___/|_|_| |_|
 
 # Do not change these values
-config-version: 1.9.3
+config-version: @version@
 already-asked: false
 
 # Start of the configuration

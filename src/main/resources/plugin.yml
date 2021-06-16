@@ -1,7 +1,7 @@
 name: RocketJoin
 author: Lorenzo0111
 main: me.lorenzo0111.rocketjoin.spigot.RocketJoin
-version: 1.9.3
+version: @version@
 softdepend: [PlaceholderAPI]
 commands:
   rocketjoin:
