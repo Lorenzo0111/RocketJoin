@@ -45,6 +45,10 @@ public class LeaveListener {
     public void onQuit(DisconnectEvent e) {
         Player p = e.getPlayer();
 
+        if (plugin.getConfig().node("enable-hide").getBoolean() && p.hasPermission(plugin.getConfig().node("hide-permission").getString("rocketjoin.silent"))) {
+            return;
+        }
+
         if (e.getPlayer().hasPermission("rocketjoin.vip") && plugin.getConfig().node("enable_vip_features").getBoolean() && plugin.getConfig().node("vip_leave").getBoolean()) {
             Component quitText = Component.text(ChatUtils.colorize(Objects.requireNonNull(plugin.getConfig().node("vip_leave_message").getString()).replace("{player}", p.getUsername())));
 

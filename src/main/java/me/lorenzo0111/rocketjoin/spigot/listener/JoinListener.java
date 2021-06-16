@@ -24,7 +24,6 @@
 
 package me.lorenzo0111.rocketjoin.spigot.listener;
 
-import me.clip.placeholderapi.PlaceholderAPI;
 import me.lorenzo0111.rocketjoin.spigot.RocketJoin;
 import me.lorenzo0111.rocketjoin.spigot.updater.UpdateChecker;
 import me.lorenzo0111.rocketjoin.spigot.utilities.FireworkSpawner;
@@ -36,24 +35,22 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.spongepowered.configurate.serialize.SerializationException;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.bukkit.Sound.ENTITY_EXPERIENCE_ORB_PICKUP;
 
 public class JoinListener implements Listener {
-
     private final RocketJoin plugin;
-    private final PluginLoader loader;
     private final FireworkSpawner fireworkSpawner = new FireworkSpawner();
     private final UpdateChecker updateChecker;
 
     public JoinListener(RocketJoin plugin, PluginLoader loader) {
         this.plugin = plugin;
-        this.loader = loader;
         this.updateChecker = loader.getUpdater();
     }
 
@@ -68,18 +65,27 @@ public class JoinListener implements Listener {
 
         this.handleUpdate(e);
 
-        this.executeCommands(e.getPlayer().hasPermission("rocketjoin.vip"), e.getPlayer());
-
-        if (plugin.getConfig().getBoolean("display_title")) {
-            p.sendTitle(translate(Objects.requireNonNull(plugin.getConfig().getString("join_title")).replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()), e.getPlayer(), loader.isPlaceholderapi()), translate(Objects.requireNonNull(plugin.getConfig().getString("join_subtitle")).replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()), e.getPlayer(), loader.isPlaceholderapi()), 15, 40, 15);
-        }
-
-        if (e.getPlayer().hasPermission("rocketjoin.vip") && plugin.getConfig().getBoolean("enable_vip_features") && this.handleVipEvent(e,p)) {
+        if (plugin.getConfiguration().node("enable-hide").getBoolean() && p.hasPermission(plugin.getConfiguration().node("hide-permission").getString("rocketjoin.silent"))) {
+            e.setJoinMessage(null);
             return;
         }
 
-        if (plugin.getConfig().getBoolean("enable_join_message")) {
-            String joinText = translate(Objects.requireNonNull(plugin.getConfig().getString("join_message")).replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()), e.getPlayer(), loader.isPlaceholderapi());
+        try {
+            this.executeCommands(e.getPlayer().hasPermission("rocketjoin.vip"), e.getPlayer());
+        } catch (SerializationException serializationException) {
+            serializationException.printStackTrace();
+        }
+
+        if (plugin.getConfiguration().node("display_title").getBoolean()) {
+            p.sendTitle(plugin.parse("join_title",p), plugin.parse("join_subtitle",p), 15, 40, 15);
+        }
+
+        if (e.getPlayer().hasPermission("rocketjoin.vip") && plugin.getConfiguration().node("enable_vip_features").getBoolean() && this.handleVipEvent(e,p)) {
+            return;
+        }
+
+        if (plugin.getConfiguration().node("enable_join_message").getBoolean()) {
+            String joinText = plugin.parse("join_message",p);
             e.setJoinMessage(joinText);
             return;
         }
@@ -88,9 +94,8 @@ public class JoinListener implements Listener {
     }
 
     private boolean handleFirstJoin(PlayerJoinEvent event) {
-        if(!event.getPlayer().hasPlayedBefore() && plugin.getConfig().getBoolean("enable_fist_join")) {
-            String joinText = translate(Objects.requireNonNull(plugin.getConfig().getString("first_join")).replace("{player}", event.getPlayer().getName()).replace("{DisplayPlayer}", event.getPlayer().getDisplayName()), event.getPlayer(), loader.isPlaceholderapi());
-            event.setJoinMessage(joinText);
+        if(!event.getPlayer().hasPlayedBefore() && plugin.getConfiguration().node("enable_fist_join").getBoolean()) {
+            event.setJoinMessage(plugin.parse("first_join",event.getPlayer()));
             return true;
         }
         return false;
@@ -98,7 +103,7 @@ public class JoinListener implements Listener {
 
     private void handleUpdate(PlayerJoinEvent event) {
         if (event.getPlayer().hasPermission("rocketjoin.update")) {
-            if (!plugin.getConfig().getBoolean("update-message")) {
+            if (!plugin.getConfiguration().node("update-message").getBoolean()) {
                 return;
             }
             updateChecker.sendUpdateCheck(event.getPlayer());
@@ -106,16 +111,16 @@ public class JoinListener implements Listener {
     }
 
     private boolean handleVipEvent(PlayerJoinEvent event, Player player) {
-        if (plugin.getConfig().getBoolean("vip_firework")) {
-            fireworkSpawner.spawnFireworks(player.getLocation(), plugin.getConfig().getInt("vip_firework_to_spawn"));
+        if (plugin.getConfiguration().node("vip_firework").getBoolean()) {
+            fireworkSpawner.spawnFireworks(player.getLocation(), plugin.getConfiguration().node("vip_firework_to_spawn").getInt());
         }
-        if (plugin.getConfig().getBoolean("vip_sound")) {
+        if (plugin.getConfiguration().node("vip_sound").getBoolean()) {
             for (Player xplayer : Bukkit.getOnlinePlayers()) {
                 xplayer.playSound(xplayer.getLocation(), ENTITY_EXPERIENCE_ORB_PICKUP, 60f, 1f);
             }
         }
-        if (plugin.getConfig().getBoolean("vip_join")) {
-            String joinText = translate(Objects.requireNonNull(plugin.getConfig().getString("vip_join_message")).replace("{player}", player.getName()).replace("{DisplayPlayer}", player.getDisplayName()), event.getPlayer(), loader.isPlaceholderapi());
+        if (plugin.getConfiguration().node("vip_join").getBoolean()) {
+            String joinText = plugin.parse("vip_join_message", event.getPlayer());
             event.setJoinMessage(joinText);
             return true;
         }
@@ -123,16 +128,15 @@ public class JoinListener implements Listener {
         return false;
     }
 
-    private void executeCommands(boolean vip, Player player) {
-        final List<String> commands = plugin.getConfig().getStringList(vip ? "vip-commands" : "commands");
+    private void executeCommands(boolean vip, Player player) throws SerializationException {
+        final List<String> commands = plugin.getConfiguration().node(vip ? "vip-commands" : "commands").getList(String.class,new ArrayList<>());
 
         for (String command : commands) {
             plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), command.replace("{player}", player.getName()));
         }
     }
 
-
-    private static String translateHexColorCodes(final String message) {
+    public static String translateHexColorCodes(final String message) {
         final Pattern hexPattern = Pattern.compile("&#([A-Fa-f0-9]{6})");
         final char colorChar = ChatColor.COLOR_CHAR;
 
@@ -149,20 +153,6 @@ public class JoinListener implements Listener {
         }
 
         return matcher.appendTail(buffer).toString();
-    }
-
-
-    public static String translate(String string, Player player, boolean placeholderApi) {
-        if (placeholderApi) {
-            string = PlaceholderAPI.setPlaceholders(player,string);
-        }
-        string = ChatColor.translateAlternateColorCodes('&', string);
-
-        if (isCompatible()) {
-            string = translateHexColorCodes(string);
-        }
-
-        return string;
     }
 
     public static boolean isCompatible() {

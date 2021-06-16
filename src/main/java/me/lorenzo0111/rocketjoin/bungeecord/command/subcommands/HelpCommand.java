@@ -26,9 +26,7 @@ package me.lorenzo0111.rocketjoin.bungeecord.command.subcommands;
 
 import me.lorenzo0111.rocketjoin.bungeecord.command.RocketJoinBungeeCommand;
 import me.lorenzo0111.rocketjoin.bungeecord.command.SubCommand;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.TextComponent;
 
 public class HelpCommand extends SubCommand {
 
@@ -43,8 +41,8 @@ public class HelpCommand extends SubCommand {
 
     @Override
     public void perform(CommandSender sender, String[] args) {
-        sender.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', this.getCommand().getPlugin().getConfig().getString("prefix") + "&r &8/rocketjoin help » &7Show this message!")));
-        sender.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', this.getCommand().getPlugin().getConfig().getString("prefix") + "&r &8/rocketjoin reload » &7Reload the plugin!")));
-        sender.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', this.getCommand().getPlugin().getConfig().getString("prefix") + "&r &8/rocketjoin debug » &7Print debug message!")));
+        sender.sendMessage(getCommand().getPlugin().parse(getCommand().getPlugin().getPrefix() + "&r &8/rocketjoin help » &7Show this message!"));
+        sender.sendMessage(getCommand().getPlugin().parse(getCommand().getPlugin().getPrefix() + "&r &8/rocketjoin reload » &7Reload the plugin!"));
+        sender.sendMessage(getCommand().getPlugin().parse(getCommand().getPlugin().getPrefix() + "&r &8/rocketjoin debug » &7Print debug message!"));
     }
 }

@@ -26,7 +26,6 @@ package me.lorenzo0111.rocketjoin.spigot.command.subcommands;
 
 import me.lorenzo0111.rocketjoin.spigot.command.RocketJoinCommand;
 import me.lorenzo0111.rocketjoin.spigot.command.SubCommand;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class ReloadCommand extends SubCommand {
@@ -43,6 +42,6 @@ public class ReloadCommand extends SubCommand {
     @Override
     public void perform(CommandSender sender, String[] args) {
         this.getCommand().getPlugin().reloadConfig();
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getCommand().getPlugin().getConfig().getString("prefix") + "&r &7Plugin reloaded!"));
+        sender.sendMessage(this.getCommand().getPlugin().parse(this.getCommand().getPlugin().getPrefix() + "&r &7Plugin reloaded!"));
     }
 }

@@ -26,9 +26,7 @@ package me.lorenzo0111.rocketjoin.bungeecord.command.subcommands;
 
 import me.lorenzo0111.rocketjoin.bungeecord.command.RocketJoinBungeeCommand;
 import me.lorenzo0111.rocketjoin.bungeecord.command.SubCommand;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.TextComponent;
 
 public class ReloadCommand extends SubCommand {
 
@@ -44,6 +42,6 @@ public class ReloadCommand extends SubCommand {
     @Override
     public void perform(CommandSender sender, String[] args) {
         this.getCommand().getPlugin().reloadConfig();
-        sender.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', this.getCommand().getPlugin().getConfig().getString("prefix") + "&r &7Plugin reloaded!")));
+        sender.sendMessage(getCommand().getPlugin().parse(this.getCommand().getPlugin().getPrefix() + "&r &7Plugin reloaded!"));
     }
 }

@@ -27,12 +27,14 @@ package me.lorenzo0111.rocketjoin.bungeecord.listener;
 import me.lorenzo0111.rocketjoin.bungeecord.RocketJoinBungee;
 import me.lorenzo0111.rocketjoin.bungeecord.updater.UpdateChecker;
 import me.lorenzo0111.rocketjoin.bungeecord.utilities.PluginLoader;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.event.EventHandler;
+import org.spongepowered.configurate.serialize.SerializationException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class JoinListener implements Listener {
@@ -44,42 +46,45 @@ public class JoinListener implements Listener {
         this.updateChecker = loader.getUpdater();
     }
 
+    @EventHandler
     public void onJoin(PostLoginEvent e) {
 
         ProxiedPlayer p = e.getPlayer();
 
-        this.executeCommands(e.getPlayer().hasPermission("rocketjoin.vip"), e.getPlayer());
+        if (plugin.getConfiguration().node("enable-hide").getBoolean() && p.hasPermission(plugin.getConfiguration().node("hide-permission").getString()))
+            return;
 
-        if (plugin.getConfig().getBoolean("display_title")) {
+        try {
+            this.executeCommands(e.getPlayer().hasPermission("rocketjoin.vip"), e.getPlayer());
+        } catch (SerializationException serializationException) {
+            serializationException.printStackTrace();
+        }
+
+        if (plugin.getConfiguration().node("display_title").getBoolean()) {
             p.sendTitle(plugin.getProxy().createTitle()
-                    .title(new TextComponent(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("join_title").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()))))
-                    .subTitle(new TextComponent(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("join_subtitle").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()))))
+                    .title(new TextComponent(plugin.parse("join_title",e.getPlayer())))
+                    .subTitle(new TextComponent(plugin.parse("join_subtitle",e.getPlayer())))
                     .fadeIn(15)
                     .stay(40)
                     .fadeOut(15));
         }
 
-        if (e.getPlayer().hasPermission("rocketjoin.vip") && plugin.getConfig().getBoolean("enable_vip_features") && plugin.getConfig().getBoolean("vip_join")) {
-            String joinText = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("vip_join_message").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
-            plugin.getProxy().broadcast(new TextComponent(joinText));
+        if (e.getPlayer().hasPermission("rocketjoin.vip") && plugin.getConfiguration().node("enable_vip_features").getBoolean() && plugin.getConfiguration().node("vip_join").getBoolean()) {
+            plugin.getProxy().broadcast(new TextComponent(plugin.parse("vip_join_message",e.getPlayer())));
             return;
         }
 
-        if (plugin.getConfig().getBoolean("enable_join_message")) {
-            String joinText = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("join_message").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
-            plugin.getProxy().broadcast(new TextComponent(joinText));
+        if (plugin.getConfiguration().node("enable_join_message").getBoolean()) {
+            plugin.getProxy().broadcast(new TextComponent(plugin.parse("join_message",e.getPlayer())));
         }
 
-        if (e.getPlayer().hasPermission("rocketjoin.update")) {
-            if (!plugin.getConfig().getBoolean("update-message")) {
-                return;
-            }
+        if (e.getPlayer().hasPermission("rocketjoin.update") && plugin.getConfiguration().node("update-message").getBoolean()) {
             updateChecker.sendUpdateCheck(p);
         }
     }
 
-    private void executeCommands(boolean vip, ProxiedPlayer player) {
-        final List<String> commands = plugin.getConfig().getStringList(vip ? "vip-commands" : "commands");
+    private void executeCommands(boolean vip, ProxiedPlayer player) throws SerializationException {
+        final List<String> commands = plugin.getConfiguration().node(vip ? "vip-commands" : "commands").getList(String.class, new ArrayList<>());
 
         for (String command : commands) {
             plugin.getProxy().getPluginManager().dispatchCommand(plugin.getProxy().getConsole(), command.replace("{player}", player.getName()));

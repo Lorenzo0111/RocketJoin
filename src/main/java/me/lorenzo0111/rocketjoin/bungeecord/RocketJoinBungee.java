@@ -26,16 +26,20 @@ package me.lorenzo0111.rocketjoin.bungeecord;
 
 import me.lorenzo0111.rocketjoin.bungeecord.utilities.PluginLoader;
 import me.lorenzo0111.rocketjoin.common.ConfigExtractor;
+import me.lorenzo0111.rocketjoin.spigot.listener.JoinListener;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
+import org.spongepowered.configurate.ConfigurateException;
+import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.logging.Level;
 
 public class RocketJoinBungee extends Plugin {
-    private Configuration configuration;
+    private ConfigurationNode configuration;
     private File config;
 
     @Override
@@ -44,7 +48,6 @@ public class RocketJoinBungee extends Plugin {
         this.config = new ConfigExtractor(this.getClass(), this.getDataFolder(), "config.yml")
             .extract();
 
-        this.loadConfig();
         PluginLoader loader = new PluginLoader(this);
         loader.loadUpdater();
         loader.loadMetrics();
@@ -52,19 +55,37 @@ public class RocketJoinBungee extends Plugin {
         loader.placeholderHook();
     }
 
-    public void loadConfig() {
-        try {
-            this.configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(config);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public ConfigurationNode getConfiguration() {
+        return configuration;
     }
 
     public void reloadConfig() {
-        this.loadConfig();
+        final YamlConfigurationLoader loader = YamlConfigurationLoader.builder().path(config.toPath()).build();
+        try {
+            this.configuration = loader.load();
+        } catch (ConfigurateException e) {
+            this.getLogger().log(Level.SEVERE, "Unable to load config: ", e);
+        }
     }
 
-    public Configuration getConfig() {
-        return configuration;
+    public TextComponent parse(String string) {
+        string = ChatColor.translateAlternateColorCodes('&', string);
+        if (JoinListener.isCompatible()) {
+            string = JoinListener.translateHexColorCodes(string);
+        }
+        return new TextComponent(string);
+    }
+
+    public String parse(String path, ProxiedPlayer player) {
+        String str = this.getConfiguration().node(path).getString("").replace("{player}", player.getName()).replace("{DisplayPlayer}", player.getDisplayName());
+        str = ChatColor.translateAlternateColorCodes('&', str);
+        if (JoinListener.isCompatible()) {
+            str = JoinListener.translateHexColorCodes(str);
+        }
+        return str;
+    }
+
+    public String getPrefix() {
+        return this.getConfiguration().node("prefix").getString("");
     }
 }

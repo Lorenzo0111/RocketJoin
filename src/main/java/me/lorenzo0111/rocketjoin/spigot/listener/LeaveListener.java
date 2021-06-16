@@ -34,26 +34,27 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class LeaveListener implements Listener {
 
     private final RocketJoin plugin;
-    private final PluginLoader loader;
 
     public LeaveListener(RocketJoin plugin, PluginLoader loader) {
         this.plugin = plugin;
-        this.loader = loader;
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         Player p = e.getPlayer();
 
-        if (e.getPlayer().hasPermission("rocketjoin.vip") && plugin.getConfig().getBoolean("enable_vip_features") && plugin.getConfig().getBoolean("vip_leave")) {
-            String quitText = JoinListener.translate(plugin.getConfig().getString("vip_leave_message", "").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()), p, loader.isPlaceholderapi());
-            e.setQuitMessage(quitText);
+        if (plugin.getConfiguration().node("enable-hide").getBoolean() && p.hasPermission(plugin.getConfiguration().node("hide-permission").getString(""))) {
+            e.setQuitMessage(null);
             return;
         }
 
-        if (plugin.getConfig().getBoolean("enable_leave_message")) {
-            String quitText = JoinListener.translate(plugin.getConfig().getString("leave_message", "").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()), p, loader.isPlaceholderapi());
-            e.setQuitMessage(quitText);
+        if (e.getPlayer().hasPermission("rocketjoin.vip") && plugin.getConfiguration().node("enable_vip_features").getBoolean() && plugin.getConfiguration().node("vip_leave").getBoolean()) {
+            e.setQuitMessage(plugin.parse("vip_leave_message",e.getPlayer()));
+            return;
+        }
+
+        if (plugin.getConfiguration().node("enable_leave_message").getBoolean()) {
+            e.setQuitMessage(plugin.parse("leave_message",e.getPlayer()));
         } else {
             e.setQuitMessage(null);
         }

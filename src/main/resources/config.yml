@@ -6,7 +6,7 @@
 #    |_|  \_\___/ \___|_|\_\___|\__|  \____/ \___/|_|_| |_|
 
 # Do not change these values
-config-version: 1.9.1
+config-version: 1.9.3
 already-asked: false
 
 # Start of the configuration
@@ -43,6 +43,10 @@ join_subtitle: "&7Welcome in ServerName Server!"
 # See https://docs.rocketplugins.space/rocketjoin/execute-commands for more information
 # commands: []
 commands: []
+
+# If you enable hide feature people with the permission of hide-permission won't have a join message
+enable-hide: false
+hide-permission: "rocketjoin.silent"
 
 # ---> VIP <---
 

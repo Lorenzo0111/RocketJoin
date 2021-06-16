@@ -1,7 +1,7 @@
 name: RocketJoin
 author: Lorenzo0111
 main: me.lorenzo0111.rocketjoin.spigot.RocketJoin
-version: 1.9.2
+version: 1.9.3
 softdepend: [PlaceholderAPI]
 commands:
   rocketjoin:
@@ -14,3 +14,5 @@ permissions:
     description: Player with this permission can view available update message on join. If update-message is disabled in the config this permission doesn't work.
   rocketjoin.vip:
     description: RocketJoin vip permission
+  rocketjoin.silent:
+    description: If set, who has this permission will join without messages

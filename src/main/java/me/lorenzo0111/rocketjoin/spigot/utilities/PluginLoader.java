@@ -46,7 +46,7 @@ public class PluginLoader {
 
     public void loadMetrics() {
         Metrics metrics = new Metrics(plugin, 9382);
-        metrics.addCustomChart(new SimplePie("vip_features", () -> plugin.getConfig().getBoolean("enable_vip_features") ? "Yes" : "No"));
+        metrics.addCustomChart(new SimplePie("vip_features", () -> plugin.getConfiguration().node("enable_vip_features").getBoolean() ? "Yes" : "No"));
     }
 
     public void loadUpdater() {

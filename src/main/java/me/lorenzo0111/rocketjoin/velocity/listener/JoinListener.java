@@ -54,10 +54,8 @@ public class JoinListener {
 
         Player p = e.getPlayer();
 
-        try {
-            this.executeCommands(e.getPlayer().hasPermission("rocketjoin.vip"), e.getPlayer());
-        } catch (SerializationException serializationException) {
-            serializationException.printStackTrace();
+        if (plugin.getConfig().node("enable-hide").getBoolean() && p.hasPermission(plugin.getConfig().node("hide-permission").getString("rocketjoin.silent"))) {
+            return;
         }
 
         if (e.getPlayer().hasPermission("rocketjoin.update")) {
@@ -65,6 +63,12 @@ public class JoinListener {
                 return;
             }
             updateChecker.sendUpdateCheck(p);
+        }
+
+        try {
+            this.executeCommands(e.getPlayer().hasPermission("rocketjoin.vip"), e.getPlayer());
+        } catch (SerializationException serializationException) {
+            serializationException.printStackTrace();
         }
 
         if (plugin.getConfig().node("display_title").getBoolean()) {

@@ -30,9 +30,7 @@ import me.lorenzo0111.rocketjoin.bungeecord.command.subcommands.HelpCommand;
 import me.lorenzo0111.rocketjoin.bungeecord.command.subcommands.ReloadCommand;
 import me.lorenzo0111.rocketjoin.bungeecord.updater.UpdateChecker;
 import me.lorenzo0111.rocketjoin.bungeecord.utilities.Debugger;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 
 import java.util.ArrayList;
@@ -58,10 +56,10 @@ public class RocketJoinBungeeCommand extends Command {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        sender.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("prefix") + "&r &7Running &e" + plugin.getDescription().getName() + " &ev" + plugin.getDescription().getVersion() + " &7by &eLorenzo0111&7!")));
+        sender.sendMessage(plugin.parse(plugin.getPrefix() + "&r &7Running &e" + plugin.getDescription().getName() + " &ev" + plugin.getDescription().getVersion() + " &7by &eLorenzo0111&7!"));
 
         if (!sender.hasPermission("rocketjoin.command")) {
-            sender.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("prefix") + "&r &cYou do not have the permission to execute this command.")));
+            sender.sendMessage(plugin.parse(plugin.getPrefix() + "&r &cYou do not have the permission to execute this command."));
             return;
         }
 
@@ -74,11 +72,11 @@ public class RocketJoinBungeeCommand extends Command {
             }
 
         } else {
-            sender.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("prefix") + "&r &7Use &8/rocketjoin help&7 for a command list")));
+            sender.sendMessage(plugin.parse(plugin.getPrefix() + "&r &7Use &8/rocketjoin help&7 for a command list"));
             return;
         }
 
-        sender.sendMessage(new TextComponent(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("prefix") + "&r &7Command not found, use &8/rocketjoin help&7 for a command list")));
+        sender.sendMessage(plugin.parse(plugin.getPrefix() + "&r &7Command not found, use &8/rocketjoin help&7 for a command list"));
     }
 
     public ArrayList<SubCommand> getSubcommands(){

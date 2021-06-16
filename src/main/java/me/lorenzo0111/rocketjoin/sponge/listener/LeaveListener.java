@@ -44,6 +44,11 @@ public class LeaveListener {
     public void onQuit(ClientConnectionEvent.Disconnect e) {
         Player p = e.getTargetEntity();
 
+        if (plugin.getConfig().node("enable-hide").getBoolean() && p.hasPermission(plugin.getConfig().node("hide-permission").getString("rocketjoin.silent"))) {
+            e.setMessageCancelled(true);
+            return;
+        }
+
         if (p.hasPermission("rocketjoin.vip") && plugin.getConfig().node("enable_vip_features").getBoolean() && plugin.getConfig().node("vip_leave").getBoolean()) {
             Text quitText = Text.of(ChatUtils.colorize(Objects.requireNonNull(plugin.getConfig().node("vip_leave_message").getString()).replace("{player}", p.getName())));
 

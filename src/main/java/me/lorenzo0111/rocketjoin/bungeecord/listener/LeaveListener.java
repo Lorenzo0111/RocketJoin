@@ -25,7 +25,6 @@
 package me.lorenzo0111.rocketjoin.bungeecord.listener;
 
 import me.lorenzo0111.rocketjoin.bungeecord.RocketJoinBungee;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
@@ -44,15 +43,16 @@ public class LeaveListener implements Listener {
     public void onQuit(PlayerDisconnectEvent e) {
         ProxiedPlayer p = e.getPlayer();
 
-        if (e.getPlayer().hasPermission("rocketjoin.vip") && plugin.getConfig().getBoolean("enable_vip_features") && plugin.getConfig().getBoolean("vip_leave")) {
-            String quitText = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("vip_leave_message").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
-            plugin.getProxy().broadcast(new TextComponent(quitText));
+        if (plugin.getConfiguration().node("enable-hide").getBoolean() && p.hasPermission(plugin.getConfiguration().node("hide-permission").getString()))
+            return;
+
+        if (e.getPlayer().hasPermission("rocketjoin.vip") && plugin.getConfiguration().node("enable_vip_features").getBoolean() && plugin.getConfiguration().node("vip_leave").getBoolean()) {
+            plugin.getProxy().broadcast(new TextComponent(plugin.parse("vip_leave_message",e.getPlayer())));
             return;
         }
 
-        if (plugin.getConfig().getBoolean("enable_leave_message")) {
-            String quitText = ChatColor.translateAlternateColorCodes('&',plugin.getConfig().getString("leave_message").replace("{player}", p.getName()).replace("{DisplayPlayer}", p.getDisplayName()));
-            plugin.getProxy().broadcast(new TextComponent(quitText));
+        if (plugin.getConfiguration().node("enable_leave_message").getBoolean()) {
+            plugin.getProxy().broadcast(new TextComponent(plugin.parse("leave_message",e.getPlayer())));
         }
     }
 

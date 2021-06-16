@@ -30,7 +30,6 @@ import me.lorenzo0111.rocketjoin.spigot.command.subcommands.HelpCommand;
 import me.lorenzo0111.rocketjoin.spigot.command.subcommands.ReloadCommand;
 import me.lorenzo0111.rocketjoin.spigot.updater.UpdateChecker;
 import me.lorenzo0111.rocketjoin.spigot.utilities.Debugger;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -61,10 +60,10 @@ public class RocketJoinCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("prefix") + "&r &7Running &e" + plugin.getDescription().getName() + " &ev" + plugin.getDescription().getVersion() + " &7by &eLorenzo0111&7!"));
+        sender.sendMessage(plugin.parse(plugin.getPrefix() + "&r &7Running &e" + plugin.getDescription().getName() + " &ev" + plugin.getDescription().getVersion() + " &7by &eLorenzo0111&7!"));
 
         if (!sender.hasPermission("rocketjoin.command")) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("prefix") + "&r &cYou do not have the permission to execute this command."));
+            sender.sendMessage(plugin.parse(plugin.getPrefix() + "&r &cYou do not have the permission to execute this command."));
             return true;
         }
 
@@ -77,11 +76,11 @@ public class RocketJoinCommand implements CommandExecutor, TabCompleter {
             }
 
         } else {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("prefix") + "&r &7Use &8/rocketjoin help&7 for a command list"));
+            sender.sendMessage(plugin.parse(plugin.getPrefix() + "&r &7Use &8/rocketjoin help&7 for a command list"));
             return true;
         }
 
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("prefix") + "&r &7Command not found, use &8/rocketjoin help&7 for a command list"));
+        sender.sendMessage(plugin.parse(plugin.getPrefix() + "&r &7Command not found, use &8/rocketjoin help&7 for a command list"));
 
         return true;
     }

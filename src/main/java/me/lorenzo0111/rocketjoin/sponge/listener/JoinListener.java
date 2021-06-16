@@ -58,11 +58,16 @@ public class JoinListener {
             this.handleMetrics(player);
         }
 
-        if (this.handleFirstJoin(e)) {
+        this.handleUpdate(e);
+
+        if (plugin.getConfig().node("enable-hide").getBoolean() && player.hasPermission(plugin.getConfig().node("hide-permission").getString("rocketjoin.silent"))) {
+            e.setMessageCancelled(true);
             return;
         }
 
-        this.handleUpdate(e);
+        if (this.handleFirstJoin(e)) {
+            return;
+        }
 
         this.executeCommands(player.hasPermission("rocketjoin.vip"), player);
 
