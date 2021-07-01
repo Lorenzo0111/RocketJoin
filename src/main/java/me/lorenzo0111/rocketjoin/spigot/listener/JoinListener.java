@@ -66,6 +66,7 @@ public class JoinListener implements Listener {
         }
 
         if (VanishUtils.isVanished(p)) {
+            e.setJoinMessage(null);
             return;
         }
 
