@@ -45,6 +45,7 @@ public class LeaveListener implements Listener {
         Player p = e.getPlayer();
 
         if (VanishUtils.isVanished(p)) {
+            e.setQuitMessage(null);
             return;
         }
 
