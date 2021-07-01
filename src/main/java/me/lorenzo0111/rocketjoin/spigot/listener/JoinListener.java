@@ -28,6 +28,7 @@ import me.lorenzo0111.rocketjoin.spigot.RocketJoin;
 import me.lorenzo0111.rocketjoin.spigot.updater.UpdateChecker;
 import me.lorenzo0111.rocketjoin.spigot.utilities.FireworkSpawner;
 import me.lorenzo0111.rocketjoin.spigot.utilities.PluginLoader;
+import me.lorenzo0111.rocketjoin.spigot.utilities.VanishUtils;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -58,6 +59,10 @@ public class JoinListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
 
         Player p = e.getPlayer();
+
+        if (VanishUtils.isVanished(p)) {
+            return;
+        }
 
         if (this.handleFirstJoin(e)) {
             return;
