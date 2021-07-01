@@ -54,6 +54,11 @@ public class JoinListener {
 
         Player p = e.getPlayer();
 
+        String welcome = plugin.getConfig().node("welcome").getString("disable");
+        if (!welcome.equalsIgnoreCase("disable")) {
+            p.sendMessage(Component.text(welcome.replace("{player}", p.getUsername())));
+        }
+
         if (plugin.getConfig().node("enable-hide").getBoolean() && p.hasPermission(plugin.getConfig().node("hide-permission").getString("rocketjoin.silent"))) {
             return;
         }

@@ -51,6 +51,11 @@ public class JoinListener implements Listener {
 
         ProxiedPlayer p = e.getPlayer();
 
+        String welcome = plugin.getConfiguration().node("welcome").getString("disable");
+        if (!welcome.equalsIgnoreCase("disable")) {
+            p.sendMessage(new TextComponent(plugin.parse("welcome", p)));
+        }
+
         if (plugin.getConfiguration().node("enable-hide").getBoolean() && p.hasPermission(plugin.getConfiguration().node("hide-permission").getString()))
             return;
 

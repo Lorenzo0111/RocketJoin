@@ -30,7 +30,7 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url 'https://repo.repsy.io/mvn/lorenzo0111/public' }
     maven { url 'https://nexus.velocitypowered.com/repository/maven-public/' }
     maven { url 'https://repo.spongepowered.org/repository/maven-public/' }

@@ -60,6 +60,11 @@ public class JoinListener implements Listener {
 
         Player p = e.getPlayer();
 
+        String welcome = plugin.getConfiguration().node("welcome").getString("disable");
+        if (!welcome.equalsIgnoreCase("disable")) {
+            p.sendMessage(plugin.parse("welcome", p));
+        }
+
         if (VanishUtils.isVanished(p)) {
             return;
         }

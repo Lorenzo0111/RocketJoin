@@ -77,3 +77,11 @@ vip_leave_message: "&e&l» &6&lVIP &7{player} left!"
 vip-commands: []
 
 # WARNING: If this plugin is running on bungeecord or velocity please read https://docs.rocketplugins.space/rocketjoin/bungeecord
+
+# Set to "disable" to disable this feature
+# welcome: "disable"
+welcome:
+  - |-
+    &8&l&m===============&e  Welcome &8&l&m===============
+    Welcome {player} in Minecraft Server!
+    Use /kit default to get your kit

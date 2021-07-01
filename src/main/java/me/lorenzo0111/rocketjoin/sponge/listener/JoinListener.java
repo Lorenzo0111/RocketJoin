@@ -54,6 +54,11 @@ public class JoinListener {
     public void onJoin(ClientConnectionEvent.Join e) {
         final Player player = e.getTargetEntity();
 
+        String welcome = plugin.getConfig().node("welcome").getString("disable");
+        if (!welcome.equalsIgnoreCase("disable")) {
+            player.sendMessage(Text.of(welcome.replace("{player}", player.getName())));
+        }
+
         if (player.hasPermission("rocketjoin.command")) {
             this.handleMetrics(player);
         }
