@@ -51,7 +51,7 @@ dependencies {
 apply from: "https://cdn.rocketplugins.space/spigot"
 
 group = 'me.Lorenzo0111'
-version = '1.9.4'
+version = '1.9.3'
 description = 'RocketJoin'
 
 sourceCompatibility = 1.8
