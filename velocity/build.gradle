@@ -22,6 +22,9 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'RocketJoin'
-
-include(':common',':bukkit',':sponge',':bungeecord',':velocity')
+dependencies {
+    implementation project(':common')
+    annotationProcessor('com.velocitypowered:velocity-api:1.1.8')
+    compileOnly('com.velocitypowered:velocity-api:1.1.8')
+    implementation('org.bstats:bstats-velocity:2.2.1')
+}

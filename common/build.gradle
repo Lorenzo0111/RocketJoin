@@ -22,6 +22,6 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'RocketJoin'
-
-include(':common',':bukkit',':sponge',':bungeecord',':velocity')
+dependencies {
+    implementation 'space.rocketplugins.pluginslib:common:2.0.1.2'
+}

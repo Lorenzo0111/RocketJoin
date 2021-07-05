@@ -22,6 +22,25 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'RocketJoin'
+package me.lorenzo0111.rocketjoin.common;
 
-include(':common',':bukkit',':sponge',':bungeecord',':velocity')
+import me.lorenzo0111.pluginslib.ChatColor;
+import me.lorenzo0111.rocketjoin.common.hex.HexUtils;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.TextColor;
+import org.jetbrains.annotations.Nullable;
+
+public class ChatUtils {
+    public static String colorize(String textToTranslate) {
+        String text = HexUtils.translateHexColorCodes(textToTranslate);
+        return ChatColor.translateAlternateColorCodes('&', text);
+    }
+
+    public static TextComponent colorize(String textToTranslate, @Nullable TextColor color) {
+        String result = colorize(textToTranslate);
+
+        return Component.text(result, color);
+    }
+
+}

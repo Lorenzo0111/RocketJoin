@@ -22,6 +22,18 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'RocketJoin'
+package me.lorenzo0111.rocketjoin.utilities;
 
-include(':common',':bukkit',':sponge',':bungeecord',':velocity')
+import org.bukkit.entity.Player;
+import org.bukkit.metadata.MetadataValue;
+
+public class VanishUtils {
+
+    public static boolean isVanished(Player player) {
+        for (MetadataValue meta : player.getMetadata("vanished")) {
+            if (meta.asBoolean()) return true;
+        }
+        return false;
+    }
+
+}

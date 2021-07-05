@@ -22,6 +22,36 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'RocketJoin'
+package me.lorenzo0111.rocketjoin.utilities;
 
-include(':common',':bukkit',':sponge',':bungeecord',':velocity')
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.entity.projectile.Firework;
+import org.spongepowered.api.item.FireworkEffect;
+import org.spongepowered.api.util.Color;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
+
+import java.util.Collections;
+
+public class FireworkSpawner {
+
+    public static void spawnFireworks(Location<World> location, int amount) {
+        for(int i = 0;i<amount; i++){
+            Firework firework = (Firework) location.createEntity(EntityTypes.FIREWORK);
+
+            firework.offer(Keys.FIREWORK_EFFECTS,
+                    Collections.singletonList(
+                            FireworkEffect
+                                    .builder()
+                                    .color(Color.YELLOW)
+                                    .flicker(true)
+                                    .build()
+                    )
+            );
+
+            location.spawnEntity(firework);
+        }
+    }
+
+}

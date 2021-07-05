@@ -22,6 +22,41 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'RocketJoin'
+package me.lorenzo0111.rocketjoin.common;
 
-include(':common',':bukkit',':sponge',':bungeecord',':velocity')
+import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
+
+import java.util.List;
+
+public interface IConfiguration {
+    // Plugin settings
+    ConfigurationNode get(Object... path);
+    <T> T property(Class<T> type, Object... path) throws SerializationException;
+    String prefix();
+    String noPermission();
+    boolean update();
+
+    // Default configuration
+    ConfigurationNode join();
+    ConfigurationNode leave();
+    ConfigurationNode firstJoin();
+    List<String> commands() throws SerializationException;
+
+    // Custom conditions
+    String join(String conditionKey);
+    String leave(String conditionKey);
+
+    List<String> commands(String conditionKey);
+
+    ConfigurationNode condition(String conditionKey);
+    ConfigurationNode conditions();
+
+    boolean hide();
+    String hidePermission();
+
+    String welcome();
+
+    void reload();
+
+}

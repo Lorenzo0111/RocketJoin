@@ -22,6 +22,43 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'RocketJoin'
+package me.lorenzo0111.rocketjoin.utilities;
 
-include(':common',':bukkit',':sponge',':bungeecord',':velocity')
+import me.lorenzo0111.rocketjoin.RocketJoinBungee;
+
+import java.util.logging.Logger;
+
+public class Debugger {
+
+    private final RocketJoinBungee plugin;
+    private final Logger logger;
+
+    public Debugger(RocketJoinBungee plugin) {
+        this.plugin = plugin;
+        this.logger = plugin.getLogger();
+    }
+
+    public void debug() {
+        this.log("-----------[ RocketPlugins Debugger ]-----------");
+
+        this.log("Server Information:");
+        this.logData("Server Version", plugin.getProxy().getVersion());
+
+        this.log("");
+
+        this.log("Plugin Information");
+        this.logData("Plugin Name", plugin.getDescription().getName());
+        this.logData("Plugin Version", plugin.getDescription().getVersion());
+
+        this.log("-----------[ RocketPlugins Debugger ]-----------");
+    }
+
+    private void logData(String prefix, String message) {
+        this.log(prefix + ": " + message);
+    }
+
+    private void log(String message) {
+        logger.info(message);
+    }
+}
+

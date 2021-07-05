@@ -22,6 +22,28 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'RocketJoin'
+package me.lorenzo0111.rocketjoin.command.subcommands;
 
-include(':common',':bukkit',':sponge',':bungeecord',':velocity')
+import com.velocitypowered.api.command.CommandSource;
+import me.lorenzo0111.rocketjoin.command.RocketJoinVelocityCommand;
+import me.lorenzo0111.rocketjoin.command.SubCommand;
+import me.lorenzo0111.rocketjoin.common.ChatUtils;
+
+public class HelpCommand extends SubCommand {
+
+    public HelpCommand(RocketJoinVelocityCommand command) {
+        super(command);
+    }
+
+    @Override
+    public String getName() {
+        return "help";
+    }
+
+    @Override
+    public void perform(CommandSource sender, String[] args) {
+        sender.sendMessage(ChatUtils.colorize(this.getCommand().getPlugin().getConfig().prefix() + "&r &8/rocketjoin help » &7Show this message!", null));
+        sender.sendMessage(ChatUtils.colorize(this.getCommand().getPlugin().getConfig().prefix() + "&r &8/rocketjoin reload » &7Reload the plugin!", null));
+        sender.sendMessage(ChatUtils.colorize(this.getCommand().getPlugin().getConfig().prefix() + "&r &8/rocketjoin debug » &7Print debug message!", null));
+    }
+}

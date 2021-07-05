@@ -22,6 +22,25 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'RocketJoin'
+package me.lorenzo0111.rocketjoin.conditions.types;
 
-include(':common',':bukkit',':sponge',':bungeecord',':velocity')
+import me.lorenzo0111.rocketjoin.conditions.Condition;
+import org.spongepowered.api.entity.living.player.Player;
+
+public class FirstCondition implements Condition {
+    private final String key;
+
+    public FirstCondition(String key) {
+        this.key = key;
+    }
+
+    @Override
+    public String key() {
+        return key;
+    }
+
+    @Override
+    public boolean apply(Player player) {
+        return !player.hasPlayedBefore();
+    }
+}

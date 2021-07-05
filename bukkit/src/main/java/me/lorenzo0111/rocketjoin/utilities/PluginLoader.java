@@ -1,0 +1,103 @@
+/*
+ *  This file is part of RocketJoin, licensed under the MIT License.
+ *
+ *  Copyright (c) Lorenzo0111
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package me.lorenzo0111.rocketjoin.utilities;
+
+import me.lorenzo0111.pluginslib.audience.BukkitAudienceManager;
+import me.lorenzo0111.pluginslib.command.Customization;
+import me.lorenzo0111.pluginslib.scheduler.BukkitScheduler;
+import me.lorenzo0111.pluginslib.updater.UpdateChecker;
+import me.lorenzo0111.rocketjoin.RocketJoin;
+import me.lorenzo0111.rocketjoin.command.RocketJoinCommand;
+import me.lorenzo0111.rocketjoin.listener.JoinListener;
+import me.lorenzo0111.rocketjoin.listener.LeaveListener;
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
+import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
+
+public class PluginLoader {
+
+    private final RocketJoin plugin;
+    private boolean placeholderapi = true;
+    private UpdateChecker updateChecker;
+
+    public PluginLoader(RocketJoin plugin) {
+        this.plugin = plugin;
+    }
+
+    public void loadMetrics() {
+        Metrics metrics = new Metrics(plugin, 9382);
+        metrics.addCustomChart(new SimplePie("conditions", () -> String.valueOf(plugin.getConfiguration().conditions().childrenList().size())));
+    }
+
+    public void loadUpdater() {
+        this.updateChecker = new UpdateChecker(new BukkitScheduler(plugin), plugin.getDescription().getVersion(), plugin.getName(), 82520, "https://bit.ly/RocketJoin", null, null);
+        this.updateChecker.sendUpdateCheck(BukkitAudienceManager.audience(Bukkit.getConsoleSender()));
+    }
+
+    public void registerEvents() {
+        Bukkit.getServer().getPluginManager().registerEvents(new LeaveListener(plugin,this), plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new JoinListener(plugin,this), plugin);
+
+        PluginCommand command = plugin.getCommand("rocketjoin");
+
+        if (command == null) {
+            return;
+        }
+
+        Customization customization = new Customization(
+                plugin.parse(plugin.getPrefix() + "&r &7Running &e" + plugin.getDescription().getName() + " &ev" + plugin.getDescription().getVersion() + " &7by &eLorenzo0111&7!"),
+                plugin.parse(plugin.getPrefix() + "&r &7Command not found, use &8/rocketjoin help&7 for a command list"),
+                plugin.parse(plugin.getPrefix() + "&r &7Use &8/rocketjoin help&7 for a command list")
+        );
+        RocketJoinCommand cmd = new RocketJoinCommand(plugin,customization);
+
+        command.setTabCompleter(cmd);
+    }
+
+    public void placeholderHook() {
+
+        // Check if PlaceholderAPI is enabled
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            plugin.getLogger().info("PlaceholderAPI hooked!");
+            placeholderapi = true;
+            plugin.getLogger().info(plugin.getDescription().getName() + " v" + plugin.getDescription().getVersion() + " by Lorenzo0111 is now enabled!");
+            return;
+        }
+
+        placeholderapi = false;
+        plugin.getLogger().info("Could not find PlaceholderAPI! Whitout PlaceholderAPI you can't use placeholders.");
+        plugin.getLogger().info("Loaded internal placeholers: {Player} and {DisplayPlayer}");
+        plugin.getLogger().info(plugin.getDescription().getName() + " v" + plugin.getDescription().getVersion() + " by Lorenzo0111 is now enabled!");
+    }
+
+    public UpdateChecker getUpdater() {
+        return updateChecker;
+    }
+
+    public boolean isPlaceholderapi() {
+        return placeholderapi;
+    }
+}

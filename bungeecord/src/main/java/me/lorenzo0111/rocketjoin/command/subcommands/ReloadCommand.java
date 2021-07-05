@@ -22,6 +22,26 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'RocketJoin'
+package me.lorenzo0111.rocketjoin.command.subcommands;
 
-include(':common',':bukkit',':sponge',':bungeecord',':velocity')
+import me.lorenzo0111.rocketjoin.command.RocketJoinBungeeCommand;
+import me.lorenzo0111.rocketjoin.command.SubCommand;
+import net.md_5.bungee.api.CommandSender;
+
+public class ReloadCommand extends SubCommand {
+
+    public ReloadCommand(RocketJoinBungeeCommand command) {
+        super(command);
+    }
+
+    @Override
+    public String getName() {
+        return "reload";
+    }
+
+    @Override
+    public void perform(CommandSender sender, String[] args) {
+        this.getCommand().getPlugin().reloadConfig();
+        sender.sendMessage(getCommand().getPlugin().parse(this.getCommand().getPlugin().getPrefix() + "&r &7Plugin reloaded!"));
+    }
+}

@@ -22,6 +22,26 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'RocketJoin'
+package me.lorenzo0111.rocketjoin.command.subcommands;
 
-include(':common',':bukkit',':sponge',':bungeecord',':velocity')
+import me.lorenzo0111.rocketjoin.command.RocketJoinBungeeCommand;
+import me.lorenzo0111.rocketjoin.command.SubCommand;
+import net.md_5.bungee.api.CommandSender;
+
+public class DebugCommand extends SubCommand {
+
+    public DebugCommand(RocketJoinBungeeCommand command) {
+        super(command);
+    }
+
+    @Override
+    public String getName() {
+        return "debug";
+    }
+
+    @Override
+    public void perform(CommandSender sender, String[] args) {
+        this.getCommand().getDebugger().debug();
+        sender.sendMessage(getCommand().getPlugin().parse(getCommand().getPlugin().getPrefix() + "&r &7Debug informations printed in the console."));
+    }
+}

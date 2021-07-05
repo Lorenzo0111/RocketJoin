@@ -22,6 +22,11 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'RocketJoin'
+package me.lorenzo0111.rocketjoin.conditions;
 
-include(':common',':bukkit',':sponge',':bungeecord',':velocity')
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+
+public interface Condition {
+    String key();
+    boolean apply(ProxiedPlayer player);
+}

@@ -1,0 +1,70 @@
+#    _____            _        _          _       _
+#    |  __ \          | |      | |        | |     (_)
+#    | |__) |___   ___| | _____| |_       | | ___  _ _ __
+#    |  _  // _ \ / __| |/ / _ \ __|  _   | |/ _ \| | '_ \
+#    | | \ \ (_) | (__|   <  __/ |_  | |__| | (_) | | | | |
+#    |_|  \_\___/ \___|_|\_\___|\__|  \____/ \___/|_|_| |_|
+
+# Do not change these values
+config-version: @version@
+already-asked: false
+
+# WARNING: If this plugin is running on bungeecord or velocity please read https://docs.rocketplugins.space/rocketjoin/bungeecord
+
+# Start of the configuration
+
+prefix: "&8&l»"
+no_permission: "&cYou do not have permission to use this command!"
+
+# Enable Update Message on Join. Default: true
+update-message: true
+
+# Placeholders: {Player} (Name) and {DisplayPlayer} (Display Name)
+# PlaceholderAPI Support! Download it from tinyurl.com/PlaceholderAPI
+
+# Join message
+join:
+  enabled: true
+  mssage: "&a{player} &7joined!"
+  enable-title: true
+  # Send a title to the player when he join the server!
+  title: "&a&lWelcome {player}!"
+  subtitle: "&7Welcome in ServerName Server!"
+
+leave:
+  enabled: true
+  message: "&c{player} &7left!"
+
+# Commands that will be executed from console when an user joins the server
+# If you want to disable this just set it to []
+# See https://docs.rocketplugins.space/rocketjoin/execute-commands for more information
+# commands: []
+commands: []
+
+# If you enable hide feature people with the permission of hide-permission won't have a join message
+enable-hide: false
+hide-permission: "rocketjoin.silent"
+
+# ---> Custom Conditions <---
+
+conditions:
+  example-vip:
+    # Read http://docs.rocketplugins.space/rocketjoin/conditiosn for more information
+    type: PERMISSION
+    value: "rocketjoin.vip"
+
+    join: "&e&l» &6&lVIP &7{player} joined!"
+    leave: "&e&l» &6&lVIP &7{player} left!"
+    sound: true
+    sound-type: ""
+    fireworks: false
+    fireworks-amount: 3
+    commands: []
+
+# Set to "disable" to disable this feature
+# welcome: "disable"
+welcome:
+  - |-
+    &8&l&m===============&e  Welcome &8&l&m===============
+    Welcome {player} in Minecraft Server!
+    Use /kit default to get your kit

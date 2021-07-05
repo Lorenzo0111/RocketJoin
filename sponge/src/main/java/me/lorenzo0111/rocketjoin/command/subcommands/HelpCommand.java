@@ -22,6 +22,29 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'RocketJoin'
+package me.lorenzo0111.rocketjoin.command.subcommands;
 
-include(':common',':bukkit',':sponge',':bungeecord',':velocity')
+import me.lorenzo0111.rocketjoin.command.RocketJoinSpongeCommand;
+import me.lorenzo0111.rocketjoin.command.SubCommand;
+import me.lorenzo0111.rocketjoin.common.ChatUtils;
+import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.command.args.CommandContext;
+import org.spongepowered.api.text.Text;
+
+public class HelpCommand extends SubCommand {
+
+    public HelpCommand(RocketJoinSpongeCommand command) {
+        super(command);
+    }
+
+    @Override
+    public String getName() {
+        return "help";
+    }
+
+    @Override
+    public void perform(CommandSource sender, CommandContext args) {
+        sender.sendMessage(Text.of(ChatUtils.colorize(this.getCommand().getPlugin().getConfig().prefix() + "&r &8/rocketjoin help » &7Show this message!")));
+        sender.sendMessage(Text.of(ChatUtils.colorize(this.getCommand().getPlugin().getConfig().prefix() + "&r &8/rocketjoin reload » &7Reload the plugin!")));
+    }
+}

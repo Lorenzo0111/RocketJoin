@@ -22,6 +22,12 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'RocketJoin'
+package me.lorenzo0111.rocketjoin.common.exception;
 
-include(':common',':bukkit',':sponge',':bungeecord',':velocity')
+import org.jetbrains.annotations.NotNull;
+
+public class LoadException extends RuntimeException {
+    public LoadException(@NotNull String error) {
+        super(String.format("Unable to load plugin: %s", error));
+    }
+}

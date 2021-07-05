@@ -22,6 +22,36 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'RocketJoin'
+package me.lorenzo0111.rocketjoin.listener;
 
-include(':common',':bukkit',':sponge',':bungeecord',':velocity')
+import me.lorenzo0111.rocketjoin.RocketJoinSponge;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.network.ClientConnectionEvent;
+import org.spongepowered.api.text.Text;
+
+public class LeaveListener {
+    private final RocketJoinSponge plugin;
+
+    public LeaveListener(RocketJoinSponge plugin) {
+        this.plugin = plugin;
+    }
+
+    @Listener
+    public void onQuit(ClientConnectionEvent.Disconnect e) {
+        Player p = e.getTargetEntity();
+
+        if (plugin.getConfig().hide() && p.hasPermission(plugin.getConfig().hidePermission())) {
+            e.setMessageCancelled(true);
+            return;
+        }
+
+        String condition = plugin.getHandler().getCondition(p);
+        if (condition == null && plugin.getConfig().leave().node("enabled").getBoolean()) {
+            e.setMessage(Text.of(plugin.getConfig().leave().node("message").getString("")));
+            return;
+        }
+
+        e.setMessage(Text.of(plugin.getConfig().leave(condition)));
+    }
+}

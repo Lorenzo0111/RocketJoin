@@ -22,6 +22,25 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'RocketJoin'
+package me.lorenzo0111.rocketjoin.command;
 
-include(':common',':bukkit',':sponge',':bungeecord',':velocity')
+import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.command.args.CommandContext;
+
+public abstract class SubCommand {
+
+    protected RocketJoinSpongeCommand command;
+
+    public SubCommand(RocketJoinSpongeCommand command) {
+        this.command = command;
+    }
+
+    public abstract String getName();
+
+    public RocketJoinSpongeCommand getCommand() {
+        return command;
+    }
+
+    public abstract void perform(CommandSource sender, CommandContext args);
+
+}

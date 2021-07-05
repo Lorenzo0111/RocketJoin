@@ -22,6 +22,28 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'RocketJoin'
+package me.lorenzo0111.rocketjoin.command.subcommands;
 
-include(':common',':bukkit',':sponge',':bungeecord',':velocity')
+
+import com.velocitypowered.api.command.CommandSource;
+import me.lorenzo0111.rocketjoin.command.RocketJoinVelocityCommand;
+import me.lorenzo0111.rocketjoin.command.SubCommand;
+import me.lorenzo0111.rocketjoin.common.ChatUtils;
+
+public class ReloadCommand extends SubCommand {
+
+    public ReloadCommand(RocketJoinVelocityCommand command) {
+        super(command);
+    }
+
+    @Override
+    public String getName() {
+        return "reload";
+    }
+
+    @Override
+    public void perform(CommandSource sender, String[] args) {
+        this.getCommand().getPlugin().reloadConfig();
+        sender.sendMessage(ChatUtils.colorize(this.getCommand().getPlugin().getConfig().prefix() + "&r &7Plugin reloaded!", null));
+    }
+}

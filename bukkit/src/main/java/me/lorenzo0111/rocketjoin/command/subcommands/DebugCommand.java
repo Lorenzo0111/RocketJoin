@@ -22,6 +22,32 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'RocketJoin'
+package me.lorenzo0111.rocketjoin.command.subcommands;
 
-include(':common',':bukkit',':sponge',':bungeecord',':velocity')
+import me.lorenzo0111.pluginslib.audience.User;
+import me.lorenzo0111.pluginslib.command.Command;
+import me.lorenzo0111.pluginslib.command.SubCommand;
+import me.lorenzo0111.rocketjoin.RocketJoin;
+import me.lorenzo0111.rocketjoin.command.RocketJoinCommand;
+import net.kyori.adventure.text.Component;
+
+public class DebugCommand extends SubCommand {
+
+    public DebugCommand(Command command) {
+        super(command);
+    }
+
+    @Override
+    public String getName() {
+        return "debug";
+    }
+
+    @Override
+    public void handleSubcommand(User<?> user, String[] strings) {
+        ((RocketJoinCommand) this.getCommand()).getDebugger().debug();
+        user.audience().sendMessage(
+                Component.text(
+                        ((RocketJoin) getCommand().getPlugin())
+                                .parse(((RocketJoin) this.getCommand().getPlugin()).getPrefix() + "&r &7Debug informations printed in the console.")));
+    }
+}

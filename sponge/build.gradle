@@ -21,7 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+repositories {
+    maven { url 'https://repo.codemc.org/repository/maven-releases/' }
+}
 
-rootProject.name = 'RocketJoin'
-
-include(':common',':bukkit',':sponge',':bungeecord',':velocity')
+dependencies {
+    implementation project(':common')
+    implementation('org.bstats:bstats-sponge:1.8')
+    compileOnly('org.spongepowered:spongeapi:7.3.0')
+}
