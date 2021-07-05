@@ -27,6 +27,6 @@ repositories {
 
 dependencies {
     implementation project(':common')
-    implementation('org.bstats:bstats-sponge:1.8')
+    implementation('org.bstats:bstats-sponge:2.0.1')
     compileOnly('org.spongepowered:spongeapi:7.3.0')
 }
