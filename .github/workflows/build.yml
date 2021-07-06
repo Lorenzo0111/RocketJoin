@@ -1,7 +1,7 @@
 name: CI
 
-
 on:
+  push:
   workflow_dispatch:
   
 jobs:
@@ -21,4 +21,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: RocketJoin
-          path: build/libs/RocketJoin-*-all.jar
+          path: |
+            **/build/libs/*.jar
+            !build/libs/*.jar

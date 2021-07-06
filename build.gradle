@@ -61,8 +61,11 @@ subprojects {
         implementation('org.spongepowered:configurate-yaml:4.1.1')
     }
 
+    jar {
+        archiveFileName = "RocketJoin-${project.name}-${project.version}.jar"
+    }
+
     shadowJar {
-        relocate('org.spongepowered.configurate', 'me.lorenzo0111.rocketjoin.libs.configurate')
         relocate('org.yaml', 'me.lorenzo0111.rocketjoin.libs.yaml')
         relocate('io.leangen', 'me.lorenzo0111.rocketjoin.libs.leangen')
         relocate('com.google.gson', 'me.lorenzo0111.rocketjoin.libs.gson')
@@ -70,7 +73,7 @@ subprojects {
         // Remove META-INF
         exclude 'META-INF', 'META-INF/**'
 
-        archiveFileName = "${project.name}-${project.version}.jar"
+        archiveFileName = "RocketJoin-${project.name}-${project.version}.jar"
     }
 
     processResources {
