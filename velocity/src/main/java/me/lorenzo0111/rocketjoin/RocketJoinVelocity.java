@@ -31,8 +31,10 @@ import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
+import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import me.lorenzo0111.rocketjoin.command.RocketJoinVelocityCommand;
+import me.lorenzo0111.rocketjoin.common.ChatUtils;
 import me.lorenzo0111.rocketjoin.common.ConfigExtractor;
 import me.lorenzo0111.rocketjoin.common.IConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.FileConfiguration;
@@ -41,8 +43,10 @@ import me.lorenzo0111.rocketjoin.conditions.ConditionHandler;
 import me.lorenzo0111.rocketjoin.listener.JoinListener;
 import me.lorenzo0111.rocketjoin.listener.LeaveListener;
 import me.lorenzo0111.rocketjoin.utilities.UpdateChecker;
+import net.kyori.adventure.text.Component;
 import org.bstats.charts.SimplePie;
 import org.bstats.velocity.Metrics;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -50,7 +54,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
 
-@Plugin(id = "rocketjoin", name = "RocketJoin", version = "1.9.3",
+@Plugin(id = "rocketjoin", name = "RocketJoin", version = "2.0",
         description = "Custom Join Messages Plugin", authors = {"Lorenzo0111"})
 public class RocketJoinVelocity {
     private final ProxyServer server;
@@ -86,7 +90,7 @@ public class RocketJoinVelocity {
         File conf = new ConfigExtractor(this.getClass(),path.toFile(), "config.yml")
                 .extract();
 
-        Objects.requireNonNull(config);
+        Objects.requireNonNull(conf);
 
         this.config = new FileConfiguration(conf);
         this.handler = new ConditionHandler(this);
@@ -135,6 +139,12 @@ public class RocketJoinVelocity {
             throw new LoadException("Version cannot be null.");
         }
         return s.get();
+    }
+
+    public Component parse(@Nullable String string, Player player) {
+        String str = string == null ? "" : string.replace("{player}", player.getUsername());
+        str = ChatUtils.colorize(str);
+        return Component.text(str);
     }
 
     public void reloadConfig() {

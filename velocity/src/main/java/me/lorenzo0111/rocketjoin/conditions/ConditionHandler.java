@@ -63,6 +63,7 @@ public class ConditionHandler {
                     this.conditions.add(firstCondition);
                     break;
                 default:
+                    plugin.getLogger().warn("Invalid condition type at '" + key + "'. Ignoring..");
                     break;
             }
 

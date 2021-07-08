@@ -24,9 +24,13 @@
 
 package me.lorenzo0111.rocketjoin.command;
 
-import me.lorenzo0111.pluginslib.command.Command;
+import me.lorenzo0111.pluginslib.ChatColor;
+import me.lorenzo0111.pluginslib.audience.BukkitUser;
 import me.lorenzo0111.pluginslib.command.Customization;
+import me.lorenzo0111.pluginslib.command.ICommand;
 import me.lorenzo0111.pluginslib.command.SubCommand;
+import me.lorenzo0111.pluginslib.command.annotations.AnyArgument;
+import me.lorenzo0111.pluginslib.command.annotations.NoArguments;
 import me.lorenzo0111.pluginslib.command.annotations.Permission;
 import me.lorenzo0111.pluginslib.updater.UpdateChecker;
 import me.lorenzo0111.rocketjoin.RocketJoin;
@@ -34,15 +38,19 @@ import me.lorenzo0111.rocketjoin.command.subcommands.DebugCommand;
 import me.lorenzo0111.rocketjoin.command.subcommands.HelpCommand;
 import me.lorenzo0111.rocketjoin.command.subcommands.ReloadCommand;
 import me.lorenzo0111.rocketjoin.utilities.Debugger;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
-public class RocketJoinCommand extends Command implements TabCompleter {
+public class RocketJoinCommand extends ICommand<JavaPlugin> implements TabCompleter, CommandExecutor {
 
     private final RocketJoin plugin;
     private final UpdateChecker updater;
@@ -50,8 +58,8 @@ public class RocketJoinCommand extends Command implements TabCompleter {
     private final ArrayList<SubCommand> subcommands = new ArrayList<>();
 
     @Permission("rocketjoin.command")
-    public RocketJoinCommand(RocketJoin plugin, Customization customization) {
-        super(plugin,"rocketjoin",customization);
+    public RocketJoinCommand(RocketJoin plugin,String command,Customization customization) {
+        super(plugin,command,customization);
         this.plugin = plugin;
         this.updater = plugin.getLoader().getUpdater();
         this.debugger = new Debugger(plugin);
@@ -65,16 +73,19 @@ public class RocketJoinCommand extends Command implements TabCompleter {
         return subcommands;
     }
 
+    @Override
+    public void register(String s) {
+        Objects.requireNonNull(RocketJoin.instance().getCommand(s)).setExecutor(this);
+        Objects.requireNonNull(RocketJoin.instance().getCommand(s)).setTabCompleter(this);
+    }
+
+    @Override
     public RocketJoin getPlugin() {
         return plugin;
     }
 
     public Debugger getDebugger() {
         return debugger;
-    }
-
-    public UpdateChecker getUpdater() {
-        return updater;
     }
 
     @Nullable
@@ -89,5 +100,58 @@ public class RocketJoinCommand extends Command implements TabCompleter {
         }
 
         return strings;
+    }
+
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull org.bukkit.command.Command command, @NotNull String label, @NotNull String[] args) {
+        BukkitUser user = new BukkitUser(sender);
+
+        if (this.getCustomization().getHeader() != null) {
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getCustomization().getHeader()));
+        }
+
+        if (this.getPermission() != null && this.getMessage() != null && !sender.hasPermission(this.getPermission())) {
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getMessage()));
+            return true;
+        }
+
+        if (args.length > 0){
+            for (SubCommand subcommand : subcommands) {
+                if (args[0].equalsIgnoreCase(subcommand.getName())) {
+                    subcommand.perform(user, args);
+                    return true;
+                }
+            }
+
+            Optional<SubCommand> anyArgs = this.findSubcommand(AnyArgument.class);
+
+            if (anyArgs.isPresent()) {
+                anyArgs.get().perform(user,args);
+                return true;
+            }
+
+        } else {
+            Optional<SubCommand> noArgsCommand = this.findSubcommand(NoArguments.class);
+
+            if (noArgsCommand.isPresent()) {
+                noArgsCommand.get().perform(user,args);
+                return true;
+            }
+
+            String noArgs = this.getCustomization().getNoArgs(command.getName());
+
+            if (noArgs != null) {
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', noArgs));
+            }
+            return true;
+        }
+
+        String notFound = this.getCustomization().getNotFound(command.getName());
+
+        if (notFound != null) {
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', notFound));
+        }
+
+        return true;
     }
 }

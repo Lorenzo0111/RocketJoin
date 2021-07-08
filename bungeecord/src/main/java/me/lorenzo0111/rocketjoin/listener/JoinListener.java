@@ -56,7 +56,7 @@ public class JoinListener implements Listener {
 
         String welcome = plugin.getConfiguration().welcome();
         if (!welcome.equalsIgnoreCase("disable")) {
-            p.sendMessage(new TextComponent(plugin.parse("welcome", p)));
+            p.sendMessage(new TextComponent(plugin.parse(welcome, p)));
         }
 
         if (plugin.getConfiguration().hide() && p.hasPermission(plugin.getConfiguration().hidePermission()))
@@ -74,7 +74,7 @@ public class JoinListener implements Listener {
             boolean join = plugin.getConfiguration().join().node("enabled").getBoolean();
             String message = plugin.getConfiguration().join().node("message").getString();
             if (join) {
-                plugin.getProxy().broadcast(new TextComponent(message));
+                plugin.getProxy().broadcast(plugin.parse(message,p));
             }
             if (plugin.getConfiguration().join().node("enable-title").getBoolean()) {
                 Title title = plugin.getProxy().createTitle()
@@ -88,7 +88,7 @@ public class JoinListener implements Listener {
             return;
         }
 
-        plugin.getProxy().broadcast(new TextComponent(plugin.getConfiguration().join(condition)));
+        plugin.getProxy().broadcast(plugin.parse(plugin.getConfiguration().join(condition),p));
     }
 
     private void executeCommands(String condition, ProxiedPlayer player) throws SerializationException {

@@ -25,7 +25,6 @@
 package me.lorenzo0111.rocketjoin.listener;
 
 import me.lorenzo0111.rocketjoin.RocketJoinSponge;
-import me.lorenzo0111.rocketjoin.common.ChatUtils;
 import me.lorenzo0111.rocketjoin.common.IConfiguration;
 import me.lorenzo0111.rocketjoin.utilities.FireworkSpawner;
 import org.spongepowered.api.Sponge;
@@ -33,12 +32,7 @@ import org.spongepowered.api.effect.sound.SoundType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
-import org.spongepowered.api.text.LiteralText;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.action.TextActions;
-import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.title.Title;
-import org.spongepowered.api.util.generator.dummy.DummyObjectProvider;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
@@ -55,12 +49,10 @@ public class JoinListener {
     public void onJoin(ClientConnectionEvent.Join e) {
         Player p = e.getTargetEntity();
 
-        this.handleMetrics(p);
-
         IConfiguration configuration = plugin.getConfig();
         String welcome = configuration.welcome();
         if (!welcome.equalsIgnoreCase("disable")) {
-            p.sendMessage(Text.of(welcome));
+            p.sendMessage(plugin.parse(welcome,p));
         }
 
         this.handleUpdate(e);
@@ -82,7 +74,7 @@ public class JoinListener {
             boolean join = configuration.join().node("enabled").getBoolean();
             String message = configuration.join().node("message").getString();
             if (join && message != null) {
-                e.setMessage(Text.of(message));
+                e.setMessage(plugin.parse(message, p));
             }
             if (configuration.join().node("enable-title").getBoolean()) {
                 Title title = Title.builder()
@@ -98,12 +90,12 @@ public class JoinListener {
             return;
         }
 
-        e.setMessage(Text.of(configuration.join(condition)));
+        e.setMessage(plugin.parse(configuration.join(condition),p));
 
         ConfigurationNode section = configuration.condition(condition);
 
         if (section.node("sound").getBoolean()) {
-            SoundType type = DummyObjectProvider.createFor(SoundType.class, section.node("sound-type").getString("ENTITY_EXPERIENCE_ORB_PICKUP"));
+            SoundType type = SoundType.of(section.node("sound-type").getString("ENTITY_EXPERIENCE_ORB_PICKUP"));
 
             for (Player player : Sponge.getServer().getOnlinePlayers())
                 player.playSound(type,player.getPosition(), 60f);
@@ -126,35 +118,6 @@ public class JoinListener {
         for (String command : commands) {
             plugin.getGame().getCommandManager().process(plugin.getGame().getServer().getConsole(), command.replace("{player}", player.getName()));
         }
-    }
-
-    public void handleMetrics(Player player) {
-        if (plugin.getConfig().get("already-asked").getBoolean(false)) {
-            return;
-        }
-
-        LiteralText accept = Text.builder("[Allow]")
-                .color(TextColors.GREEN)
-                .onClick(TextActions.runCommand("/rocketjoin metrics allow"))
-                .build();
-
-        LiteralText deny = Text.builder("[Deny]")
-                .color(TextColors.RED)
-                .onClick(TextActions.runCommand("/rocketjoin metrics deny"))
-                .build();
-
-        Text text = Text.builder(
-                ChatUtils.colorize("&8[&eMetrics&8] "))
-                .append(Text.of("Thanks for installing " + plugin.getPlugin().getName() + " If you want to support my work please allow me to collect anonymous statistics from your server."))
-                .color(TextColors.GRAY)
-                .append(Text.of("\nThis will allow me to update the plugin and give you a better experience.", TextColors.GRAY))
-                .color(TextColors.GRAY)
-                .append(accept)
-                .append(Text.of( " "))
-                .append(deny)
-                .build();
-
-        player.sendMessage(text);
     }
 
 }

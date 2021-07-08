@@ -59,7 +59,7 @@ public class PluginLoader {
     }
 
     public void placeholderHook() {
-        plugin.getLogger().warning("PlaceholdersAPI is not supported on bungeecord.");
+        plugin.getLogger().info("PlaceholdersAPI is not supported on bungeecord.");
         plugin.getLogger().info("Loaded internal placeholers: {Player} and {DisplayPlayer}");
         plugin.getLogger().info(plugin.getDescription().getName() + " v" + plugin.getDescription().getVersion() + " by Lorenzo0111 is now enabled!");
     }

@@ -26,16 +26,16 @@ package me.lorenzo0111.rocketjoin;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.lorenzo0111.pluginslib.audience.BukkitAudienceManager;
+import me.lorenzo0111.rocketjoin.common.ChatUtils;
 import me.lorenzo0111.rocketjoin.common.ConfigExtractor;
 import me.lorenzo0111.rocketjoin.common.IConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.FileConfiguration;
-import me.lorenzo0111.rocketjoin.common.hex.HexUtils;
 import me.lorenzo0111.rocketjoin.conditions.ConditionHandler;
 import me.lorenzo0111.rocketjoin.utilities.PluginLoader;
 import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.io.File;
@@ -47,6 +47,14 @@ public class RocketJoin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        File file = new ConfigExtractor(this.getClass(),this.getDataFolder(), "config.yml")
+                .extract();
+
+        this.config = new FileConfiguration(file);
+        this.handler = new ConditionHandler(this);
+
+        this.reloadConfig();
+
         BukkitAudienceManager.init(this);
 
         // Load the plugin
@@ -55,12 +63,6 @@ public class RocketJoin extends JavaPlugin {
         this.loader.loadMetrics();
         this.loader.placeholderHook();
         this.loader.registerEvents();
-
-        File file = new ConfigExtractor(this.getClass(),this.getDataFolder(), "config.yml")
-                .extract();
-
-        this.config = new FileConfiguration(file);
-        this.reloadConfig();
     }
 
     public void onDisable() {
@@ -94,28 +96,31 @@ public class RocketJoin extends JavaPlugin {
     }
 
     public String parse(String string) {
-        string = ChatColor.translateAlternateColorCodes('&', string);
-        string = HexUtils.translateHexColorCodes(string);
+        string = ChatUtils.colorize(string);
         return string;
+    }
+
+    public String parse(@Nullable String string, Player player) {
+        String str = string == null ? "" : string.replace("{player}", player.getName()).replace("{DisplayPlayer}", player.getDisplayName());
+        if (loader.isPlaceholderapi()) {
+            str = PlaceholderAPI.setPlaceholders(player,str);
+        }
+        str = this.parse(str);
+        return str;
     }
 
     public String parse(Player player, Object... path) {
         try {
-            String str = config.property(String.class,path).replace("{player}", player.getName()).replace("{DisplayPlayer}", player.getDisplayName());
-            if (loader.isPlaceholderapi()) {
-                str = PlaceholderAPI.setPlaceholders(player,str);
-            }
-            str = ChatColor.translateAlternateColorCodes('&', str);
-            str = HexUtils.translateHexColorCodes(str);
-            return str;
+            String str = config.property(String.class,path);
+            return this.parse(str,player);
         } catch (SerializationException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public String parse(String path, Player player) {
-        return this.parse(player,path);
+    public static RocketJoin instance() {
+        return RocketJoin.getPlugin(RocketJoin.class);
     }
 
     public ConditionHandler getHandler() {

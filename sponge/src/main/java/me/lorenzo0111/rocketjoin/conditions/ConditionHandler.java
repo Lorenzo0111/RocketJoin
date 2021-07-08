@@ -50,7 +50,7 @@ public class ConditionHandler {
         IConfiguration configuration = plugin.getConfig();
         ConfigurationNode conditions = configuration.conditions();
 
-        for (ConfigurationNode node : conditions.childrenList()) {
+        for (ConfigurationNode node : conditions.childrenMap().values()) {
             String key = Objects.requireNonNull(node.key()).toString();
 
             switch (node.node("type").getString("null").toUpperCase()) {
@@ -63,6 +63,7 @@ public class ConditionHandler {
                     this.conditions.add(firstCondition);
                     break;
                 default:
+                    plugin.getLogger().warn("Invalid condition type at '" + key + "'. Ignoring..");
                     break;
             }
 

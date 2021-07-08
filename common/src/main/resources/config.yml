@@ -25,7 +25,7 @@ update-message: true
 # Join message
 join:
   enabled: true
-  mssage: "&a{player} &7joined!"
+  message: "&a{player} &7joined!"
   enable-title: true
   # Send a title to the player when he join the server!
   title: "&a&lWelcome {player}!"

@@ -26,7 +26,6 @@ package me.lorenzo0111.rocketjoin.command;
 
 import me.lorenzo0111.rocketjoin.RocketJoinSponge;
 import me.lorenzo0111.rocketjoin.command.subcommands.HelpCommand;
-import me.lorenzo0111.rocketjoin.command.subcommands.MetricsCommand;
 import me.lorenzo0111.rocketjoin.command.subcommands.ReloadCommand;
 import me.lorenzo0111.rocketjoin.common.ChatUtils;
 import me.lorenzo0111.rocketjoin.utilities.UpdateChecker;
@@ -51,7 +50,6 @@ public class RocketJoinSpongeCommand implements CommandExecutor {
 
         this.subcommands.add(new HelpCommand(this));
         this.subcommands.add(new ReloadCommand(this));
-        this.subcommands.add(new MetricsCommand(this));
     }
 
     @Override

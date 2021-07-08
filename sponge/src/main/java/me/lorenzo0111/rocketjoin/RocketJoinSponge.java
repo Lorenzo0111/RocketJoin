@@ -36,7 +36,6 @@ import me.lorenzo0111.rocketjoin.conditions.ConditionHandler;
 import me.lorenzo0111.rocketjoin.listener.JoinListener;
 import me.lorenzo0111.rocketjoin.listener.LeaveListener;
 import me.lorenzo0111.rocketjoin.utilities.UpdateChecker;
-import org.bstats.sponge.Metrics2;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.command.CommandSource;
@@ -48,22 +47,19 @@ import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.util.metric.MetricsConfigManager;
 import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Optional;
 
-@Plugin(id = "rocketjoin", name = "RocketJoin", version = "1.9.3",
+@Plugin(id = "rocketjoin", name = "RocketJoin", version = "2.0",
         description = "Custom Join Messages Plugin", authors = {"Lorenzo0111"})
 public class RocketJoinSponge {
     @Inject private Logger logger;
     @ConfigDir(sharedRoot = false) @Inject private Path path;
     private IConfiguration conf;
     @Inject private Game game;
-    @Inject private MetricsConfigManager metricsConfigManager;
-    @Inject private Metrics2.Factory factory;
     private PluginContainer plugin;
     private UpdateChecker updater;
     private ConditionHandler handler;
@@ -103,8 +99,6 @@ public class RocketJoinSponge {
 
         this.getGame().getCommandManager().register(plugin, myCommandSpec, "rj", "rocketjoin", "rjs");
 
-        this.loadMetrics();
-
         logger.info("RocketJoin loaded!");
     }
 
@@ -141,34 +135,18 @@ public class RocketJoinSponge {
         return s.get();
     }
 
-    private void loadMetrics() {
-        if (canMetrics()) {
-            this.getLogger().info("Thanks for allowing metrics. Loading bStats..");
-            Metrics2 metrics = factory.make(9382);
-            metrics.addCustomChart(new Metrics2.SimplePie("conditions", () -> String.valueOf(conf.conditions().childrenList().size())));
-        }
-    }
+    public Text parse(String string, CommandSource source) {
+        String str = string.replace("{player}", source.getName());
 
-    public void editMetrics(CommandSource source,boolean allow) {
-        try {
-            this.getConfig().get("already-asked").set(true);
-        } catch (SerializationException e) {
-            e.printStackTrace();
-        }
-
-        if (allow) {
-            this.getGame().getCommandManager().process(source, String.format("sponge metrics %s enable", this.getPlugin().getId()));
-            this.loadMetrics();
-        }
-
+        str = ChatUtils.colorize(str);
+        str = HexUtils.translateHexColorCodes(str);
+        return Text.of(str);
     }
 
     public Text parse(CommandSource source, Object... path) {
         try {
-            String str = conf.property(String.class,path).replace("{player}", source.getName());
-            str = ChatUtils.colorize(str);
-            str = HexUtils.translateHexColorCodes(str);
-            return Text.of(str);
+            String str = conf.property(String.class,path);
+            return this.parse(str,source);
         } catch (SerializationException e) {
             e.printStackTrace();
         }
@@ -177,9 +155,5 @@ public class RocketJoinSponge {
 
     public ConditionHandler getHandler() {
         return handler;
-    }
-
-    public boolean canMetrics() {
-        return this.metricsConfigManager.getCollectionState(this.plugin).asBoolean();
     }
 }

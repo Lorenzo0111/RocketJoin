@@ -25,7 +25,6 @@
 package me.lorenzo0111.rocketjoin.listener;
 
 import me.lorenzo0111.rocketjoin.RocketJoinBungee;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -52,11 +51,11 @@ public class LeaveListener implements Listener {
 
         String condition = plugin.getHandler().getCondition(p);
         if (condition == null && plugin.getConfiguration().leave().node("enabled").getBoolean()) {
-            plugin.getProxy().broadcast(new TextComponent(plugin.getConfiguration().leave().node("message").getString()));
+            plugin.getProxy().broadcast(plugin.parse(plugin.getConfiguration().leave().node("message").getString(),p));
             return;
         }
 
-        plugin.getProxy().broadcast(new TextComponent(plugin.getConfiguration().leave(condition)));
+        plugin.getProxy().broadcast(plugin.parse(plugin.getConfiguration().leave(condition),p));
 
     }
 

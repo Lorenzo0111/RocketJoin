@@ -24,6 +24,7 @@
 
 package me.lorenzo0111.rocketjoin;
 
+import me.lorenzo0111.rocketjoin.common.ChatUtils;
 import me.lorenzo0111.rocketjoin.common.ConfigExtractor;
 import me.lorenzo0111.rocketjoin.common.IConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.FileConfiguration;
@@ -34,6 +35,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.io.File;
@@ -48,8 +50,8 @@ public class RocketJoinBungee extends Plugin {
                 .extract();
 
         this.configuration = new FileConfiguration(config);
-
         this.handler = new ConditionHandler(this);
+
         this.reloadConfig();
 
         PluginLoader loader = new PluginLoader(this);
@@ -77,17 +79,17 @@ public class RocketJoinBungee extends Plugin {
     public TextComponent parse(ProxiedPlayer player, Object... path) {
         try {
             String str = this.getConfiguration().property(String.class,path).replace("{player}", player.getName()).replace("{DisplayPlayer}", player.getDisplayName());
-            str = ChatColor.translateAlternateColorCodes('&', str);
-            str = HexUtils.translateHexColorCodes(str);
-            return new TextComponent(str);
+            return this.parse(str,player);
         } catch (SerializationException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public TextComponent parse(String path, ProxiedPlayer player) {
-        return this.parse(player,path);
+    public TextComponent parse(@Nullable String string, ProxiedPlayer player) {
+        String str = string == null ? "" : string.replace("{player}", player.getName()).replace("{DisplayPlayer}", player.getDisplayName());
+        str = ChatUtils.colorize(str);
+        return new TextComponent(str);
     }
 
     public ConditionHandler getHandler() {

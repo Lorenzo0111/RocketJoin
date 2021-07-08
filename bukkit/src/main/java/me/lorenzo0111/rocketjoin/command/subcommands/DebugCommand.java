@@ -25,7 +25,6 @@
 package me.lorenzo0111.rocketjoin.command.subcommands;
 
 import me.lorenzo0111.pluginslib.audience.User;
-import me.lorenzo0111.pluginslib.command.Command;
 import me.lorenzo0111.pluginslib.command.SubCommand;
 import me.lorenzo0111.rocketjoin.RocketJoin;
 import me.lorenzo0111.rocketjoin.command.RocketJoinCommand;
@@ -33,7 +32,7 @@ import net.kyori.adventure.text.Component;
 
 public class DebugCommand extends SubCommand {
 
-    public DebugCommand(Command command) {
+    public DebugCommand(RocketJoinCommand command) {
         super(command);
     }
 

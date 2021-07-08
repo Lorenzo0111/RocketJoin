@@ -42,7 +42,6 @@ public class ConditionHandler {
 
     public ConditionHandler(RocketJoin plugin) {
         this.plugin = plugin;
-        this.init();
     }
 
     public void init() {
@@ -50,7 +49,7 @@ public class ConditionHandler {
         IConfiguration configuration = plugin.getConfiguration();
         ConfigurationNode conditions = configuration.conditions();
 
-        for (ConfigurationNode node : conditions.childrenList()) {
+        for (ConfigurationNode node : conditions.childrenMap().values()) {
             String key = Objects.requireNonNull(node.key()).toString();
 
             switch (node.node("type").getString("null").toUpperCase()) {
@@ -63,6 +62,7 @@ public class ConditionHandler {
                     this.conditions.add(firstCondition);
                     break;
                 default:
+                    plugin.getLogger().warning("Invalid condition type at '" + key + "'. Ignoring..");
                     break;
             }
 

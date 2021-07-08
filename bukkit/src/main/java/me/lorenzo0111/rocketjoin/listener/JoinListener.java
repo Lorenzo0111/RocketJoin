@@ -61,7 +61,7 @@ public class JoinListener implements Listener {
         IConfiguration configuration = plugin.getConfiguration();
         String welcome = configuration.welcome();
         if (!welcome.equalsIgnoreCase("disable")) {
-            p.sendMessage(plugin.parse("welcome", p));
+            p.sendMessage(plugin.parse(welcome, p));
         }
 
         if (VanishUtils.isVanished(p)) {
@@ -95,7 +95,7 @@ public class JoinListener implements Listener {
             return;
         }
 
-        e.setJoinMessage(configuration.join(condition));
+        e.setJoinMessage(plugin.parse(configuration.join(condition),p));
 
         ConfigurationNode section = configuration.condition(condition);
 

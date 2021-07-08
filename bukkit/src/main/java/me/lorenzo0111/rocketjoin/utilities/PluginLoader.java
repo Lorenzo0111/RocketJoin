@@ -35,7 +35,6 @@ import me.lorenzo0111.rocketjoin.listener.LeaveListener;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
-import org.bukkit.command.PluginCommand;
 
 public class PluginLoader {
 
@@ -58,23 +57,15 @@ public class PluginLoader {
     }
 
     public void registerEvents() {
-        Bukkit.getServer().getPluginManager().registerEvents(new LeaveListener(plugin,this), plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new LeaveListener(plugin), plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new JoinListener(plugin,this), plugin);
-
-        PluginCommand command = plugin.getCommand("rocketjoin");
-
-        if (command == null) {
-            return;
-        }
 
         Customization customization = new Customization(
                 plugin.parse(plugin.getPrefix() + "&r &7Running &e" + plugin.getDescription().getName() + " &ev" + plugin.getDescription().getVersion() + " &7by &eLorenzo0111&7!"),
                 plugin.parse(plugin.getPrefix() + "&r &7Command not found, use &8/rocketjoin help&7 for a command list"),
                 plugin.parse(plugin.getPrefix() + "&r &7Use &8/rocketjoin help&7 for a command list")
         );
-        RocketJoinCommand cmd = new RocketJoinCommand(plugin,customization);
-
-        command.setTabCompleter(cmd);
+        new RocketJoinCommand(plugin,"rocketjoin",customization);
     }
 
     public void placeholderHook() {

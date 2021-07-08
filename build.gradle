@@ -69,6 +69,9 @@ subprojects {
         relocate('org.yaml', 'me.lorenzo0111.rocketjoin.libs.yaml')
         relocate('io.leangen', 'me.lorenzo0111.rocketjoin.libs.leangen')
         relocate('com.google.gson', 'me.lorenzo0111.rocketjoin.libs.gson')
+        relocate('org.bstats','me.lorenzo0111.rocketjoin.bstats') {
+            exclude('org.bstats.sponge')
+        }
 
         // Remove META-INF
         exclude 'META-INF', 'META-INF/**'

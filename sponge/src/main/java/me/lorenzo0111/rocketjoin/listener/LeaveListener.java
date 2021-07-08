@@ -28,7 +28,6 @@ import me.lorenzo0111.rocketjoin.RocketJoinSponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
-import org.spongepowered.api.text.Text;
 
 public class LeaveListener {
     private final RocketJoinSponge plugin;
@@ -48,10 +47,11 @@ public class LeaveListener {
 
         String condition = plugin.getHandler().getCondition(p);
         if (condition == null && plugin.getConfig().leave().node("enabled").getBoolean()) {
-            e.setMessage(Text.of(plugin.getConfig().leave().node("message").getString("")));
+            e.setMessage(plugin.parse(plugin.getConfig().leave().node("message").getString(""),e.getTargetEntity()));
             return;
         }
 
-        e.setMessage(Text.of(plugin.getConfig().leave(condition)));
+        e.setMessage(plugin.parse(plugin.getConfig().leave(condition), e.getTargetEntity()));
+
     }
 }

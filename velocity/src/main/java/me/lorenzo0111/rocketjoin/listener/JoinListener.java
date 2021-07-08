@@ -28,7 +28,6 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.PostLoginEvent;
 import com.velocitypowered.api.proxy.Player;
 import me.lorenzo0111.rocketjoin.RocketJoinVelocity;
-import me.lorenzo0111.rocketjoin.common.ChatUtils;
 import me.lorenzo0111.rocketjoin.utilities.UpdateChecker;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -58,7 +57,7 @@ public class JoinListener {
 
         String welcome = plugin.getConfig().welcome();
         if (!welcome.equalsIgnoreCase("disable")) {
-            p.sendMessage(Component.text(ChatUtils.colorize(welcome)));
+            p.sendMessage(plugin.parse(welcome,p));
         }
 
         if (plugin.getConfig().hide() && p.hasPermission(plugin.getConfig().hidePermission()))
@@ -74,19 +73,19 @@ public class JoinListener {
 
         if (condition == null) {
             boolean join = plugin.getConfig().join().node("enabled").getBoolean();
-            String message = ChatUtils.colorize(plugin.getConfig().join().node("message").getString());
+            Component message = plugin.parse(plugin.getConfig().join().node("message").getString(),p);
             if (join) {
                 plugin.getServer().getScheduler().buildTask(plugin, () -> {
                     for (Audience audience : plugin.getServer().getAllPlayers()) {
-                        audience.sendMessage(Component.text(message));
+                        audience.sendMessage(message);
                     }
                 }).schedule();
             }
             if (plugin.getConfig().join().node("enable-title").getBoolean()) {
                 final Title.Times times = Title.Times.of(Ticks.duration(15), Duration.ofMillis(3000), Ticks.duration(20));
                 final Title title = Title.title(
-                        Component.text(ChatUtils.colorize(plugin.getConfig().join().node("title").getString())),
-                        Component.text(ChatUtils.colorize(plugin.getConfig().join().node("subtitle").getString())),
+                        plugin.parse(plugin.getConfig().join().node("title").getString(),p),
+                        plugin.parse(plugin.getConfig().join().node("subtitle").getString(),p),
                         times
                 );
 
@@ -97,7 +96,7 @@ public class JoinListener {
 
         plugin.getServer().getScheduler().buildTask(plugin, () -> {
             for (Audience audience : plugin.getServer().getAllPlayers()) {
-                audience.sendMessage(Component.text(plugin.getConfig().join(condition)));
+                audience.sendMessage(plugin.parse(plugin.getConfig().join(condition),p));
             }
         }).schedule();
     }
