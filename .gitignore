@@ -122,3 +122,4 @@ run/
 # Database and server directory
 db/
 server/
+release/
