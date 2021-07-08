@@ -49,7 +49,7 @@ hide-permission: "rocketjoin.silent"
 
 conditions:
   example-vip:
-    # Read http://docs.rocketplugins.space/rocketjoin/conditiosn for more information
+    # Read http://docs.rocketplugins.space/rocketjoin/conditions for more information
     type: PERMISSION
     value: "rocketjoin.vip"
 
