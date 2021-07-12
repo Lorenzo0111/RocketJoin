@@ -42,5 +42,5 @@ dependencies {
     implementation 'org.bstats:bstats-bukkit:2.2.1'
     implementation 'space.rocketplugins.pluginslib:bukkit:2.0.1.2'
     compileOnly 'org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT'
-    compileOnly 'me.clip:placeholderapi:2.10.9'
+    compileOnly 'me.clip:placeholderapi:2.10.10'
 }
