@@ -29,4 +29,6 @@ rm -r release/
 mkdir release
 cp ./*/build/libs/RocketJoin-*.jar release/
 rm release/RocketJoin-common-*.jar
-tar -czvf release/release.tar.gz release
+cp .release/* release/
+cd release || exit
+7z a release.zip
