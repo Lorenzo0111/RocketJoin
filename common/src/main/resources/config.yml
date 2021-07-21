@@ -61,10 +61,9 @@ conditions:
     fireworks-amount: 3
     commands: []
 
+# Use \n for a new line
 # Set to "disable" to disable this feature
 # welcome: "disable"
-welcome:
-  - |-
-    &8&l&m===============&e  Welcome &8&l&m===============
-    Welcome {player} in Minecraft Server!
-    Use /kit default to get your kit
+welcome: "&8&l&m===============&e  Welcome &8&l&m===============\n
+    Welcome {player} in Minecraft Server!\n
+    Use /kit default to get your kit\n"
