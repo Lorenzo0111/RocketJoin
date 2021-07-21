@@ -48,12 +48,13 @@ public class LeaveListener {
         }
 
         String condition = plugin.getHandler().getCondition(p);
-        if (condition == null && plugin.getConfig().leave().node("enabled").getBoolean()) {
-            plugin.getServer().getScheduler().buildTask(plugin, () -> {
-                for (Audience audience : plugin.getServer().getAllPlayers()) {
-                    audience.sendMessage(Component.text(plugin.getConfig().leave().node("message").getString("")));
-                }
-            }).schedule();
+        if (condition == null) {
+            if (plugin.getConfig().leave().node("enabled").getBoolean())
+                plugin.getServer().getScheduler().buildTask(plugin, () -> {
+                    for (Audience audience : plugin.getServer().getAllPlayers()) {
+                        audience.sendMessage(Component.text(plugin.getConfig().leave().node("message").getString("")));
+                    }
+                }).schedule();
             return;
         }
 

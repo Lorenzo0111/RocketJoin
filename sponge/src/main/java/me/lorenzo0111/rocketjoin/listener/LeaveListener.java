@@ -46,8 +46,10 @@ public class LeaveListener {
         }
 
         String condition = plugin.getHandler().getCondition(p);
-        if (condition == null && plugin.getConfig().leave().node("enabled").getBoolean()) {
-            e.setMessage(plugin.parse(plugin.getConfig().leave().node("message").getString(""),e.getTargetEntity()));
+        if (condition == null) {
+            if (plugin.getConfig().leave().node("enabled").getBoolean())
+                e.setMessage(plugin.parse(plugin.getConfig().leave().node("message").getString(""),e.getTargetEntity()));
+
             return;
         }
 
