@@ -64,15 +64,15 @@ public class JoinListener implements Listener {
             p.sendMessage(plugin.parse(welcome, p));
         }
 
+        e.setJoinMessage(null);
+
         if (VanishUtils.isVanished(p)) {
-            e.setJoinMessage(null);
             return;
         }
 
         this.handleUpdate(e);
 
         if (configuration.hide() && p.hasPermission(configuration.hidePermission())) {
-            e.setJoinMessage(null);
             return;
         }
 

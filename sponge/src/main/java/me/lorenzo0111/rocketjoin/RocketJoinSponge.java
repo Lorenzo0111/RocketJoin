@@ -47,13 +47,12 @@ import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Optional;
 
-@Plugin(id = "rocketjoin", name = "RocketJoin", version = "2.0",
+@Plugin(id = "rocketjoin", name = "RocketJoin", version = "2.1",
         description = "Custom Join Messages Plugin", authors = {"Lorenzo0111"})
 public class RocketJoinSponge {
     @Inject private Logger logger;
@@ -144,13 +143,8 @@ public class RocketJoinSponge {
     }
 
     public Text parse(CommandSource source, Object... path) {
-        try {
-            String str = conf.property(String.class,path);
-            return this.parse(str,source);
-        } catch (SerializationException e) {
-            e.printStackTrace();
-        }
-        return null;
+        String str = conf.get(path).getString("");
+        return this.parse(str,source);
     }
 
     public ConditionHandler getHandler() {

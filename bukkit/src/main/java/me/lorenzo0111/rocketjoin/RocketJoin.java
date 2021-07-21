@@ -101,7 +101,8 @@ public class RocketJoin extends JavaPlugin {
     }
 
     public String parse(@Nullable String string, Player player) {
-        String str = string == null ? "" : string.replace("{player}", player.getName()).replace("{DisplayPlayer}", player.getDisplayName());
+        if (string == null) return null;
+        String str = string.replace("{player}", player.getName()).replace("{DisplayPlayer}", player.getDisplayName());
         if (loader.isPlaceholderapi()) {
             str = PlaceholderAPI.setPlaceholders(player,str);
         }

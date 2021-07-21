@@ -91,11 +91,19 @@ public class FileConfiguration implements IConfiguration {
 
     @Override
     public String join(String conditionKey) {
+        if (conditionKey == null) {
+            return this.join().node("message").getString();
+        }
+
         return ChatUtils.colorize(config.node("conditions",conditionKey,"join").getString());
     }
 
     @Override
     public String leave(String conditionKey) {
+        if (conditionKey == null) {
+            return this.leave().node("message").getString();
+        }
+
         return ChatUtils.colorize(config.node("conditions",conditionKey,"leave").getString());
     }
 

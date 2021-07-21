@@ -43,13 +43,13 @@ public class LeaveListener implements Listener {
     public void onQuit(PlayerQuitEvent e) {
         Player p = e.getPlayer();
 
+        e.setQuitMessage(null);
+
         if (VanishUtils.isVanished(p)) {
-            e.setQuitMessage(null);
             return;
         }
 
         if (plugin.getConfiguration().hide() && p.hasPermission(plugin.getConfiguration().hidePermission())) {
-            e.setQuitMessage(null);
             return;
         }
 
