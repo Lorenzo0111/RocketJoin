@@ -2,6 +2,7 @@ name: RocketJoin
 author: Lorenzo0111
 main: me.lorenzo0111.rocketjoin.RocketJoin
 version: @version@
+api-version: 1.13
 softdepend: [PlaceholderAPI]
 commands:
   rocketjoin:
