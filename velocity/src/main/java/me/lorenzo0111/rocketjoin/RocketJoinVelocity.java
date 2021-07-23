@@ -57,22 +57,15 @@ import java.util.Optional;
 @Plugin(id = "rocketjoin", name = "RocketJoin", version = "2.1",
         description = "Custom Join Messages Plugin", authors = {"Lorenzo0111"})
 public class RocketJoinVelocity {
-    private final ProxyServer server;
-    private final Logger logger;
+    @Inject private Logger logger;
+    @Inject @DataDirectory private Path path;
+    @Inject private Metrics.Factory metricsFactory;
+    @Inject private ProxyServer server;
+
     private PluginContainer plugin;
     private UpdateChecker updater;
     private IConfiguration config;
-    private final Path path;
-    private final Metrics.Factory metricsFactory;
     private ConditionHandler handler;
-
-    @Inject
-    public RocketJoinVelocity(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory, Metrics.Factory factory) {
-        this.server = server;
-        this.logger = logger;
-        this.path = dataDirectory;
-        this.metricsFactory = factory;
-    }
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
