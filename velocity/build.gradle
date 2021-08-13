@@ -28,3 +28,14 @@ dependencies {
     compileOnly('com.velocitypowered:velocity-api:1.1.8')
     implementation('org.bstats:bstats-velocity:2.2.1')
 }
+
+import org.apache.tools.ant.filters.ReplaceTokens
+
+task processSources(type: Sync) {
+    from sourceSets.main.java.srcDirs
+    inputs.property 'version', version
+    filter ReplaceTokens, tokens: [version: version]
+    into "$buildDir/src"
+}
+
+compileJava.source = processSources.outputs

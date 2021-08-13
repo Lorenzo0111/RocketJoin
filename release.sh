@@ -24,7 +24,6 @@
 # SOFTWARE.
 #
 
-./gradlew clean build
 rm -r release/
 mkdir release
 cp ./*/build/libs/RocketJoin-*.jar release/
