@@ -31,6 +31,9 @@ import me.lorenzo0111.rocketjoin.common.IConfiguration;
 import me.lorenzo0111.rocketjoin.utilities.FireworkSpawner;
 import me.lorenzo0111.rocketjoin.utilities.PluginLoader;
 import me.lorenzo0111.rocketjoin.utilities.VanishUtils;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -41,6 +44,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
+import java.time.Duration;
 import java.util.List;
 
 public class JoinListener implements Listener {
@@ -90,7 +94,10 @@ public class JoinListener implements Listener {
                 e.setJoinMessage(plugin.parse(p,"join","message"));
             }
             if (configuration.join().node("enable-title").getBoolean()) {
-                p.sendTitle(plugin.parse(p,"join","title"), plugin.parse(p,"join","subtitle"), 15, 40, 15);
+                Audience audience = BukkitAudienceManager.audience(p);
+                audience.showTitle(Title.title(Component.text(plugin.parse(p,"join","title")),
+                        Component.text(plugin.parse(p,"join","subtitle")),
+                        Title.Times.of(Duration.ofMillis(500), Duration.ofSeconds(2), Duration.ofMillis(500))));
             }
             return;
         }

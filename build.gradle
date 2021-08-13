@@ -42,7 +42,7 @@ subprojects {
     apply plugin: 'com.github.johnrengelman.shadow'
 
     group = 'me.lorenzo0111'
-    version = '2.1'
+    version = '2.1.1'
     description = "Create custom join messages with groups, commands on join, sounds and more. PlaceholderAPI support"
 
     repositories {

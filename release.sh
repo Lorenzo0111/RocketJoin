@@ -24,10 +24,16 @@
 # SOFTWARE.
 #
 
+function version() {
+  git describe --exact-match --tags 2> /dev/null || git rev-parse --short HEAD
+}
+
+v=$(version)
+
 rm -r release/
 mkdir release
 cp ./*/build/libs/RocketJoin-*.jar release/
 rm release/RocketJoin-common-*.jar
 cp .release/* release/
 cd release || exit
-7z a release.zip
+7z a "RocketJoin-${v}.zip"
