@@ -37,6 +37,10 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
+ext {
+    deps = "me.lorenzo0111.rocketjoin.libraries."
+}
+
 subprojects {
     apply plugin: 'java'
     apply plugin: 'com.github.johnrengelman.shadow'
@@ -66,14 +70,19 @@ subprojects {
     }
 
     shadowJar {
-        relocate('me.lorenzo0111.pluginslib', 'me.lorenzo0111.rocketjoin.pluginslib')
-        relocate('net.kyori.examination', 'me.lorenzo0111.rocketjoin.libs.examination')
-        relocate('org.checkerframework', 'me.lorenzo0111.rocketjoin.libs.checkerframework')
-        relocate('io.github.slimjar', 'me.lorenzo0111.rocketjoin.libs.slimjar')
-        relocate('org.yaml', 'me.lorenzo0111.rocketjoin.libs.yaml')
-        relocate('io.leangen', 'me.lorenzo0111.rocketjoin.libs.leangen')
-        relocate('com.google', 'me.lorenzo0111.rocketjoin.libs.google')
-        relocate('org.bstats','me.lorenzo0111.rocketjoin.bstats') {
+        relocate("me.lorenzo0111.pluginslib", "me.lorenzo0111.rocketjoin.pluginslib")
+        relocate("net.kyori.examination", "${deps}examination")
+        relocate("org.checkerframework", "${deps}checkerframework")
+        relocate("io.github.slimjar", "${deps}slimjar")
+        relocate("org.yaml", "${deps}yaml")
+        relocate("io.leangen", "${deps}leangen")
+        relocate("com.google.thirdparty", "${deps}google.thirdparty")
+        relocate("com.google.j2objc", "${deps}google.j2objc")
+        relocate("com.google.gson", "${deps}google.gson")
+        relocate("com.google.errorprone", "${deps}google.errorprone")
+        relocate("com.google.common", "${deps}google.common")
+        relocate("javax", "${deps}javax")
+        relocate("org.bstats","${deps}bstats") {
             exclude('org.bstats.sponge')
         }
 
