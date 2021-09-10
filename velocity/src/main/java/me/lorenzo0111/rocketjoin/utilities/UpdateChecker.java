@@ -81,7 +81,7 @@ public class UpdateChecker {
 
     public void sendUpdateCheck(Audience player, boolean available) {
         if (available) {
-            TextComponent component = Component.text(ChatUtils.colorize(String.format("&8[&eRocketUpdater&8] &7An update of %s is available. Download it from %s",plugin.getPlugin().getDescription().getName(),url)));
+            TextComponent component = Component.text(ChatUtils.colorize(String.format("&8[&eRocketUpdater&8] &7An update of %s is available. Download it from %s","RocketJoin",url)));
             player.sendMessage(component);
         }
     }

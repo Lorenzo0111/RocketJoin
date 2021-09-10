@@ -29,7 +29,6 @@ import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
-import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -38,7 +37,6 @@ import me.lorenzo0111.rocketjoin.common.ChatUtils;
 import me.lorenzo0111.rocketjoin.common.ConfigExtractor;
 import me.lorenzo0111.rocketjoin.common.IConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.FileConfiguration;
-import me.lorenzo0111.rocketjoin.common.exception.LoadException;
 import me.lorenzo0111.rocketjoin.conditions.ConditionHandler;
 import me.lorenzo0111.rocketjoin.listener.JoinListener;
 import me.lorenzo0111.rocketjoin.listener.LeaveListener;
@@ -52,31 +50,29 @@ import org.slf4j.Logger;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Objects;
-import java.util.Optional;
 
 @Plugin(id = "rocketjoin", name = "RocketJoin", version = "@version@",
         description = "Custom Join Messages Plugin", authors = {"Lorenzo0111"})
 public class RocketJoinVelocity {
-    @Inject private Logger logger;
-    @Inject @DataDirectory private Path path;
-    @Inject private Metrics.Factory metricsFactory;
-    @Inject private ProxyServer server;
+    private final Logger logger;
+    private final Path path;
+    private final ProxyServer server;
+    private final Metrics.Factory metricsFactory;
 
-    private PluginContainer plugin;
     private UpdateChecker updater;
     private IConfiguration config;
     private ConditionHandler handler;
 
+    @Inject
+    public RocketJoinVelocity(Logger logger, @DataDirectory Path path, ProxyServer server, Metrics.Factory metricsFactory) {
+        this.logger = logger;
+        this.path = path;
+        this.server = server;
+        this.metricsFactory = metricsFactory;
+    }
+
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        final Optional<PluginContainer> pluginContainer = server.getPluginManager().fromInstance(this);
-
-        if (!pluginContainer.isPresent()) {
-            throw new LoadException("Unable to get plugin container. Report code: CONTAINER");
-        }
-
-        this.plugin = pluginContainer.get();
-
         this.updater = new UpdateChecker(this,82520, "https://bit.ly/RocketJoin");
         this.updater.fetch().thenAccept((available) -> this.updater.sendUpdateCheck(this.server.getConsoleCommandSource(),available));
 
@@ -114,10 +110,6 @@ public class RocketJoinVelocity {
         return server;
     }
 
-    public PluginContainer getPlugin() {
-        return plugin;
-    }
-
     public UpdateChecker getUpdater() {
         return updater;
     }
@@ -127,11 +119,7 @@ public class RocketJoinVelocity {
     }
 
     public String getVersion() {
-        final Optional<String> s = this.getPlugin().getDescription().getVersion();
-        if (!s.isPresent()) {
-            throw new LoadException("Version cannot be null.");
-        }
-        return s.get();
+        return "@version@";
     }
 
     public Component parse(@Nullable String string, Player player) {
