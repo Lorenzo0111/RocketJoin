@@ -22,38 +22,22 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.listener;
+package me.lorenzo0111.rocketjoin.common.config;
 
-import me.lorenzo0111.rocketjoin.RocketJoinSponge;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.network.ClientConnectionEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class LeaveListener {
-    private final RocketJoinSponge plugin;
+import java.util.List;
 
-    public LeaveListener(RocketJoinSponge plugin) {
-        this.plugin = plugin;
-    }
+public interface ConditionConfiguration {
+    @NotNull String type();
+    @Nullable String value();
 
-    @Listener
-    public void onQuit(ClientConnectionEvent.Disconnect e) {
-        Player p = e.getTargetEntity();
-
-        if (plugin.getConfig().hide() && p.hasPermission(plugin.getConfig().hidePermission())) {
-            e.setMessageCancelled(true);
-            return;
-        }
-
-        String condition = plugin.getHandler().getCondition(p);
-        if (condition == null) {
-            if (plugin.getConfig().leave().enabled())
-                e.setMessage(plugin.parse(plugin.getConfig().leave().message(),e.getTargetEntity()));
-
-            return;
-        }
-
-        e.setMessage(plugin.parse(plugin.getConfig().leave(condition), e.getTargetEntity()));
-
-    }
+    String join();
+    String leave();
+    boolean sound();
+    String soundType();
+    boolean fireworks();
+    int fireworksAmount();
+    List<String> commands();
 }

@@ -28,15 +28,14 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import me.lorenzo0111.pluginslib.audience.BukkitAudienceManager;
 import me.lorenzo0111.rocketjoin.common.ChatUtils;
 import me.lorenzo0111.rocketjoin.common.ConfigExtractor;
-import me.lorenzo0111.rocketjoin.common.IConfiguration;
-import me.lorenzo0111.rocketjoin.common.config.FileConfiguration;
+import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
+import me.lorenzo0111.rocketjoin.common.config.file.FileConfiguration;
 import me.lorenzo0111.rocketjoin.conditions.ConditionHandler;
 import me.lorenzo0111.rocketjoin.utilities.PluginLoader;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.io.File;
 
@@ -82,13 +81,9 @@ public class RocketJoin extends JavaPlugin {
         config.reload();
         handler.init();
 
-        try {
-
-            if (config.property(String.class,"config-version") == null) {
-                this.getLogger().severe("You are using an old configuration, consider deleting the config.yml and restarting the server. If you need help you can also join in our support server.");
-            }
-
-        } catch (SerializationException ignored) { }
+        if (config.version() == null) {
+            this.getLogger().severe("You are using an old configuration, consider deleting the config.yml and restarting the server. If you need help you can also join in our support server.");
+        }
     }
 
     public Component parseComponent(String string) {
@@ -108,16 +103,6 @@ public class RocketJoin extends JavaPlugin {
         }
         str = this.parse(str);
         return str;
-    }
-
-    public String parse(Player player, Object... path) {
-        try {
-            String str = config.property(String.class,path);
-            return this.parse(str,player);
-        } catch (SerializationException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public static RocketJoin instance() {

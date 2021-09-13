@@ -49,10 +49,10 @@ public class LeaveListener {
 
         String condition = plugin.getHandler().getCondition(p);
         if (condition == null) {
-            if (plugin.getConfig().leave().node("enabled").getBoolean())
+            if (plugin.getConfig().leave().enabled())
                 plugin.getServer().getScheduler().buildTask(plugin, () -> {
                     for (Audience audience : plugin.getServer().getAllPlayers()) {
-                        audience.sendMessage(Component.text(plugin.getConfig().leave().node("message").getString("")));
+                        audience.sendMessage(Component.text(plugin.getConfig().leave().message()));
                     }
                 }).schedule();
             return;

@@ -72,8 +72,8 @@ public class JoinListener {
         }
 
         if (condition == null) {
-            boolean join = plugin.getConfig().join().node("enabled").getBoolean();
-            Component message = plugin.parse(plugin.getConfig().join().node("message").getString(),p);
+            boolean join = plugin.getConfig().join().enabled();
+            Component message = plugin.parse(plugin.getConfig().join().message(),p);
             if (join) {
                 plugin.getServer().getScheduler().buildTask(plugin, () -> {
                     for (Audience audience : plugin.getServer().getAllPlayers()) {
@@ -81,11 +81,11 @@ public class JoinListener {
                     }
                 }).schedule();
             }
-            if (plugin.getConfig().join().node("enable-title").getBoolean()) {
+            if (plugin.getConfig().join().enableTitle()) {
                 final Title.Times times = Title.Times.of(Ticks.duration(15), Duration.ofMillis(3000), Ticks.duration(20));
                 final Title title = Title.title(
-                        plugin.parse(plugin.getConfig().join().node("title").getString(),p),
-                        plugin.parse(plugin.getConfig().join().node("subtitle").getString(),p),
+                        plugin.parse(plugin.getConfig().join().title(),p),
+                        plugin.parse(plugin.getConfig().join().subTitle(),p),
                         times
                 );
 

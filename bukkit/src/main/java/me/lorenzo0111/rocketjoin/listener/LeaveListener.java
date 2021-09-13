@@ -55,8 +55,8 @@ public class LeaveListener implements Listener {
 
         String condition = plugin.getHandler().getCondition(p);
         if (condition == null) {
-            if (plugin.getConfiguration().leave().node("enabled").getBoolean())
-                e.setQuitMessage(plugin.parse(plugin.getConfiguration().leave().node("message").getString(),p));
+            if (plugin.getConfiguration().leave().enabled())
+                e.setQuitMessage(plugin.parse(plugin.getConfiguration().leave().message(),p));
             return;
         }
 

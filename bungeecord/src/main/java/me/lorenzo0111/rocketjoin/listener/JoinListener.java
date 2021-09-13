@@ -71,15 +71,15 @@ public class JoinListener implements Listener {
         }
 
         if (condition == null) {
-            boolean join = plugin.getConfiguration().join().node("enabled").getBoolean();
-            String message = plugin.getConfiguration().join().node("message").getString();
+            boolean join = plugin.getConfiguration().join().enabled();
+            String message = plugin.getConfiguration().join().message();
             if (join) {
                 plugin.getProxy().broadcast(plugin.parse(message,p));
             }
-            if (plugin.getConfiguration().join().node("enable-title").getBoolean()) {
+            if (plugin.getConfiguration().join().enableTitle()) {
                 Title title = plugin.getProxy().createTitle()
-                        .title(plugin.parse(p,"join","title"))
-                        .subTitle(plugin.parse(p,"join","subtitle"))
+                        .title(plugin.parse(plugin.getConfiguration().join().title(), p))
+                        .subTitle(plugin.parse(plugin.getConfiguration().join().subTitle(), p))
                         .fadeIn(15)
                         .stay(40)
                         .fadeOut(15);

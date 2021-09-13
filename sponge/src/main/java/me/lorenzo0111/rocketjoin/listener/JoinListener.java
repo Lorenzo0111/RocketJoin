@@ -25,7 +25,8 @@
 package me.lorenzo0111.rocketjoin.listener;
 
 import me.lorenzo0111.rocketjoin.RocketJoinSponge;
-import me.lorenzo0111.rocketjoin.common.IConfiguration;
+import me.lorenzo0111.rocketjoin.common.config.ConditionConfiguration;
+import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
 import me.lorenzo0111.rocketjoin.utilities.FireworkSpawner;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.sound.SoundType;
@@ -33,7 +34,6 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.text.title.Title;
-import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.List;
@@ -71,15 +71,15 @@ public class JoinListener {
         }
 
         if (condition == null) {
-            boolean join = configuration.join().node("enabled").getBoolean();
-            String message = configuration.join().node("message").getString();
+            boolean join = configuration.join().enabled();
+            String message = configuration.join().message();
             if (join && message != null) {
                 e.setMessage(plugin.parse(message, p));
             }
-            if (configuration.join().node("enable-title").getBoolean()) {
+            if (configuration.join().enableTitle()) {
                 Title title = Title.builder()
-                        .title(plugin.parse(p,"join","title"))
-                        .subtitle(plugin.parse(p,"join","subtitle"))
+                        .title(plugin.parse(configuration.join().title(),p))
+                        .subtitle(plugin.parse(configuration.join().subTitle(),p))
                         .fadeIn(15)
                         .stay(40)
                         .fadeOut(15)
@@ -92,17 +92,17 @@ public class JoinListener {
 
         e.setMessage(plugin.parse(configuration.join(condition),p));
 
-        ConfigurationNode section = configuration.condition(condition);
+        ConditionConfiguration section = configuration.condition(condition);
 
-        if (section.node("sound").getBoolean()) {
-            SoundType type = SoundType.of(section.node("sound-type").getString("ENTITY_EXPERIENCE_ORB_PICKUP"));
+        if (section.sound()) {
+            SoundType type = SoundType.of(section.soundType());
 
             for (Player player : Sponge.getServer().getOnlinePlayers())
                 player.playSound(type,player.getPosition(), 60f);
         }
 
-        if (section.node("fireworks").getBoolean()) {
-            FireworkSpawner.spawnFireworks(p.getLocation(), section.node("fireworks-amount").getInt(3));
+        if (section.fireworks()) {
+            FireworkSpawner.spawnFireworks(p.getLocation(), section.fireworksAmount());
         }
     }
 

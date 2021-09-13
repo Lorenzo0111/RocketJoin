@@ -26,8 +26,8 @@ package me.lorenzo0111.rocketjoin;
 
 import me.lorenzo0111.rocketjoin.common.ChatUtils;
 import me.lorenzo0111.rocketjoin.common.ConfigExtractor;
-import me.lorenzo0111.rocketjoin.common.IConfiguration;
-import me.lorenzo0111.rocketjoin.common.config.FileConfiguration;
+import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
+import me.lorenzo0111.rocketjoin.common.config.file.FileConfiguration;
 import me.lorenzo0111.rocketjoin.common.hex.HexUtils;
 import me.lorenzo0111.rocketjoin.conditions.ConditionHandler;
 import me.lorenzo0111.rocketjoin.utilities.PluginLoader;
@@ -36,7 +36,6 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.io.File;
 
@@ -74,16 +73,6 @@ public class RocketJoinBungee extends Plugin {
         string = ChatColor.translateAlternateColorCodes('&', string);
         string = HexUtils.translateHexColorCodes(string);
         return new TextComponent(string);
-    }
-
-    public TextComponent parse(ProxiedPlayer player, Object... path) {
-        try {
-            String str = this.getConfiguration().property(String.class,path).replace("{player}", player.getName()).replace("{DisplayPlayer}", player.getDisplayName());
-            return this.parse(str,player);
-        } catch (SerializationException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     public TextComponent parse(@Nullable String string, ProxiedPlayer player) {

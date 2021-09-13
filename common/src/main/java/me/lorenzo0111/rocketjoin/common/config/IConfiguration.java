@@ -22,8 +22,9 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.common;
+package me.lorenzo0111.rocketjoin.common.config;
 
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
@@ -31,16 +32,14 @@ import java.util.List;
 
 public interface IConfiguration {
     // Plugin settings
-    ConfigurationNode get(Object... path);
-    <T> T property(Class<T> type, Object... path) throws SerializationException;
+    @Nullable String version();
     String prefix();
     String noPermission();
     boolean update();
 
     // Default configuration
-    ConfigurationNode join();
-    ConfigurationNode leave();
-    ConfigurationNode firstJoin();
+    SingleConfiguration join();
+    SingleConfiguration leave();
     List<String> commands() throws SerializationException;
 
     // Custom conditions
@@ -49,7 +48,7 @@ public interface IConfiguration {
 
     List<String> commands(String conditionKey);
 
-    ConfigurationNode condition(String conditionKey);
+    ConditionConfiguration condition(String conditionKey);
     ConfigurationNode conditions();
 
     boolean hide();

@@ -25,7 +25,7 @@
 package me.lorenzo0111.rocketjoin.conditions;
 
 import me.lorenzo0111.rocketjoin.RocketJoinBungee;
-import me.lorenzo0111.rocketjoin.common.IConfiguration;
+import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
 import me.lorenzo0111.rocketjoin.conditions.types.FirstCondition;
 import me.lorenzo0111.rocketjoin.conditions.types.PermissionCondition;
 import net.md_5.bungee.api.connection.ProxiedPlayer;

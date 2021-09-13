@@ -25,7 +25,7 @@
 package me.lorenzo0111.rocketjoin.conditions;
 
 import me.lorenzo0111.rocketjoin.RocketJoin;
-import me.lorenzo0111.rocketjoin.common.IConfiguration;
+import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
 import me.lorenzo0111.rocketjoin.conditions.types.FirstCondition;
 import me.lorenzo0111.rocketjoin.conditions.types.PermissionCondition;
 import org.bukkit.entity.Player;

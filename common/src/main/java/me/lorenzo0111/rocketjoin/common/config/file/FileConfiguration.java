@@ -22,10 +22,13 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.common.config;
+package me.lorenzo0111.rocketjoin.common.config.file;
 
 import me.lorenzo0111.rocketjoin.common.ChatUtils;
-import me.lorenzo0111.rocketjoin.common.IConfiguration;
+import me.lorenzo0111.rocketjoin.common.config.ConditionConfiguration;
+import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
+import me.lorenzo0111.rocketjoin.common.config.SingleConfiguration;
+import me.lorenzo0111.rocketjoin.common.exception.LoadException;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -33,9 +36,13 @@ import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
 
 public class FileConfiguration implements IConfiguration {
+    private Map<String,Object> cache;
     private ConfigurationNode config;
     private final File file;
 
@@ -45,13 +52,8 @@ public class FileConfiguration implements IConfiguration {
     }
 
     @Override
-    public ConfigurationNode get(Object... path) {
-        return config.node(path);
-    }
-
-    @Override
-    public <T> T property(Class<T> type, Object... path) throws SerializationException {
-        return config.node(path).get(type);
+    public String version() {
+        return config.node("config-version").getString();
     }
 
     @Override
@@ -70,18 +72,13 @@ public class FileConfiguration implements IConfiguration {
     }
 
     @Override
-    public ConfigurationNode join() {
-        return config.node("join");
+    public SingleConfiguration join() {
+        return get("join", () -> new FileSingleConfiguration(config.node("join")));
     }
 
     @Override
-    public ConfigurationNode leave() {
-        return config.node("leave");
-    }
-
-    @Override
-    public ConfigurationNode firstJoin() {
-        return config.node("first-join");
+    public SingleConfiguration leave() {
+        return get("leave", () -> new FileSingleConfiguration(config.node("leave")));
     }
 
     @Override
@@ -92,7 +89,7 @@ public class FileConfiguration implements IConfiguration {
     @Override
     public String join(String conditionKey) {
         if (conditionKey == null) {
-            return this.join().node("message").getString();
+            return this.join().message();
         }
 
         return ChatUtils.colorize(config.node("conditions",conditionKey,"join").getString());
@@ -101,7 +98,7 @@ public class FileConfiguration implements IConfiguration {
     @Override
     public String leave(String conditionKey) {
         if (conditionKey == null) {
-            return this.leave().node("message").getString();
+            return this.leave().message();
         }
 
         return ChatUtils.colorize(config.node("conditions",conditionKey,"leave").getString());
@@ -118,8 +115,8 @@ public class FileConfiguration implements IConfiguration {
     }
 
     @Override
-    public ConfigurationNode condition(String conditionKey) {
-        return config.node("conditions",conditionKey);
+    public ConditionConfiguration condition(String conditionKey) {
+        return get("c-" + conditionKey,() -> new FileCondition(config.node("conditions",conditionKey)));
     }
 
     @Override
@@ -147,8 +144,25 @@ public class FileConfiguration implements IConfiguration {
         YamlConfigurationLoader loader = YamlConfigurationLoader.builder().path(file.toPath()).build();
         try {
             this.config = loader.load();
+            this.cache = new HashMap<>();
         } catch (ConfigurateException e) {
             e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> T get(String key, Callable<T> def) {
+        if (cache.containsKey(key)) {
+             return (T) cache.get(key);
+        }
+
+        try {
+            T call = def.call();
+
+            cache.put(key,call);
+            return call;
+        } catch (Exception e) {
+            throw new LoadException("Unable to get configuration. Please report it to the github repository.");
         }
     }
 }

@@ -22,38 +22,40 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.listener;
+package me.lorenzo0111.rocketjoin.common.config.file;
 
-import me.lorenzo0111.rocketjoin.RocketJoinSponge;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.network.ClientConnectionEvent;
+import me.lorenzo0111.rocketjoin.common.config.SingleConfiguration;
+import org.spongepowered.configurate.ConfigurationNode;
 
-public class LeaveListener {
-    private final RocketJoinSponge plugin;
+public class FileSingleConfiguration implements SingleConfiguration {
+    private final ConfigurationNode node;
 
-    public LeaveListener(RocketJoinSponge plugin) {
-        this.plugin = plugin;
+    public FileSingleConfiguration(ConfigurationNode node) {
+        this.node = node;
     }
 
-    @Listener
-    public void onQuit(ClientConnectionEvent.Disconnect e) {
-        Player p = e.getTargetEntity();
+    @Override
+    public boolean enabled() {
+        return node.node("enabled").getBoolean();
+    }
 
-        if (plugin.getConfig().hide() && p.hasPermission(plugin.getConfig().hidePermission())) {
-            e.setMessageCancelled(true);
-            return;
-        }
+    @Override
+    public String message() {
+        return node.node("message").getString();
+    }
 
-        String condition = plugin.getHandler().getCondition(p);
-        if (condition == null) {
-            if (plugin.getConfig().leave().enabled())
-                e.setMessage(plugin.parse(plugin.getConfig().leave().message(),e.getTargetEntity()));
+    @Override
+    public boolean enableTitle() {
+        return node.node("enable-title").getBoolean();
+    }
 
-            return;
-        }
+    @Override
+    public String title() {
+        return node.node("title").getString();
+    }
 
-        e.setMessage(plugin.parse(plugin.getConfig().leave(condition), e.getTargetEntity()));
-
+    @Override
+    public String subTitle() {
+        return node.node("subtitle").getString();
     }
 }

@@ -22,38 +22,14 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.listener;
+package me.lorenzo0111.rocketjoin.common.config;
 
-import me.lorenzo0111.rocketjoin.RocketJoinSponge;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.network.ClientConnectionEvent;
+public interface SingleConfiguration {
+    boolean enabled();
+    String message();
 
-public class LeaveListener {
-    private final RocketJoinSponge plugin;
-
-    public LeaveListener(RocketJoinSponge plugin) {
-        this.plugin = plugin;
-    }
-
-    @Listener
-    public void onQuit(ClientConnectionEvent.Disconnect e) {
-        Player p = e.getTargetEntity();
-
-        if (plugin.getConfig().hide() && p.hasPermission(plugin.getConfig().hidePermission())) {
-            e.setMessageCancelled(true);
-            return;
-        }
-
-        String condition = plugin.getHandler().getCondition(p);
-        if (condition == null) {
-            if (plugin.getConfig().leave().enabled())
-                e.setMessage(plugin.parse(plugin.getConfig().leave().message(),e.getTargetEntity()));
-
-            return;
-        }
-
-        e.setMessage(plugin.parse(plugin.getConfig().leave(condition), e.getTargetEntity()));
-
-    }
+    // Only for join
+    boolean enableTitle();
+    String title();
+    String subTitle();
 }

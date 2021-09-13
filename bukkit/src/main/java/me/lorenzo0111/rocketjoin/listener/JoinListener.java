@@ -27,7 +27,8 @@ package me.lorenzo0111.rocketjoin.listener;
 import me.lorenzo0111.pluginslib.audience.BukkitAudienceManager;
 import me.lorenzo0111.pluginslib.updater.UpdateChecker;
 import me.lorenzo0111.rocketjoin.RocketJoin;
-import me.lorenzo0111.rocketjoin.common.IConfiguration;
+import me.lorenzo0111.rocketjoin.common.config.ConditionConfiguration;
+import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
 import me.lorenzo0111.rocketjoin.utilities.FireworkSpawner;
 import me.lorenzo0111.rocketjoin.utilities.PluginLoader;
 import me.lorenzo0111.rocketjoin.utilities.VanishUtils;
@@ -41,7 +42,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.time.Duration;
@@ -89,14 +89,14 @@ public class JoinListener implements Listener {
         }
 
         if (condition == null) {
-            boolean join = configuration.join().node("enabled").getBoolean();
+            boolean join = configuration.join().enabled();
             if (join) {
-                e.setJoinMessage(plugin.parse(p,"join","message"));
+                e.setJoinMessage(plugin.parse(configuration.join().message(), p));
             }
-            if (configuration.join().node("enable-title").getBoolean()) {
+            if (configuration.join().enableTitle()) {
                 Audience audience = BukkitAudienceManager.audience(p);
-                audience.showTitle(Title.title(Component.text(plugin.parse(p,"join","title")),
-                        Component.text(plugin.parse(p,"join","subtitle")),
+                audience.showTitle(Title.title(Component.text(plugin.parse(configuration.join().title(),p)),
+                        Component.text(plugin.parse(configuration.join().subTitle(),p)),
                         Title.Times.of(Duration.ofMillis(500), Duration.ofSeconds(2), Duration.ofMillis(500))));
             }
             return;
@@ -104,17 +104,17 @@ public class JoinListener implements Listener {
 
         e.setJoinMessage(plugin.parse(configuration.join(condition),p));
 
-        ConfigurationNode section = configuration.condition(condition);
+        ConditionConfiguration section = configuration.condition(condition);
 
-        if (section.node("sound").getBoolean()) {
-            Sound sound = Sound.valueOf(section.node("sound-type").getString("ENTITY_EXPERIENCE_ORB_PICKUP"));
+        if (section.sound()) {
+            Sound sound = Sound.valueOf(section.soundType());
 
             for (Player player : Bukkit.getOnlinePlayers())
                 player.playSound(player.getLocation(), sound, 60f, 1f);
         }
 
-        if (section.node("fireworks").getBoolean()) {
-            fireworkSpawner.spawnFireworks(p.getLocation(), section.node("fireworks-amount").getInt(3));
+        if (section.fireworks()) {
+            fireworkSpawner.spawnFireworks(p.getLocation(), section.fireworksAmount());
         }
     }
 
