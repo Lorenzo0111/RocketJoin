@@ -28,8 +28,6 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.proxy.Player;
 import me.lorenzo0111.rocketjoin.RocketJoinVelocity;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
 
 
 public class LeaveListener {
@@ -51,16 +49,16 @@ public class LeaveListener {
         if (condition == null) {
             if (plugin.getConfig().leave().enabled())
                 plugin.getServer().getScheduler().buildTask(plugin, () -> {
-                    for (Audience audience : plugin.getServer().getAllPlayers()) {
-                        audience.sendMessage(Component.text(plugin.getConfig().leave().message()));
+                    for (Player audience : plugin.getServer().getAllPlayers()) {
+                        audience.sendMessage(plugin.parse(plugin.getConfig().leave().message(),audience));
                     }
                 }).schedule();
             return;
         }
 
         plugin.getServer().getScheduler().buildTask(plugin, () -> {
-            for (Audience audience : plugin.getServer().getAllPlayers()) {
-                audience.sendMessage(Component.text(plugin.getConfig().leave(condition)));
+            for (Player audience : plugin.getServer().getAllPlayers()) {
+                audience.sendMessage(plugin.parse(plugin.getConfig().leave(condition),audience));
             }
         }).schedule();
     }
