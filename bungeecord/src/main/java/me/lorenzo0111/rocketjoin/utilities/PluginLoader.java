@@ -28,6 +28,7 @@ import me.lorenzo0111.rocketjoin.RocketJoinBungee;
 import me.lorenzo0111.rocketjoin.command.RocketJoinBungeeCommand;
 import me.lorenzo0111.rocketjoin.listener.JoinListener;
 import me.lorenzo0111.rocketjoin.listener.LeaveListener;
+import me.lorenzo0111.rocketjoin.listener.SwitchListener;
 import me.lorenzo0111.rocketjoin.updater.UpdateChecker;
 import org.bstats.bungeecord.Metrics;
 import org.bstats.charts.SimplePie;
@@ -54,6 +55,7 @@ public class PluginLoader {
     public void registerEvents() {
         plugin.getProxy().getPluginManager().registerListener(plugin,new LeaveListener(plugin));
         plugin.getProxy().getPluginManager().registerListener(plugin,new JoinListener(plugin,this));
+        plugin.getProxy().getPluginManager().registerListener(plugin,new SwitchListener(plugin));
 
         plugin.getProxy().getPluginManager().registerCommand(plugin, new RocketJoinBungeeCommand(plugin,this.getUpdater()));
     }

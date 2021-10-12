@@ -35,6 +35,13 @@ leave:
   enabled: true
   message: "&c{player} &7left!"
 
+# Only available in a proxy( Velocity or Bungeecord)
+# Called on server switch
+# Additional placeholders: {oldServer} {newServer}
+serverSwitch:
+  enabled: false
+  message: "&a{player} &7switched to &a{newServer}"
+
 # Commands that will be executed from console when an user joins the server
 # If you want to disable this just set it to []
 # See https://docs.rocketplugins.space/rocketjoin/execute-commands for more information

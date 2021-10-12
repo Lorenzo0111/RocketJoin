@@ -40,6 +40,7 @@ import me.lorenzo0111.rocketjoin.common.config.file.FileConfiguration;
 import me.lorenzo0111.rocketjoin.conditions.ConditionHandler;
 import me.lorenzo0111.rocketjoin.listener.JoinListener;
 import me.lorenzo0111.rocketjoin.listener.LeaveListener;
+import me.lorenzo0111.rocketjoin.listener.SwitchListener;
 import me.lorenzo0111.rocketjoin.utilities.UpdateChecker;
 import net.kyori.adventure.text.Component;
 import org.bstats.charts.SimplePie;
@@ -88,6 +89,7 @@ public class RocketJoinVelocity {
 
         server.getEventManager().register(this, new JoinListener(this));
         server.getEventManager().register(this, new LeaveListener(this));
+        server.getEventManager().register(this, new SwitchListener(this));
 
         Metrics metrics = metricsFactory.make(this, 11318);
         metrics.addCustomChart(new SimplePie("conditions", () -> String.valueOf(config.conditions().childrenList().size())));

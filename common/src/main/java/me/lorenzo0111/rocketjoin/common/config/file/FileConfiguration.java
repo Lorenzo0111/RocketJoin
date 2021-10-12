@@ -29,6 +29,7 @@ import me.lorenzo0111.rocketjoin.common.config.ConditionConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.SingleConfiguration;
 import me.lorenzo0111.rocketjoin.common.exception.LoadException;
+import me.lorenzo0111.rocketjoin.common.platform.Platform;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -42,6 +43,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 public class FileConfiguration implements IConfiguration {
+    private static final Platform platform = Platform.getPlatform();
     private Map<String,Object> cache;
     private ConfigurationNode config;
     private final File file;
@@ -49,6 +51,7 @@ public class FileConfiguration implements IConfiguration {
     public FileConfiguration(File file) {
         this.file = file;
         this.reload();
+        this.migrate();
     }
 
     @Override
@@ -79,6 +82,11 @@ public class FileConfiguration implements IConfiguration {
     @Override
     public SingleConfiguration leave() {
         return get("leave", () -> new FileSingleConfiguration(config.node("leave")));
+    }
+
+    @Override
+    public SingleConfiguration serverSwitch() {
+        return get("serverSwitch", () -> new FileSingleConfiguration(config.node("serverSwitch")));
     }
 
     @Override
@@ -148,6 +156,24 @@ public class FileConfiguration implements IConfiguration {
         } catch (ConfigurateException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void migrate() {
+        // 2.1.4
+        if (platform.isProxy()) {
+            ConfigurationNode serverSwitch = config.node("serverSwitch");
+
+            if (serverSwitch.isNull() || serverSwitch.empty() || serverSwitch.virtual()) {
+                try {
+                    serverSwitch.node("enabled").set(false);
+                    serverSwitch.node("message").set("&a{player} &7switched to &a{newServer}");
+                } catch (SerializationException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 
     @SuppressWarnings("unchecked")

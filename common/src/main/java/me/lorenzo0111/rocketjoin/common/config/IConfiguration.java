@@ -40,6 +40,7 @@ public interface IConfiguration {
     // Default configuration
     SingleConfiguration join();
     SingleConfiguration leave();
+    SingleConfiguration serverSwitch();
     List<String> commands() throws SerializationException;
 
     // Custom conditions
@@ -57,5 +58,5 @@ public interface IConfiguration {
     String welcome();
 
     void reload();
-
+    void migrate();
 }

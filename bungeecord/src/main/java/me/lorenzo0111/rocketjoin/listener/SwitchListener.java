@@ -24,43 +24,28 @@
 
 package me.lorenzo0111.rocketjoin.listener;
 
-import com.velocitypowered.api.event.Subscribe;
-import com.velocitypowered.api.event.connection.DisconnectEvent;
-import com.velocitypowered.api.proxy.Player;
-import me.lorenzo0111.rocketjoin.RocketJoinVelocity;
+import me.lorenzo0111.rocketjoin.RocketJoinBungee;
+import net.md_5.bungee.api.event.ServerSwitchEvent;
+import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.event.EventHandler;
 
+public class SwitchListener implements Listener {
+    private final RocketJoinBungee plugin;
 
-public class LeaveListener {
-    private final RocketJoinVelocity plugin;
-
-    public LeaveListener(RocketJoinVelocity plugin) {
+    public SwitchListener(RocketJoinBungee plugin) {
         this.plugin = plugin;
     }
 
-    @Subscribe
-    public void onQuit(DisconnectEvent e) {
-        Player p = e.getPlayer();
+    @EventHandler
+    public void onSwitch(ServerSwitchEvent event) {
+        if (event.getFrom() == null) return;
 
-        if (plugin.getConfig().hide() && p.hasPermission(plugin.getConfig().hidePermission())) {
+        if (plugin.getConfiguration().hide() && event.getPlayer().hasPermission(plugin.getConfiguration().hidePermission())) {
             return;
         }
 
-        String condition = plugin.getHandler().getCondition(p);
-        if (condition == null) {
-            if (plugin.getConfig().leave().enabled())
-                plugin.getServer().getScheduler().buildTask(plugin, () -> {
-                    for (Player audience : plugin.getServer().getAllPlayers()) {
-                        audience.sendMessage(plugin.parse(plugin.getConfig().leave().message(),p));
-                    }
-                }).schedule();
-            return;
+        if (plugin.getConfiguration().serverSwitch().enabled()) {
+            plugin.getProxy().broadcast(plugin.parse(plugin.getConfiguration().serverSwitch().message(),event.getPlayer()));
         }
-
-        plugin.getServer().getScheduler().buildTask(plugin, () -> {
-            for (Player audience : plugin.getServer().getAllPlayers()) {
-                audience.sendMessage(plugin.parse(plugin.getConfig().leave(condition),p));
-            }
-        }).schedule();
     }
-
 }

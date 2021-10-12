@@ -22,38 +22,39 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.listener;
+package me.lorenzo0111.rocketjoin.common.platform;
 
-import me.lorenzo0111.rocketjoin.RocketJoinBungee;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.PlayerDisconnectEvent;
-import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.event.EventHandler;
+public enum Platform {
+    BUKKIT(false),
+    SPONGE(false),
+    BUNGEECORD(true),
+    VELOCITY(true);
 
-public class LeaveListener implements Listener {
+    private final boolean proxy;
 
-    private final RocketJoinBungee plugin;
-
-    public LeaveListener(RocketJoinBungee plugin) {
-        this.plugin = plugin;
+    Platform(boolean proxy) {
+        this.proxy = proxy;
     }
 
-    @EventHandler
-    public void onQuit(PlayerDisconnectEvent e) {
-        ProxiedPlayer p = e.getPlayer();
-
-        if (plugin.getConfiguration().hide() && p.hasPermission(plugin.getConfiguration().hidePermission()))
-            return;
-
-        String condition = plugin.getHandler().getCondition(p);
-        if (condition == null) {
-            if (plugin.getConfiguration().leave().enabled())
-                plugin.getProxy().broadcast(plugin.parse(plugin.getConfiguration().leave().message(),p));
-            return;
-        }
-
-        plugin.getProxy().broadcast(plugin.parse(plugin.getConfiguration().leave(condition),p));
-
+    public boolean isProxy() {
+        return proxy;
     }
 
+    public static Platform getPlatform() {
+        if (hasClass("org.bukkit.bukkit")) return BUKKIT;
+        if (hasClass("org.spongepowered.api.Game")) return SPONGE;
+        if (hasClass("net.md_5.bungee.api.ProxyServer")) return BUNGEECORD;
+        if (hasClass("com.velocitypowered.api.plugin.Plugin")) return VELOCITY;
+
+        throw new IllegalStateException("Unable to find platform name");
+    }
+
+    private static boolean hasClass(String name) {
+        try {
+            Class.forName(name);
+            return true;
+        }catch (Exception ignored){}
+
+        return false;
+    }
 }
