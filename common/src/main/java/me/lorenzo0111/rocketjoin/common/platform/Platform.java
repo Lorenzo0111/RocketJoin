@@ -41,7 +41,7 @@ public enum Platform {
     }
 
     public static Platform getPlatform() {
-        if (hasClass("org.bukkit.bukkit")) return BUKKIT;
+        if (hasClass("org.bukkit.Bukkit")) return BUKKIT;
         if (hasClass("org.spongepowered.api.Game")) return SPONGE;
         if (hasClass("net.md_5.bungee.api.ProxyServer")) return BUNGEECORD;
         if (hasClass("com.velocitypowered.api.plugin.Plugin")) return VELOCITY;
