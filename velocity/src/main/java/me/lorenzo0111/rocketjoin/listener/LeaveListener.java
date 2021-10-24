@@ -28,6 +28,7 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.proxy.Player;
 import me.lorenzo0111.rocketjoin.RocketJoinVelocity;
+import me.lorenzo0111.rocketjoin.audience.WrappedPlayer;
 
 
 public class LeaveListener {
@@ -45,7 +46,7 @@ public class LeaveListener {
             return;
         }
 
-        String condition = plugin.getHandler().getCondition(p);
+        String condition = plugin.getHandler().getCondition(WrappedPlayer.wrap(p));
         if (condition == null) {
             if (plugin.getConfig().leave().enabled())
                 plugin.getServer().getScheduler().buildTask(plugin, () -> {

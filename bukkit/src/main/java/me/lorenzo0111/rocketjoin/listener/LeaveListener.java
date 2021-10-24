@@ -25,6 +25,7 @@
 package me.lorenzo0111.rocketjoin.listener;
 
 import me.lorenzo0111.rocketjoin.RocketJoin;
+import me.lorenzo0111.rocketjoin.audience.WrappedPlayer;
 import me.lorenzo0111.rocketjoin.utilities.VanishUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -53,7 +54,7 @@ public class LeaveListener implements Listener {
             return;
         }
 
-        String condition = plugin.getHandler().getCondition(p);
+        String condition = plugin.getHandler().getCondition(WrappedPlayer.wrap(p));
         if (condition == null) {
             if (plugin.getConfiguration().leave().enabled())
                 e.setQuitMessage(plugin.parse(plugin.getConfiguration().leave().message(),p));

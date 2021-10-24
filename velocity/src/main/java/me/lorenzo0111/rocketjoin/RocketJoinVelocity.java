@@ -35,9 +35,9 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import me.lorenzo0111.rocketjoin.command.RocketJoinVelocityCommand;
 import me.lorenzo0111.rocketjoin.common.ChatUtils;
 import me.lorenzo0111.rocketjoin.common.ConfigExtractor;
+import me.lorenzo0111.rocketjoin.common.conditions.ConditionHandler;
 import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.file.FileConfiguration;
-import me.lorenzo0111.rocketjoin.conditions.ConditionHandler;
 import me.lorenzo0111.rocketjoin.listener.JoinListener;
 import me.lorenzo0111.rocketjoin.listener.LeaveListener;
 import me.lorenzo0111.rocketjoin.listener.SwitchListener;
@@ -83,7 +83,7 @@ public class RocketJoinVelocity {
         Objects.requireNonNull(conf);
 
         this.config = new FileConfiguration(conf);
-        this.handler = new ConditionHandler(this);
+        this.handler = new ConditionHandler(config);
 
         this.reloadConfig();
 

@@ -28,9 +28,9 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import me.lorenzo0111.pluginslib.audience.BukkitAudienceManager;
 import me.lorenzo0111.rocketjoin.common.ChatUtils;
 import me.lorenzo0111.rocketjoin.common.ConfigExtractor;
+import me.lorenzo0111.rocketjoin.common.conditions.ConditionHandler;
 import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.file.FileConfiguration;
-import me.lorenzo0111.rocketjoin.conditions.ConditionHandler;
 import me.lorenzo0111.rocketjoin.utilities.PluginLoader;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
@@ -50,7 +50,7 @@ public class RocketJoin extends JavaPlugin {
                 .extract();
 
         this.config = new FileConfiguration(file);
-        this.handler = new ConditionHandler(this);
+        this.handler = new ConditionHandler(config);
 
         this.reloadConfig();
 

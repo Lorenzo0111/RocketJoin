@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.conditions.types;
+package me.lorenzo0111.rocketjoin.common.conditions.types;
 
-import me.lorenzo0111.rocketjoin.conditions.Condition;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import me.lorenzo0111.rocketjoin.common.audiences.Player;
+import me.lorenzo0111.rocketjoin.common.conditions.Condition;
 
 public class FirstCondition implements Condition {
     private final String key;
@@ -40,7 +40,7 @@ public class FirstCondition implements Condition {
     }
 
     @Override
-    public boolean apply(ProxiedPlayer player) {
-        return false;
+    public boolean apply(Player player) {
+        return !player.playerBefore();
     }
 }

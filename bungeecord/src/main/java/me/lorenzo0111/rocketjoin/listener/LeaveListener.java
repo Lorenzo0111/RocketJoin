@@ -25,6 +25,7 @@
 package me.lorenzo0111.rocketjoin.listener;
 
 import me.lorenzo0111.rocketjoin.RocketJoinBungee;
+import me.lorenzo0111.rocketjoin.audience.WrappedPlayer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -45,7 +46,7 @@ public class LeaveListener implements Listener {
         if (plugin.getConfiguration().hide() && p.hasPermission(plugin.getConfiguration().hidePermission()))
             return;
 
-        String condition = plugin.getHandler().getCondition(p);
+        String condition = plugin.getHandler().getCondition(WrappedPlayer.wrap(p));
         if (condition == null) {
             if (plugin.getConfiguration().leave().enabled())
                 plugin.getProxy().broadcast(plugin.parse(plugin.getConfiguration().leave().message(),p));

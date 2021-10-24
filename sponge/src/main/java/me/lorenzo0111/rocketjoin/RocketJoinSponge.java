@@ -28,11 +28,11 @@ import com.google.inject.Inject;
 import me.lorenzo0111.rocketjoin.command.RocketJoinSpongeCommand;
 import me.lorenzo0111.rocketjoin.common.ChatUtils;
 import me.lorenzo0111.rocketjoin.common.ConfigExtractor;
+import me.lorenzo0111.rocketjoin.common.conditions.ConditionHandler;
 import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.file.FileConfiguration;
 import me.lorenzo0111.rocketjoin.common.exception.LoadException;
 import me.lorenzo0111.rocketjoin.common.hex.HexUtils;
-import me.lorenzo0111.rocketjoin.conditions.ConditionHandler;
 import me.lorenzo0111.rocketjoin.listener.JoinListener;
 import me.lorenzo0111.rocketjoin.listener.LeaveListener;
 import me.lorenzo0111.rocketjoin.utilities.UpdateChecker;
@@ -80,7 +80,7 @@ public class RocketJoinSponge {
                 .extract();
 
         this.conf = new FileConfiguration(config);
-        this.handler = new ConditionHandler(this);
+        this.handler = new ConditionHandler(conf);
 
         this.reloadConfig();
 

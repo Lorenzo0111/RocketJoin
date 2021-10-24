@@ -25,6 +25,7 @@
 package me.lorenzo0111.rocketjoin.listener;
 
 import me.lorenzo0111.rocketjoin.RocketJoinSponge;
+import me.lorenzo0111.rocketjoin.audience.WrappedPlayer;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
@@ -45,7 +46,7 @@ public class LeaveListener {
             return;
         }
 
-        String condition = plugin.getHandler().getCondition(p);
+        String condition = plugin.getHandler().getCondition(WrappedPlayer.wrap(p));
         if (condition == null) {
             if (plugin.getConfig().leave().enabled())
                 e.setMessage(plugin.parse(plugin.getConfig().leave().message(),e.getTargetEntity()));

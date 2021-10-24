@@ -22,11 +22,23 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.conditions;
+package me.lorenzo0111.rocketjoin.audience;
 
-import org.bukkit.entity.Player;
+import me.lorenzo0111.rocketjoin.common.audiences.Player;
 
-public interface Condition {
-    String key();
-    boolean apply(Player player);
+public class WrappedPlayer {
+
+    public static Player wrap(com.velocitypowered.api.proxy.Player player) {
+        return new Player() {
+            @Override
+            public boolean playerBefore() {
+                return true;
+            }
+
+            @Override
+            public boolean hasPermission(String permission) {
+                return player.hasPermission(permission);
+            }
+        };
+    }
 }

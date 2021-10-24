@@ -27,6 +27,7 @@ package me.lorenzo0111.rocketjoin.listener;
 import me.lorenzo0111.pluginslib.audience.BukkitAudienceManager;
 import me.lorenzo0111.pluginslib.updater.UpdateChecker;
 import me.lorenzo0111.rocketjoin.RocketJoin;
+import me.lorenzo0111.rocketjoin.audience.WrappedPlayer;
 import me.lorenzo0111.rocketjoin.common.config.ConditionConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
 import me.lorenzo0111.rocketjoin.utilities.FireworkSpawner;
@@ -80,7 +81,7 @@ public class JoinListener implements Listener {
             return;
         }
 
-        String condition = plugin.getHandler().getCondition(p);
+        String condition = plugin.getHandler().getCondition(WrappedPlayer.wrap(p));
 
         try {
             this.executeCommands(condition, e.getPlayer());

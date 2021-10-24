@@ -22,26 +22,11 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.conditions.types;
+package me.lorenzo0111.rocketjoin.common.conditions;
 
-import com.velocitypowered.api.proxy.Player;
-import me.lorenzo0111.rocketjoin.conditions.Condition;
+import me.lorenzo0111.rocketjoin.common.audiences.Player;
 
-public class PermissionCondition implements Condition {
-    private final String key, permission;
-
-    public PermissionCondition(String key, String permission) {
-        this.key = key;
-        this.permission = permission;
-    }
-
-    @Override
-    public String key() {
-        return this.key;
-    }
-
-    @Override
-    public boolean apply(Player player) {
-        return player.hasPermission(permission);
-    }
+public interface Condition {
+    String key();
+    boolean apply(Player player);
 }

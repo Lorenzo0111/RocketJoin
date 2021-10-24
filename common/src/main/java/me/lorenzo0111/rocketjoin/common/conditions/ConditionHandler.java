@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.conditions;
+package me.lorenzo0111.rocketjoin.common.conditions;
 
-import me.lorenzo0111.rocketjoin.RocketJoin;
+import me.lorenzo0111.rocketjoin.common.audiences.Player;
+import me.lorenzo0111.rocketjoin.common.conditions.types.FirstCondition;
+import me.lorenzo0111.rocketjoin.common.conditions.types.PermissionCondition;
 import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
-import me.lorenzo0111.rocketjoin.conditions.types.FirstCondition;
-import me.lorenzo0111.rocketjoin.conditions.types.PermissionCondition;
-import org.bukkit.entity.Player;
+import me.lorenzo0111.rocketjoin.common.exception.LoadException;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
 
@@ -37,16 +37,17 @@ import java.util.List;
 import java.util.Objects;
 
 public class ConditionHandler {
-    private final RocketJoin plugin;
+    private final IConfiguration configuration;
     private final List<Condition> conditions = new ArrayList<>();
 
-    public ConditionHandler(RocketJoin plugin) {
-        this.plugin = plugin;
+    public ConditionHandler(IConfiguration configuration) {
+        this.configuration = configuration;
+        this.init();
     }
 
-    public void init() {
+    public List<LoadException> init() throws LoadException {
+        List<LoadException> exceptions = new ArrayList<>();
         this.conditions.clear();
-        IConfiguration configuration = plugin.getConfiguration();
         ConfigurationNode conditions = configuration.conditions();
 
         for (ConfigurationNode node : conditions.childrenMap().values()) {
@@ -62,11 +63,13 @@ public class ConditionHandler {
                     this.conditions.add(firstCondition);
                     break;
                 default:
-                    plugin.getLogger().warning("Invalid condition type at '" + key + "'. Ignoring..");
+                    exceptions.add(new LoadException("Invalid condition type at '" + key + "'"));
                     break;
             }
 
         }
+
+        return exceptions;
     }
 
     public @Nullable String getCondition(Player player) {

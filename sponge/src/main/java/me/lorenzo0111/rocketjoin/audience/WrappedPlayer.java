@@ -22,26 +22,23 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.conditions.types;
+package me.lorenzo0111.rocketjoin.audience;
 
-import me.lorenzo0111.rocketjoin.conditions.Condition;
-import org.bukkit.entity.Player;
+import me.lorenzo0111.rocketjoin.common.audiences.Player;
 
-public class PermissionCondition implements Condition {
-    private final String key, permission;
+public class WrappedPlayer {
 
-    public PermissionCondition(String key, String permission) {
-        this.key = key;
-        this.permission = permission;
-    }
+    public static Player wrap(org.spongepowered.api.entity.living.player.Player player) {
+        return new Player() {
+            @Override
+            public boolean playerBefore() {
+                return player.hasPlayedBefore();
+            }
 
-    @Override
-    public String key() {
-        return this.key;
-    }
-
-    @Override
-    public boolean apply(Player player) {
-        return player.hasPermission(permission);
+            @Override
+            public boolean hasPermission(String permission) {
+                return player.hasPermission(permission);
+            }
+        };
     }
 }

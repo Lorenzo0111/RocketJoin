@@ -22,11 +22,9 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.conditions;
+package me.lorenzo0111.rocketjoin.common.audiences;
 
-import org.spongepowered.api.entity.living.player.Player;
-
-public interface Condition {
-    String key();
-    boolean apply(Player player);
+public interface Player {
+    boolean playerBefore();
+    boolean hasPermission(String permission);
 }

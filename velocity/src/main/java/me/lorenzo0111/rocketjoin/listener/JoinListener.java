@@ -28,6 +28,7 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.PostLoginEvent;
 import com.velocitypowered.api.proxy.Player;
 import me.lorenzo0111.rocketjoin.RocketJoinVelocity;
+import me.lorenzo0111.rocketjoin.audience.WrappedPlayer;
 import me.lorenzo0111.rocketjoin.utilities.UpdateChecker;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -63,7 +64,7 @@ public class JoinListener {
         if (plugin.getConfig().hide() && p.hasPermission(plugin.getConfig().hidePermission()))
             return;
 
-        String condition = plugin.getHandler().getCondition(p);
+        String condition = plugin.getHandler().getCondition(WrappedPlayer.wrap(p));
 
         try {
             this.executeCommands(condition, e.getPlayer());

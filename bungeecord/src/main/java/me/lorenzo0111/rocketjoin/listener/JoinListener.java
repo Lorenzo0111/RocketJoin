@@ -25,6 +25,7 @@
 package me.lorenzo0111.rocketjoin.listener;
 
 import me.lorenzo0111.rocketjoin.RocketJoinBungee;
+import me.lorenzo0111.rocketjoin.audience.WrappedPlayer;
 import me.lorenzo0111.rocketjoin.updater.UpdateChecker;
 import me.lorenzo0111.rocketjoin.utilities.PluginLoader;
 import net.md_5.bungee.api.Title;
@@ -62,7 +63,7 @@ public class JoinListener implements Listener {
         if (plugin.getConfiguration().hide() && p.hasPermission(plugin.getConfiguration().hidePermission()))
             return;
 
-        String condition = plugin.getHandler().getCondition(p);
+        String condition = plugin.getHandler().getCondition(WrappedPlayer.wrap(p));
 
         try {
             this.executeCommands(condition, e.getPlayer());

@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-package me.lorenzo0111.rocketjoin.conditions.types;
+package me.lorenzo0111.rocketjoin.common.conditions.types;
 
-import me.lorenzo0111.rocketjoin.conditions.Condition;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import me.lorenzo0111.rocketjoin.common.audiences.Player;
+import me.lorenzo0111.rocketjoin.common.conditions.Condition;
 
 public class PermissionCondition implements Condition {
     private final String key, permission;
@@ -41,7 +41,7 @@ public class PermissionCondition implements Condition {
     }
 
     @Override
-    public boolean apply(ProxiedPlayer player) {
+    public boolean apply(Player player) {
         return player.hasPermission(permission);
     }
 }

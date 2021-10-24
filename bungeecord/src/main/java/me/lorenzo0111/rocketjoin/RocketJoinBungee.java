@@ -26,10 +26,10 @@ package me.lorenzo0111.rocketjoin;
 
 import me.lorenzo0111.rocketjoin.common.ChatUtils;
 import me.lorenzo0111.rocketjoin.common.ConfigExtractor;
+import me.lorenzo0111.rocketjoin.common.conditions.ConditionHandler;
 import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.file.FileConfiguration;
 import me.lorenzo0111.rocketjoin.common.hex.HexUtils;
-import me.lorenzo0111.rocketjoin.conditions.ConditionHandler;
 import me.lorenzo0111.rocketjoin.utilities.PluginLoader;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -49,7 +49,7 @@ public class RocketJoinBungee extends Plugin {
                 .extract();
 
         this.configuration = new FileConfiguration(config);
-        this.handler = new ConditionHandler(this);
+        this.handler = new ConditionHandler(configuration);
 
         this.reloadConfig();
 
