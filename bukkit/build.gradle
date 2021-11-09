@@ -40,7 +40,7 @@ repositories {
 dependencies {
     implementation project(':common')
     implementation 'org.bstats:bstats-bukkit:2.2.1'
-    implementation('space.rocketplugins.pluginslib:bukkit:2.0.3') {
+    implementation('space.rocketplugins.pluginslib:bukkit:2.0.3.1') {
         exclude module: 'slimjar'
     }
     compileOnly 'org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT'
