@@ -26,7 +26,7 @@ package me.lorenzo0111.rocketjoin.common.exception;
 
 import org.jetbrains.annotations.NotNull;
 
-public class LoadException extends RuntimeException {
+public class LoadException extends Exception {
     public LoadException(@NotNull String error) {
         super(String.format("Unable to load plugin: %s", error));
     }

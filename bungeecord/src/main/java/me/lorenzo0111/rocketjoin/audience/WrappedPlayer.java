@@ -25,6 +25,7 @@
 package me.lorenzo0111.rocketjoin.audience;
 
 import me.lorenzo0111.rocketjoin.common.audiences.Player;
+import me.lorenzo0111.rocketjoin.common.database.PlayersDatabase;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 public class WrappedPlayer {
@@ -33,7 +34,7 @@ public class WrappedPlayer {
         return new Player() {
             @Override
             public boolean playerBefore() {
-                return true;
+                return PlayersDatabase.contains(player.getUniqueId());
             }
 
             @Override

@@ -40,7 +40,7 @@ public class ConditionHandler {
     private final IConfiguration configuration;
     private final List<Condition> conditions = new ArrayList<>();
 
-    public ConditionHandler(IConfiguration configuration) {
+    public ConditionHandler(IConfiguration configuration) throws LoadException {
         this.configuration = configuration;
         this.init();
     }

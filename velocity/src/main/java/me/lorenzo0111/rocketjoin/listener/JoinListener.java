@@ -29,6 +29,7 @@ import com.velocitypowered.api.event.connection.PostLoginEvent;
 import com.velocitypowered.api.proxy.Player;
 import me.lorenzo0111.rocketjoin.RocketJoinVelocity;
 import me.lorenzo0111.rocketjoin.audience.WrappedPlayer;
+import me.lorenzo0111.rocketjoin.common.database.PlayersDatabase;
 import me.lorenzo0111.rocketjoin.utilities.UpdateChecker;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -51,6 +52,7 @@ public class JoinListener {
     @Subscribe
     public void onJoin(PostLoginEvent e) {
         Player p = e.getPlayer();
+        PlayersDatabase.add(p.getUniqueId());
 
         if (plugin.getConfig().update() && p.hasPermission("rocketjoin.update")) {
             updateChecker.sendUpdateCheck(p);

@@ -31,6 +31,7 @@ import me.lorenzo0111.rocketjoin.common.ConfigExtractor;
 import me.lorenzo0111.rocketjoin.common.conditions.ConditionHandler;
 import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.file.FileConfiguration;
+import me.lorenzo0111.rocketjoin.common.exception.LoadException;
 import me.lorenzo0111.rocketjoin.utilities.PluginLoader;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
@@ -50,7 +51,13 @@ public class RocketJoin extends JavaPlugin {
                 .extract();
 
         this.config = new FileConfiguration(file);
-        this.handler = new ConditionHandler(config);
+        try {
+            this.handler = new ConditionHandler(config);
+        } catch (LoadException e) {
+            this.getLogger().severe(e.getMessage());
+            this.setEnabled(false);
+            return;
+        }
 
         this.reloadConfig();
 
@@ -79,7 +86,11 @@ public class RocketJoin extends JavaPlugin {
     @Override
     public void reloadConfig() {
         config.reload();
-        handler.init();
+        try {
+            handler.init();
+        } catch (LoadException e) {
+            this.getLogger().severe(e.getMessage());
+        }
 
         if (config.version() == null) {
             this.getLogger().severe("You are using an old configuration, consider deleting the config.yml and restarting the server. If you need help you can also join in our support server.");

@@ -76,17 +76,35 @@ public class FileConfiguration implements IConfiguration {
 
     @Override
     public SingleConfiguration join() {
-        return get("join", () -> new FileSingleConfiguration(config.node("join")));
+        try {
+            return get("join", () -> new FileSingleConfiguration(config.node("join")));
+        } catch (LoadException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return null;
     }
 
     @Override
     public SingleConfiguration leave() {
-        return get("leave", () -> new FileSingleConfiguration(config.node("leave")));
+        try {
+            return get("leave", () -> new FileSingleConfiguration(config.node("leave")));
+        } catch (LoadException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return null;
     }
 
     @Override
     public SingleConfiguration serverSwitch() {
-        return get("serverSwitch", () -> new FileSingleConfiguration(config.node("serverSwitch")));
+        try {
+            return get("serverSwitch", () -> new FileSingleConfiguration(config.node("serverSwitch")));
+        } catch (LoadException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return null;
     }
 
     @Override
@@ -124,7 +142,13 @@ public class FileConfiguration implements IConfiguration {
 
     @Override
     public ConditionConfiguration condition(String conditionKey) {
-        return get("c-" + conditionKey,() -> new FileCondition(config.node("conditions",conditionKey)));
+        try {
+            return get("c-" + conditionKey,() -> new FileCondition(config.node("conditions",conditionKey)));
+        } catch (LoadException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return null;
     }
 
     @Override
@@ -177,7 +201,7 @@ public class FileConfiguration implements IConfiguration {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> T get(String key, Callable<T> def) {
+    private <T> T get(String key, Callable<T> def) throws LoadException {
         if (cache.containsKey(key)) {
              return (T) cache.get(key);
         }

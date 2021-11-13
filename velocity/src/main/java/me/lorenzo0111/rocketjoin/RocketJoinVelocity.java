@@ -38,6 +38,8 @@ import me.lorenzo0111.rocketjoin.common.ConfigExtractor;
 import me.lorenzo0111.rocketjoin.common.conditions.ConditionHandler;
 import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.file.FileConfiguration;
+import me.lorenzo0111.rocketjoin.common.database.PlayersDatabase;
+import me.lorenzo0111.rocketjoin.common.exception.LoadException;
 import me.lorenzo0111.rocketjoin.listener.JoinListener;
 import me.lorenzo0111.rocketjoin.listener.LeaveListener;
 import me.lorenzo0111.rocketjoin.listener.SwitchListener;
@@ -80,10 +82,22 @@ public class RocketJoinVelocity {
         File conf = new ConfigExtractor(this.getClass(),path.toFile(), "config.yml")
                 .extract();
 
+        try {
+            PlayersDatabase.init(path.toFile());
+        } catch (LoadException e) {
+            this.getLogger().error(e.getMessage());
+            return;
+        }
+
         Objects.requireNonNull(conf);
 
         this.config = new FileConfiguration(conf);
-        this.handler = new ConditionHandler(config);
+        try {
+            this.handler = new ConditionHandler(config);
+        } catch (LoadException e) {
+            this.getLogger().error(e.getMessage());
+            return;
+        }
 
         this.reloadConfig();
 
@@ -132,7 +146,11 @@ public class RocketJoinVelocity {
 
     public void reloadConfig() {
         config.reload();
-        handler.init();
+        try {
+            handler.init();
+        } catch (LoadException e) {
+            this.getLogger().error(e.getMessage());
+        }
     }
 
     public ConditionHandler getHandler() {

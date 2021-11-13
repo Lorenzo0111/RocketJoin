@@ -68,7 +68,12 @@ public class RocketJoinSponge {
         final Optional<PluginContainer> pluginContainer = game.getPluginManager().fromInstance(this);
 
         if (!pluginContainer.isPresent()) {
-            throw new LoadException("Unable to get plugin container. Report code: CONTAINER");
+            try {
+                throw new LoadException("Unable to get plugin container. Report code: CONTAINER");
+            } catch (LoadException e) {
+                this.getLogger().error(e.getMessage());
+            }
+            return;
         }
 
         this.plugin = pluginContainer.get();
@@ -80,7 +85,12 @@ public class RocketJoinSponge {
                 .extract();
 
         this.conf = new FileConfiguration(config);
-        this.handler = new ConditionHandler(conf);
+        try {
+            this.handler = new ConditionHandler(conf);
+        } catch (LoadException e) {
+            this.getLogger().error(e.getMessage());
+            return;
+        }
 
         this.reloadConfig();
 
@@ -103,7 +113,11 @@ public class RocketJoinSponge {
 
     public void reloadConfig() {
         conf.reload();
-        handler.init();
+        try {
+            handler.init();
+        } catch (LoadException e) {
+            this.getLogger().error(e.getMessage());
+        }
     }
 
     public IConfiguration getConfig() {
@@ -129,8 +143,15 @@ public class RocketJoinSponge {
     public String getVersion() {
         final Optional<String> s = this.getPlugin().getVersion();
         if (!s.isPresent()) {
-            throw new LoadException("Version cannot be null.");
+            try {
+                throw new LoadException("Version cannot be null.");
+            } catch (LoadException e) {
+                this.getLogger().error(e.getMessage());
+            }
+
+            return null;
         }
+
         return s.get();
     }
 

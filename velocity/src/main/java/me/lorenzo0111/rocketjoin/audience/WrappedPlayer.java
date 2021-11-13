@@ -25,6 +25,7 @@
 package me.lorenzo0111.rocketjoin.audience;
 
 import me.lorenzo0111.rocketjoin.common.audiences.Player;
+import me.lorenzo0111.rocketjoin.common.database.PlayersDatabase;
 
 public class WrappedPlayer {
 
@@ -32,7 +33,7 @@ public class WrappedPlayer {
         return new Player() {
             @Override
             public boolean playerBefore() {
-                return true;
+                return PlayersDatabase.contains(player.getUniqueId());
             }
 
             @Override

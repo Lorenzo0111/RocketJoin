@@ -29,6 +29,8 @@ import me.lorenzo0111.rocketjoin.common.ConfigExtractor;
 import me.lorenzo0111.rocketjoin.common.conditions.ConditionHandler;
 import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.file.FileConfiguration;
+import me.lorenzo0111.rocketjoin.common.database.PlayersDatabase;
+import me.lorenzo0111.rocketjoin.common.exception.LoadException;
 import me.lorenzo0111.rocketjoin.common.hex.HexUtils;
 import me.lorenzo0111.rocketjoin.utilities.PluginLoader;
 import net.md_5.bungee.api.ChatColor;
@@ -48,8 +50,20 @@ public class RocketJoinBungee extends Plugin {
         File config = new ConfigExtractor(this.getClass(), this.getDataFolder(), "config.yml")
                 .extract();
 
+        try {
+            PlayersDatabase.init(this.getDataFolder());
+        } catch (LoadException e) {
+            this.getLogger().severe(e.getMessage());
+            return;
+        }
+
         this.configuration = new FileConfiguration(config);
-        this.handler = new ConditionHandler(configuration);
+        try {
+            this.handler = new ConditionHandler(configuration);
+        } catch (LoadException e) {
+            this.getLogger().severe(e.getMessage());
+            return;
+        }
 
         this.reloadConfig();
 
@@ -66,7 +80,11 @@ public class RocketJoinBungee extends Plugin {
 
     public void reloadConfig() {
         this.configuration.reload();
-        handler.init();
+        try {
+            handler.init();
+        } catch (LoadException e) {
+            this.getLogger().severe(e.getMessage());
+        }
     }
 
     public TextComponent parse(String string) {

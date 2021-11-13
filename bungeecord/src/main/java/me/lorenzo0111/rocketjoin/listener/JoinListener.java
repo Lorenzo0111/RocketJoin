@@ -26,6 +26,7 @@ package me.lorenzo0111.rocketjoin.listener;
 
 import me.lorenzo0111.rocketjoin.RocketJoinBungee;
 import me.lorenzo0111.rocketjoin.audience.WrappedPlayer;
+import me.lorenzo0111.rocketjoin.common.database.PlayersDatabase;
 import me.lorenzo0111.rocketjoin.updater.UpdateChecker;
 import me.lorenzo0111.rocketjoin.utilities.PluginLoader;
 import net.md_5.bungee.api.Title;
@@ -50,6 +51,7 @@ public class JoinListener implements Listener {
     @EventHandler
     public void onJoin(PostLoginEvent e) {
         ProxiedPlayer p = e.getPlayer();
+        PlayersDatabase.add(p.getUniqueId());
 
         if (plugin.getConfiguration().update() && p.hasPermission("rocketjoin.update")) {
             updateChecker.sendUpdateCheck(p);
