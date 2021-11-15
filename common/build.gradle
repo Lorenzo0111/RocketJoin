@@ -23,7 +23,7 @@
  */
 
 dependencies {
-    implementation('space.rocketplugins.pluginslib:common:2.0.3.1') {
+    implementation('space.rocketplugins.pluginslib:common:2.0.3.2') {
         exclude module: 'slimjar'
     }
 }
