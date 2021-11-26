@@ -45,7 +45,9 @@ public class SwitchListener implements Listener {
         }
 
         if (plugin.getConfiguration().serverSwitch().enabled()) {
-            plugin.getProxy().broadcast(plugin.parse(plugin.getConfiguration().serverSwitch().message(),event.getPlayer()));
+            plugin.getProxy().broadcast(plugin.parse(plugin.getConfiguration().serverSwitch().message()
+                    .replace("{oldServer}", event.getFrom().getName())
+                    .replace("{newServer}", event.getPlayer().getServer().getInfo().getName()), event.getPlayer()));
         }
     }
 }

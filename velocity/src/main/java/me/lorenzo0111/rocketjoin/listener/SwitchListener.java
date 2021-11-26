@@ -47,7 +47,9 @@ public class SwitchListener {
         if (plugin.getConfig().serverSwitch().enabled()) {
             plugin.getServer().getScheduler().buildTask(plugin, () -> {
                 for (Player audience : plugin.getServer().getAllPlayers()) {
-                    audience.sendMessage(plugin.parse(plugin.getConfig().serverSwitch().message(),event.getPlayer()));
+                    audience.sendMessage(plugin.parse(plugin.getConfig().serverSwitch().message()
+                            .replace("{oldServer}", event.getPreviousServer().get().getServerInfo().getName())
+                            .replace("{newServer}", event.getServer().getServerInfo().getName()), event.getPlayer()));
                 }
             }).schedule();
         }
