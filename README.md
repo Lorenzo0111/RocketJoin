@@ -9,7 +9,7 @@ With this plugin you can change the join and leave message and you can use Place
 
 ## Usage
 
-You can read the plugin wiki [here](https://docs.rocketplugins.space/rocketjoin/starting)
+You can read the plugin wiki [here](https://wiki.lorenzo0111.me/rocketjoin/starting)
 
 ## Support
 
