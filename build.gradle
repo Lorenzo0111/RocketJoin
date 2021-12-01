@@ -38,12 +38,14 @@ ext {
     deps = "me.lorenzo0111.rocketjoin.libraries."
 }
 
+version = '2.3'
+
 subprojects {
     apply plugin: 'java'
     apply plugin: 'com.github.johnrengelman.shadow'
 
     group = 'me.lorenzo0111'
-    version = '2.2'
+    version = rootProject.version
     description = "Create custom join messages with groups, commands on join, sounds and more. PlaceholderAPI support"
 
     repositories {

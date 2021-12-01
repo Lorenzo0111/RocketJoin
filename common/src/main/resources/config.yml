@@ -9,7 +9,7 @@
 config-version: @version@
 already-asked: false
 
-# WARNING: If this plugin is running on bungeecord or velocity please read https://docs.rocketplugins.space/rocketjoin/bungeecord
+# WARNING: If this plugin is running on bungeecord or velocity please read https://wiki.lorenzo0111.me/rocketjoin/bungeecord
 
 # Start of the configuration
 
@@ -44,7 +44,7 @@ serverSwitch:
 
 # Commands that will be executed from console when an user joins the server
 # If you want to disable this just set it to []
-# See https://docs.rocketplugins.space/rocketjoin/execute-commands for more information
+# See https://wiki.lorenzo0111.me/rocketjoin/execute-commands for more information
 # commands: []
 commands: []
 
@@ -56,7 +56,7 @@ hide-permission: "rocketjoin.silent"
 
 conditions:
   example-vip:
-    # Read http://docs.rocketplugins.space/rocketjoin/conditions for more information
+    # Read http://wiki.lorenzo0111.me/rocketjoin/conditions for more information
     type: PERMISSION
     value: "rocketjoin.vip"
 
