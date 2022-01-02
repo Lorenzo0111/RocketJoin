@@ -90,9 +90,9 @@ public final class PlayersDatabase {
 
         try {
             users = data.node("data").getList(String.class);
-        } catch (SerializationException ignored) {}
-
-        users = new ArrayList<>();
+        } catch (SerializationException ignored) {
+            users = new ArrayList<>();
+        }
     }
 
     public static void save() {
