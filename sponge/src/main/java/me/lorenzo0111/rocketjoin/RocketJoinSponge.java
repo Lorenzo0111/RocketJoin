@@ -36,6 +36,8 @@ import me.lorenzo0111.rocketjoin.common.hex.HexUtils;
 import me.lorenzo0111.rocketjoin.listener.JoinListener;
 import me.lorenzo0111.rocketjoin.listener.LeaveListener;
 import me.lorenzo0111.rocketjoin.utilities.UpdateChecker;
+import org.bstats.sponge.Metrics;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.command.CommandSource;
@@ -62,6 +64,11 @@ public class RocketJoinSponge {
     private PluginContainer plugin;
     private UpdateChecker updater;
     private ConditionHandler handler;
+
+    @Inject
+    public RocketJoinSponge(Metrics.@NotNull Factory factory) {
+        factory.make(13863);
+    }
 
     @Listener
     public void onServerStart(GameStartedServerEvent event) {
@@ -99,10 +106,7 @@ public class RocketJoinSponge {
 
         CommandSpec myCommandSpec = CommandSpec.builder()
                 .description(Text.of("RocketJoin main command"))
-                .arguments(
-                        GenericArguments.optional(GenericArguments.string(Text.of("subcommand"))),
-                        GenericArguments.optional(GenericArguments.string(Text.of("metrics")))
-                        )
+                .arguments(GenericArguments.optional(GenericArguments.string(Text.of("subcommand"))))
                 .executor(new RocketJoinSpongeCommand(this))
                 .build();
 
