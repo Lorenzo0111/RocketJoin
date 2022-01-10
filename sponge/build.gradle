@@ -28,7 +28,7 @@ repositories {
 dependencies {
     implementation project(':common')
     implementation('org.bstats:bstats-sponge:2.2.1')
-    compileOnly('org.spongepowered:spongeapi:7.4.0')
+    compileOnly('org.spongepowered:spongeapi:8.0.0')
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens
