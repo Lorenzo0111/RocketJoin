@@ -39,7 +39,7 @@ repositories {
 
 dependencies {
     implementation project(':common')
-    implementation 'org.bstats:bstats-bukkit:2.2.1'
+    implementation 'org.bstats:bstats-bukkit:3.0.0'
     implementation('space.rocketplugins.pluginslib:bukkit:2.0.3.2') {
         exclude module: 'slimjar'
     }
