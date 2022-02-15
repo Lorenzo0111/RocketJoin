@@ -24,9 +24,17 @@
 
 package me.lorenzo0111.rocketjoin.listener;
 
+import com.google.common.collect.ImmutableList;
 import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.event.connection.PostLoginEvent;
+import com.velocitypowered.api.event.connection.PreLoginEvent;
+import com.velocitypowered.api.event.player.ServerConnectedEvent;
+import com.velocitypowered.api.event.player.ServerPostConnectEvent;
 import com.velocitypowered.api.proxy.Player;
+import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.ServerConnection;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import me.lorenzo0111.rocketjoin.RocketJoinVelocity;
 import me.lorenzo0111.rocketjoin.audience.WrappedPlayer;
 import me.lorenzo0111.rocketjoin.common.database.PlayersDatabase;
@@ -38,6 +46,9 @@ import net.kyori.adventure.util.Ticks;
 import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class JoinListener {
@@ -50,7 +61,7 @@ public class JoinListener {
     }
 
     @Subscribe
-    public void onJoin(PostLoginEvent e) {
+    public void onJoin(ServerPostConnectEvent e) {
         Player p = e.getPlayer();
         PlayersDatabase.add(p.getUniqueId());
 
@@ -74,16 +85,26 @@ public class JoinListener {
             serializationException.printStackTrace();
         }
 
-        if (condition == null) {
+        if (condition == null && e.getPlayer().getCurrentServer().isPresent()) {
             boolean join = plugin.getConfig().join().enabled();
             Component message = plugin.parse(plugin.getConfig().join().message(),p);
+            Component otherServerMessage =
+                    plugin.parse(plugin.getConfig().join().otherServerMessage()
+                            .replace("{server}", p.getCurrentServer().get().getServerInfo().getName()), p);
+            ArrayList<RegisteredServer> otherServers = new ArrayList<>(plugin.getServer().getAllServers());
+            otherServers.remove(p.getCurrentServer().get().getServer());
             if (join) {
                 plugin.getServer().getScheduler().buildTask(plugin, () -> {
-                    for (Audience audience : plugin.getServer().getAllPlayers()) {
-                        audience.sendMessage(message);
+                    for (Audience audience : p.getCurrentServer().get().getServer().getPlayersConnected()) {
+                        if (e.getPreviousServer() != null) return;
+                        else audience.sendMessage(message);
+                    }
+                    for (Audience audience : otherServers) {
+                        audience.sendMessage(otherServerMessage);
                     }
                 }).schedule();
             }
+
             if (plugin.getConfig().join().enableTitle()) {
                 final Title.Times times = Title.Times.of(Ticks.duration(15), Duration.ofMillis(3000), Ticks.duration(20));
                 final Title title = Title.title(

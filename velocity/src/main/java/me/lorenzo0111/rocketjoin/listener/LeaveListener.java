@@ -26,9 +26,11 @@ package me.lorenzo0111.rocketjoin.listener;
 
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
+import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import com.velocitypowered.api.proxy.Player;
 import me.lorenzo0111.rocketjoin.RocketJoinVelocity;
 import me.lorenzo0111.rocketjoin.audience.WrappedPlayer;
+import net.kyori.adventure.text.Component;
 
 
 public class LeaveListener {
@@ -48,10 +50,16 @@ public class LeaveListener {
 
         String condition = plugin.getHandler().getCondition(WrappedPlayer.wrap(p));
         if (condition == null) {
+            if (e.getPlayer().getCurrentServer().isEmpty()) return;
+
             if (plugin.getConfig().leave().enabled())
                 plugin.getServer().getScheduler().buildTask(plugin, () -> {
-                    for (Player audience : plugin.getServer().getAllPlayers()) {
+                    for (Player audience : e.getPlayer().getCurrentServer().get().getServer().getPlayersConnected()) {
                         audience.sendMessage(plugin.parse(plugin.getConfig().leave().message(),p));
+                    }
+                    for (Player audience : plugin.getServer().getAllPlayers()) {
+                        audience.sendMessage(plugin.parse(plugin.getConfig().leave().otherServerMessage()
+                                .replace("{server}", e.getPlayer().getCurrentServer().get().getServerInfo().getName()),p));
                     }
                 }).schedule();
             return;

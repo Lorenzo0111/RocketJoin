@@ -27,9 +27,14 @@ package me.lorenzo0111.rocketjoin.common.config;
 public interface SingleConfiguration {
     boolean enabled();
     String message();
+    String otherServerMessage();
 
     // Only for join
     boolean enableTitle();
     String title();
     String subTitle();
+
+    // Only for serverSwitch
+    String messageFrom();
+    String messageTo();
 }

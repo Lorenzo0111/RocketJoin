@@ -38,7 +38,7 @@ public class SwitchListener {
 
     @Subscribe
     public void onSwitch(ServerConnectedEvent event) {
-        if (!event.getPreviousServer().isPresent()) return;
+        if (event.getPreviousServer().isEmpty()) return;
 
         if (plugin.getConfig().hide() && event.getPlayer().hasPermission(plugin.getConfig().hidePermission())) {
             return;
@@ -46,8 +46,13 @@ public class SwitchListener {
 
         if (plugin.getConfig().serverSwitch().enabled()) {
             plugin.getServer().getScheduler().buildTask(plugin, () -> {
-                for (Player audience : plugin.getServer().getAllPlayers()) {
-                    audience.sendMessage(plugin.parse(plugin.getConfig().serverSwitch().message()
+                for (Player audience : event.getPreviousServer().get().getPlayersConnected()) {
+                    audience.sendMessage(plugin.parse(plugin.getConfig().serverSwitch().messageFrom()
+                            .replace("{oldServer}", event.getPreviousServer().get().getServerInfo().getName())
+                            .replace("{newServer}", event.getServer().getServerInfo().getName()), event.getPlayer()));
+                }
+                for (Player audience : event.getServer().getPlayersConnected()) {
+                    audience.sendMessage(plugin.parse(plugin.getConfig().serverSwitch().messageTo()
                             .replace("{oldServer}", event.getPreviousServer().get().getServerInfo().getName())
                             .replace("{newServer}", event.getServer().getServerInfo().getName()), event.getPlayer()));
                 }
