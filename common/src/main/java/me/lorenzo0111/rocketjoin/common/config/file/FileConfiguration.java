@@ -198,6 +198,39 @@ public class FileConfiguration implements IConfiguration {
             }
         }
 
+        // 2.4
+        if (platform.isProxy()) {
+            ConfigurationNode join = config.node("join").node("otherServerMessage");
+
+            if (join.isNull() || join.empty() || join.virtual()) {
+                try {
+                    join.set("&a{player} &7joined &a{server}!");
+                } catch (SerializationException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            ConfigurationNode leave = config.node("leave").node("otherServerMessage");
+
+            if (leave.isNull() || leave.empty() || leave.virtual()) {
+                try {
+                    leave.set("&c{player} &7left &a{server}!");
+                } catch (SerializationException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            ConfigurationNode serverSwitch = config.node("serverSwitch");
+
+            if (serverSwitch.isNull() || serverSwitch.empty() || serverSwitch.virtual()) {
+                try {
+                    serverSwitch.node("messageFrom").set("&a{player} &7switched to &a{newServer}");
+                    serverSwitch.node("messageTo").set("&a{player} &7came from &a{oldServer}");
+                } catch (SerializationException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
