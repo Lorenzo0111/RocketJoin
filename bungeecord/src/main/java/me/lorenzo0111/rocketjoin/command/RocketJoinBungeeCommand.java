@@ -28,7 +28,6 @@ import me.lorenzo0111.rocketjoin.RocketJoinBungee;
 import me.lorenzo0111.rocketjoin.command.subcommands.DebugCommand;
 import me.lorenzo0111.rocketjoin.command.subcommands.HelpCommand;
 import me.lorenzo0111.rocketjoin.command.subcommands.ReloadCommand;
-import me.lorenzo0111.rocketjoin.updater.UpdateChecker;
 import me.lorenzo0111.rocketjoin.utilities.Debugger;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
@@ -39,14 +38,12 @@ public class RocketJoinBungeeCommand extends Command {
 
 
     private final RocketJoinBungee plugin;
-    private final UpdateChecker updater;
     private final Debugger debugger;
     private final ArrayList<SubCommand> subcommands = new ArrayList<>();
 
-    public RocketJoinBungeeCommand(RocketJoinBungee plugin, UpdateChecker updater) {
+    public RocketJoinBungeeCommand(RocketJoinBungee plugin) {
         super("rocketjoinbungee",null,"rjb");
         this.plugin = plugin;
-        this.updater = updater;
         this.debugger = new Debugger(plugin);
 
         this.subcommands.add(new HelpCommand(this));
@@ -56,10 +53,10 @@ public class RocketJoinBungeeCommand extends Command {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        sender.sendMessage(plugin.parse(plugin.getPrefix() + "&r &7Running &e" + plugin.getDescription().getName() + " &ev" + plugin.getDescription().getVersion() + " &7by &eLorenzo0111&7!"));
+        plugin.sendMessage(sender, plugin.parse(plugin.getPrefix() + "&r &7Running &e" + plugin.getDescription().getName() + " &ev" + plugin.getDescription().getVersion() + " &7by &eLorenzo0111&7!"));
 
         if (!sender.hasPermission("rocketjoin.command")) {
-            sender.sendMessage(plugin.parse(plugin.getPrefix() + "&r &cYou do not have the permission to execute this command."));
+            plugin.sendMessage(sender, plugin.parse(plugin.getPrefix() + "&r &cYou do not have the permission to execute this command."));
             return;
         }
 
@@ -72,11 +69,11 @@ public class RocketJoinBungeeCommand extends Command {
             }
 
         } else {
-            sender.sendMessage(plugin.parse(plugin.getPrefix() + "&r &7Use &8/rocketjoin help&7 for a command list"));
+            plugin.sendMessage(sender, plugin.parse(plugin.getPrefix() + "&r &7Use &8/rocketjoin help&7 for a command list"));
             return;
         }
 
-        sender.sendMessage(plugin.parse(plugin.getPrefix() + "&r &7Command not found, use &8/rocketjoin help&7 for a command list"));
+        plugin.sendMessage(sender, plugin.parse(plugin.getPrefix() + "&r &7Command not found, use &8/rocketjoin help&7 for a command list"));
     }
 
     public ArrayList<SubCommand> getSubcommands(){
@@ -89,10 +86,6 @@ public class RocketJoinBungeeCommand extends Command {
 
     public Debugger getDebugger() {
         return debugger;
-    }
-
-    public UpdateChecker getUpdater() {
-        return updater;
     }
 }
 

@@ -24,6 +24,8 @@
 
 package me.lorenzo0111.rocketjoin.common.config;
 
+import net.kyori.adventure.sound.Sound;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,7 +38,7 @@ public interface ConditionConfiguration {
     String join();
     String leave();
     boolean sound();
-    String soundType();
+    Sound soundType();
     boolean fireworks();
     int fireworksAmount();
     List<String> commands();

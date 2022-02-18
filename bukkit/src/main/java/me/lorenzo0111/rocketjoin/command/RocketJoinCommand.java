@@ -32,8 +32,7 @@ import me.lorenzo0111.pluginslib.command.SubCommand;
 import me.lorenzo0111.pluginslib.command.annotations.AnyArgument;
 import me.lorenzo0111.pluginslib.command.annotations.NoArguments;
 import me.lorenzo0111.pluginslib.command.annotations.Permission;
-import me.lorenzo0111.pluginslib.updater.UpdateChecker;
-import me.lorenzo0111.rocketjoin.RocketJoin;
+import me.lorenzo0111.rocketjoin.RocketJoinBukkit;
 import me.lorenzo0111.rocketjoin.command.subcommands.DebugCommand;
 import me.lorenzo0111.rocketjoin.command.subcommands.HelpCommand;
 import me.lorenzo0111.rocketjoin.command.subcommands.ReloadCommand;
@@ -52,16 +51,14 @@ import java.util.Optional;
 
 public class RocketJoinCommand extends ICommand<JavaPlugin> implements TabCompleter, CommandExecutor {
 
-    private final RocketJoin plugin;
-    private final UpdateChecker updater;
+    private final RocketJoinBukkit plugin;
     private final Debugger debugger;
     private final ArrayList<SubCommand> subcommands = new ArrayList<>();
 
     @Permission("rocketjoin.command")
-    public RocketJoinCommand(RocketJoin plugin,String command,Customization customization) {
+    public RocketJoinCommand(RocketJoinBukkit plugin, String command, Customization customization) {
         super(plugin,command,customization);
         this.plugin = plugin;
-        this.updater = plugin.getLoader().getUpdater();
         this.debugger = new Debugger(plugin);
 
         this.subcommands.add(new HelpCommand(this));
@@ -75,12 +72,12 @@ public class RocketJoinCommand extends ICommand<JavaPlugin> implements TabComple
 
     @Override
     public void register(String s) {
-        Objects.requireNonNull(RocketJoin.instance().getCommand(s)).setExecutor(this);
-        Objects.requireNonNull(RocketJoin.instance().getCommand(s)).setTabCompleter(this);
+        Objects.requireNonNull(RocketJoinBukkit.instance().getCommand(s)).setExecutor(this);
+        Objects.requireNonNull(RocketJoinBukkit.instance().getCommand(s)).setTabCompleter(this);
     }
 
     @Override
-    public RocketJoin getPlugin() {
+    public RocketJoinBukkit getPlugin() {
         return plugin;
     }
 

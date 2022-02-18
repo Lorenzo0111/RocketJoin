@@ -24,6 +24,7 @@
 
 package me.lorenzo0111.rocketjoin.common.config;
 
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -34,7 +35,7 @@ public interface IConfiguration {
     // Plugin settings
     @Nullable String version();
     String prefix();
-    String noPermission();
+    Component noPermission();
     boolean update();
 
     // Default configuration

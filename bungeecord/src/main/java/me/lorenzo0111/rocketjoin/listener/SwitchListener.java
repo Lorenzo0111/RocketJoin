@@ -25,6 +25,7 @@
 package me.lorenzo0111.rocketjoin.listener;
 
 import me.lorenzo0111.rocketjoin.RocketJoinBungee;
+import me.lorenzo0111.rocketjoin.utilities.BungeeUtilities;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -45,9 +46,9 @@ public class SwitchListener implements Listener {
         }
 
         if (plugin.getConfiguration().serverSwitch().enabled()) {
-            plugin.getProxy().broadcast(plugin.parse(plugin.getConfiguration().serverSwitch().message()
+            BungeeUtilities.broadcast(plugin, plugin.parse(plugin.getConfiguration().serverSwitch().message()
                     .replace("{oldServer}", event.getFrom().getName())
-                    .replace("{newServer}", event.getPlayer().getServer().getInfo().getName()), event.getPlayer()));
+                    .replace("{newServer}", event.getPlayer().getServer().getInfo().getName()), event.getPlayer()), event.getPlayer());
         }
     }
 }

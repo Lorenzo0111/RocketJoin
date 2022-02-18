@@ -42,6 +42,6 @@ public class DebugCommand extends SubCommand {
     @Override
     public void perform(CommandSender sender, String[] args) {
         this.getCommand().getDebugger().debug();
-        sender.sendMessage(getCommand().getPlugin().parse(getCommand().getPlugin().getPrefix() + "&r &7Debug informations printed in the console."));
+        this.getCommand().getPlugin().sendMessage(sender,getCommand().getPlugin().parse(getCommand().getPlugin().getPrefix() + "&r &7Debug informations printed in the console."));
     }
 }

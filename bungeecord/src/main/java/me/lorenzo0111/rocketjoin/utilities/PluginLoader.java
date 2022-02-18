@@ -24,12 +24,12 @@
 
 package me.lorenzo0111.rocketjoin.utilities;
 
+import me.lorenzo0111.pluginslib.updater.UpdateChecker;
 import me.lorenzo0111.rocketjoin.RocketJoinBungee;
 import me.lorenzo0111.rocketjoin.command.RocketJoinBungeeCommand;
 import me.lorenzo0111.rocketjoin.listener.JoinListener;
 import me.lorenzo0111.rocketjoin.listener.LeaveListener;
 import me.lorenzo0111.rocketjoin.listener.SwitchListener;
-import me.lorenzo0111.rocketjoin.updater.UpdateChecker;
 import org.bstats.bungeecord.Metrics;
 import org.bstats.charts.SimplePie;
 
@@ -48,8 +48,7 @@ public class PluginLoader {
     }
 
     public void loadUpdater() {
-        this.updateChecker = new UpdateChecker(plugin, 82520, "https://bit.ly/RocketJoin");
-        this.updateChecker.sendUpdateCheck(plugin.getProxy().getConsole());
+        this.updateChecker = plugin.getUpdater();
     }
 
     public void registerEvents() {
@@ -57,7 +56,7 @@ public class PluginLoader {
         plugin.getProxy().getPluginManager().registerListener(plugin,new JoinListener(plugin,this));
         plugin.getProxy().getPluginManager().registerListener(plugin,new SwitchListener(plugin));
 
-        plugin.getProxy().getPluginManager().registerCommand(plugin, new RocketJoinBungeeCommand(plugin,this.getUpdater()));
+        plugin.getProxy().getPluginManager().registerCommand(plugin, new RocketJoinBungeeCommand(plugin));
     }
 
     public void placeholderHook() {

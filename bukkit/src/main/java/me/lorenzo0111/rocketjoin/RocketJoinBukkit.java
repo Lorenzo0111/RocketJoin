@@ -28,19 +28,23 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import me.lorenzo0111.pluginslib.audience.BukkitAudienceManager;
 import me.lorenzo0111.rocketjoin.common.ChatUtils;
 import me.lorenzo0111.rocketjoin.common.ConfigExtractor;
+import me.lorenzo0111.rocketjoin.common.RocketJoin;
 import me.lorenzo0111.rocketjoin.common.conditions.ConditionHandler;
 import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.file.FileConfiguration;
 import me.lorenzo0111.rocketjoin.common.exception.LoadException;
+import me.lorenzo0111.rocketjoin.common.utils.IScheduler;
 import me.lorenzo0111.rocketjoin.utilities.PluginLoader;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
-public class RocketJoin extends JavaPlugin {
+public class RocketJoinBukkit extends JavaPlugin implements RocketJoin {
+    private IScheduler scheduler;
     private IConfiguration config;
     private PluginLoader loader;
     private ConditionHandler handler;
@@ -50,6 +54,17 @@ public class RocketJoin extends JavaPlugin {
         File file = new ConfigExtractor(this.getClass(),this.getDataFolder(), "config.yml")
                 .extract();
 
+        this.scheduler = new IScheduler() {
+            @Override
+            public void async(Runnable runnable) {
+                Bukkit.getScheduler().runTaskAsynchronously(RocketJoinBukkit.this, runnable);
+            }
+
+            @Override
+            public void sync(Runnable runnable) {
+                Bukkit.getScheduler().runTask(RocketJoinBukkit.this, runnable);
+            }
+        };
         this.config = new FileConfiguration(file);
         try {
             this.handler = new ConditionHandler(config);
@@ -65,7 +80,6 @@ public class RocketJoin extends JavaPlugin {
 
         // Load the plugin
         this.loader = new PluginLoader(this);
-        this.loader.loadUpdater();
         this.loader.loadMetrics();
         this.loader.placeholderHook();
         this.loader.registerEvents();
@@ -75,12 +89,20 @@ public class RocketJoin extends JavaPlugin {
         BukkitAudienceManager.shutdown();
     }
 
-    public PluginLoader getLoader() {
-        return loader;
+
+    @Override
+    public IScheduler getScheduler() {
+        return scheduler;
     }
 
+    @Override
     public IConfiguration getConfiguration() {
         return config;
+    }
+
+    @Override
+    public String getVersion() {
+        return this.getDescription().getVersion();
     }
 
     @Override
@@ -97,27 +119,22 @@ public class RocketJoin extends JavaPlugin {
         }
     }
 
-    public Component parseComponent(String string) {
-        return Component.text(parse(string));
+    public Component parse(@Nullable String string) {
+        return ChatUtils.colorize(string);
     }
 
-    public String parse(String string) {
-        string = ChatUtils.colorize(string);
-        return string;
-    }
-
-    public String parse(@Nullable String string, Player player) {
+    public Component parse(@Nullable String string, Player player) {
         if (string == null) return null;
         String str = string.replace("{player}", player.getName()).replace("{DisplayPlayer}", player.getDisplayName());
         if (loader.isPlaceholderapi()) {
             str = PlaceholderAPI.setPlaceholders(player,str);
         }
-        str = this.parse(str);
-        return str;
+
+        return ChatUtils.colorize(str);
     }
 
-    public static RocketJoin instance() {
-        return RocketJoin.getPlugin(RocketJoin.class);
+    public static RocketJoinBukkit instance() {
+        return RocketJoinBukkit.getPlugin(RocketJoinBukkit.class);
     }
 
     public ConditionHandler getHandler() {

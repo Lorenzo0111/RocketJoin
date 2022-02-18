@@ -30,6 +30,7 @@ public enum Platform {
     BUNGEECORD(true),
     VELOCITY(true);
 
+    private static Platform platform;
     private final boolean proxy;
 
     Platform(boolean proxy) {
@@ -41,19 +42,25 @@ public enum Platform {
     }
 
     public static Platform getPlatform() {
-        if (hasClass("org.bukkit.Bukkit")) return BUKKIT;
-        if (hasClass("org.spongepowered.api.Game")) return SPONGE;
-        if (hasClass("net.md_5.bungee.api.ProxyServer")) return BUNGEECORD;
-        if (hasClass("com.velocitypowered.api.plugin.Plugin")) return VELOCITY;
+        if (platform == null) {
 
-        throw new IllegalStateException("Unable to find platform name");
+            if (hasClass("org.bukkit.Bukkit")) platform = BUKKIT;
+            else if (hasClass("org.spongepowered.api.Game")) platform = SPONGE;
+            else if (hasClass("net.md_5.bungee.api.ProxyServer")) platform = BUNGEECORD;
+            else if (hasClass("com.velocitypowered.api.plugin.Plugin")) platform = VELOCITY;
+
+            if (platform == null)
+                throw new IllegalStateException("Unable to find platform name");
+        }
+
+        return platform;
     }
 
     private static boolean hasClass(String name) {
         try {
             Class.forName(name);
             return true;
-        }catch (Exception ignored){}
+        }catch (Exception | Error ignored){}
 
         return false;
     }

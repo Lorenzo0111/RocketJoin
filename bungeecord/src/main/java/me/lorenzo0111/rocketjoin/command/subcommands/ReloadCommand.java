@@ -42,6 +42,6 @@ public class ReloadCommand extends SubCommand {
     @Override
     public void perform(CommandSender sender, String[] args) {
         this.getCommand().getPlugin().reloadConfig();
-        sender.sendMessage(getCommand().getPlugin().parse(this.getCommand().getPlugin().getPrefix() + "&r &7Plugin reloaded!"));
+        this.getCommand().getPlugin().sendMessage(sender, getCommand().getPlugin().parse(this.getCommand().getPlugin().getPrefix() + "&r &7Plugin reloaded!"));
     }
 }

@@ -30,20 +30,17 @@ import me.lorenzo0111.rocketjoin.RocketJoinVelocity;
 import me.lorenzo0111.rocketjoin.command.subcommands.HelpCommand;
 import me.lorenzo0111.rocketjoin.command.subcommands.ReloadCommand;
 import me.lorenzo0111.rocketjoin.common.ChatUtils;
-import me.lorenzo0111.rocketjoin.utilities.UpdateChecker;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RocketJoinVelocityCommand implements SimpleCommand {
     private final RocketJoinVelocity plugin;
-    private final UpdateChecker updater;
     private final ArrayList<SubCommand> subcommands = new ArrayList<>();
     private final List<String> commandsName = new ArrayList<>();
 
     public RocketJoinVelocityCommand(RocketJoinVelocity plugin) {
         this.plugin = plugin;
-        this.updater = plugin.getUpdater();
 
         this.subcommands.add(new HelpCommand(this));
         this.subcommands.add(new ReloadCommand(this));
@@ -57,10 +54,10 @@ public class RocketJoinVelocityCommand implements SimpleCommand {
         final CommandSource sender = invocation.source();
         final String[] args = invocation.arguments();
 
-        sender.sendMessage(ChatUtils.colorize(plugin.getConfig().prefix() + "&r &7Running &eRocketJoin &ev" + plugin.getVersion() + " &7by &eLorenzo0111&7!", null));
+        sender.sendMessage(ChatUtils.colorize(plugin.getConfig().prefix() + "&r &7Running &eRocketJoin &ev" + plugin.getVersion() + " &7by &eLorenzo0111&7!"));
 
         if (!sender.hasPermission("rocketjoin.command")) {
-            sender.sendMessage(ChatUtils.colorize(plugin.getConfig().prefix() + "&r &cYou do not have the permission to execute this command.", null));
+            sender.sendMessage(ChatUtils.colorize(plugin.getConfig().prefix() + "&r &cYou do not have the permission to execute this command."));
             return;
         }
 
@@ -73,11 +70,11 @@ public class RocketJoinVelocityCommand implements SimpleCommand {
             }
 
         } else {
-            sender.sendMessage(ChatUtils.colorize(plugin.getConfig().prefix() + "&r &7Use &8/rocketjoin help&7 for a command list", null));
+            sender.sendMessage(ChatUtils.colorize(plugin.getConfig().prefix() + "&r &7Use &8/rocketjoin help&7 for a command list"));
             return;
         }
 
-        sender.sendMessage(ChatUtils.colorize(plugin.getConfig().prefix() + "&r &7Command not found, use &8/rocketjoin help&7 for a command list", null));
+        sender.sendMessage(ChatUtils.colorize(plugin.getConfig().prefix() + "&r &7Command not found, use &8/rocketjoin help&7 for a command list"));
     }
 
     @Override
@@ -91,9 +88,5 @@ public class RocketJoinVelocityCommand implements SimpleCommand {
 
     public RocketJoinVelocity getPlugin() {
         return plugin;
-    }
-
-    public UpdateChecker getUpdater() {
-        return updater;
     }
 }

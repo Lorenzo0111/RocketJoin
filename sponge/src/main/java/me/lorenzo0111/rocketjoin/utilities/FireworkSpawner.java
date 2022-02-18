@@ -24,23 +24,22 @@
 
 package me.lorenzo0111.rocketjoin.utilities;
 
-import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.entity.EntityTypes;
-import org.spongepowered.api.entity.projectile.Firework;
+import org.spongepowered.api.entity.projectile.explosive.FireworkRocket;
 import org.spongepowered.api.item.FireworkEffect;
 import org.spongepowered.api.util.Color;
 import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
 
 import java.util.Collections;
 
 public class FireworkSpawner {
 
-    public static void spawnFireworks(Location<World> location, int amount) {
-        for(int i = 0;i<amount; i++){
-            Firework firework = (Firework) location.createEntity(EntityTypes.FIREWORK);
+    public static void spawnFireworks(Location<?,?> location, int amount) {
+        for (int i = 0; i<amount; i++) {
+            FireworkRocket entity = location.world().createEntity(EntityTypes.FIREWORK_ROCKET, location.position());
 
-            firework.offer(Keys.FIREWORK_EFFECTS,
+            entity.offer(Keys.FIREWORK_EFFECTS,
                     Collections.singletonList(
                             FireworkEffect
                                     .builder()
@@ -50,7 +49,7 @@ public class FireworkSpawner {
                     )
             );
 
-            location.spawnEntity(firework);
+            location.world().spawnEntity(entity);
         }
     }
 

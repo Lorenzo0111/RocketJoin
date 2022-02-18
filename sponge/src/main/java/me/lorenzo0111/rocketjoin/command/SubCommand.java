@@ -24,8 +24,7 @@
 
 package me.lorenzo0111.rocketjoin.command;
 
-import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.command.args.CommandContext;
+import org.spongepowered.api.command.parameter.CommandContext;
 
 public abstract class SubCommand {
 
@@ -41,6 +40,6 @@ public abstract class SubCommand {
         return command;
     }
 
-    public abstract void perform(CommandSource sender, CommandContext args);
+    public abstract void perform(CommandContext args);
 
 }

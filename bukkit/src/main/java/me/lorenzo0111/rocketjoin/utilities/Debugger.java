@@ -24,8 +24,8 @@
 
 package me.lorenzo0111.rocketjoin.utilities;
 
-import me.lorenzo0111.rocketjoin.RocketJoin;
-import me.lorenzo0111.rocketjoin.common.hex.HexUtils;
+import me.lorenzo0111.rocketjoin.RocketJoinBukkit;
+import me.lorenzo0111.rocketjoin.common.platform.Platform;
 import org.bukkit.Bukkit;
 
 import java.util.Arrays;
@@ -33,10 +33,10 @@ import java.util.logging.Logger;
 
 public class Debugger {
 
-    private final RocketJoin plugin;
+    private final RocketJoinBukkit plugin;
     private final Logger logger;
 
-    public Debugger(RocketJoin plugin) {
+    public Debugger(RocketJoinBukkit plugin) {
         this.plugin = plugin;
         this.logger = plugin.getLogger();
     }
@@ -45,6 +45,7 @@ public class Debugger {
         this.log("-----------[ RocketPlugins Debugger ]-----------");
 
         this.log("Server Information:");
+        this.logData("Server Platform", Platform.getPlatform().name());
         this.logData("Server Version", Bukkit.getServer().getBukkitVersion());
         this.logData("Server Software", Bukkit.getServer().getVersion());
         this.logData("Server Plugins", Arrays.toString(Bukkit.getServer().getPluginManager().getPlugins()));
@@ -54,7 +55,7 @@ public class Debugger {
         this.log("Plugin Information");
         this.logData("Plugin Name", plugin.getDescription().getName());
         this.logData("Plugin Version", plugin.getDescription().getVersion());
-        this.logData("HEX Compatibility", HexUtils.isCompatible(getMinor()) ? "Yes" : "No");
+        this.logData("HEX Compatibility", getMinor() >= 16 ? "Yes" : "No");
 
         this.log("-----------[ RocketPlugins Debugger ]-----------");
     }

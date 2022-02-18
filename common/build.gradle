@@ -23,7 +23,7 @@
  */
 
 dependencies {
-    implementation('space.rocketplugins.pluginslib:common:2.0.3.2') {
-        exclude module: 'slimjar'
-    }
+    implementation("net.kyori:adventure-text-serializer-legacy:4.9.3")
+    implementation("net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT")
+    compileOnly('net.kyori:adventure-api:4.9.3')
 }

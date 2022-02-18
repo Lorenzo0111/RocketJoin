@@ -25,10 +25,14 @@
 package me.lorenzo0111.rocketjoin.audience;
 
 import me.lorenzo0111.rocketjoin.common.audiences.Player;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 public class WrappedPlayer {
 
-    public static Player wrap(org.spongepowered.api.entity.living.player.Player player) {
+    @Contract(value = "_ -> new", pure = true)
+    public static @NotNull Player wrap(ServerPlayer player) {
         return new Player() {
             @Override
             public boolean playerBefore() {

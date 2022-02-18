@@ -26,9 +26,10 @@ package me.lorenzo0111.rocketjoin.listener;
 
 import me.lorenzo0111.rocketjoin.RocketJoinSponge;
 import me.lorenzo0111.rocketjoin.audience.WrappedPlayer;
-import org.spongepowered.api.entity.living.player.Player;
+import net.kyori.adventure.text.Component;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.network.ClientConnectionEvent;
+import org.spongepowered.api.event.network.ServerSideConnectionEvent;
 
 public class LeaveListener {
     private final RocketJoinSponge plugin;
@@ -38,23 +39,23 @@ public class LeaveListener {
     }
 
     @Listener
-    public void onQuit(ClientConnectionEvent.Disconnect e) {
-        Player p = e.getTargetEntity();
+    public void onQuit(ServerSideConnectionEvent.Disconnect e) {
+        ServerPlayer p = e.player();
 
         if (plugin.getConfig().hide() && p.hasPermission(plugin.getConfig().hidePermission())) {
-            e.setMessageCancelled(true);
+            e.setMessage(Component.empty());
             return;
         }
 
         String condition = plugin.getHandler().getCondition(WrappedPlayer.wrap(p));
         if (condition == null) {
             if (plugin.getConfig().leave().enabled())
-                e.setMessage(plugin.parse(plugin.getConfig().leave().message(),e.getTargetEntity()));
+                e.setMessage(plugin.parse(plugin.getConfig().leave().message(),p));
 
             return;
         }
 
-        e.setMessage(plugin.parse(plugin.getConfig().leave(condition), e.getTargetEntity()));
+        e.setMessage(plugin.parse(plugin.getConfig().leave(condition), p));
 
     }
 }
