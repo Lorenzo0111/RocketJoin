@@ -28,8 +28,9 @@ import me.lorenzo0111.pluginslib.audience.BukkitAudienceManager;
 import me.lorenzo0111.pluginslib.command.Customization;
 import me.lorenzo0111.pluginslib.scheduler.BukkitScheduler;
 import me.lorenzo0111.pluginslib.updater.UpdateChecker;
-import me.lorenzo0111.rocketjoin.RocketJoin;
+import me.lorenzo0111.rocketjoin.RocketJoinBukkit;
 import me.lorenzo0111.rocketjoin.command.RocketJoinCommand;
+import me.lorenzo0111.rocketjoin.common.ChatUtils;
 import me.lorenzo0111.rocketjoin.listener.JoinListener;
 import me.lorenzo0111.rocketjoin.listener.LeaveListener;
 import org.bstats.bukkit.Metrics;
@@ -38,12 +39,13 @@ import org.bukkit.Bukkit;
 
 public class PluginLoader {
 
-    private final RocketJoin plugin;
+    private final RocketJoinBukkit plugin;
+    private final UpdateChecker updateChecker;
     private boolean placeholderapi = true;
-    private UpdateChecker updateChecker;
 
-    public PluginLoader(RocketJoin plugin) {
+    public PluginLoader(RocketJoinBukkit plugin) {
         this.plugin = plugin;
+        this.updateChecker = plugin.getUpdater();
     }
 
     public void loadMetrics() {
@@ -51,19 +53,14 @@ public class PluginLoader {
         metrics.addCustomChart(new SimplePie("conditions", () -> String.valueOf(plugin.getConfiguration().conditions().childrenList().size())));
     }
 
-    public void loadUpdater() {
-        this.updateChecker = new UpdateChecker(new BukkitScheduler(plugin), plugin.getDescription().getVersion(), plugin.getName(), 82520, "https://bit.ly/RocketJoin", null, null);
-        this.updateChecker.sendUpdateCheck(BukkitAudienceManager.audience(Bukkit.getConsoleSender()));
-    }
-
     public void registerEvents() {
         Bukkit.getServer().getPluginManager().registerEvents(new LeaveListener(plugin), plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new JoinListener(plugin,this), plugin);
 
         Customization customization = new Customization(
-                plugin.parse(plugin.getPrefix() + "&r &7Running &e" + plugin.getDescription().getName() + " &ev" + plugin.getDescription().getVersion() + " &7by &eLorenzo0111&7!"),
-                plugin.parse(plugin.getPrefix() + "&r &7Command not found, use &8/rocketjoin help&7 for a command list"),
-                plugin.parse(plugin.getPrefix() + "&r &7Use &8/rocketjoin help&7 for a command list")
+                ChatUtils.serializer().serialize(plugin.parse(plugin.getPrefix() + "&r &7Running &e" + plugin.getDescription().getName() + " &ev" + plugin.getDescription().getVersion() + " &7by &eLorenzo0111&7!")),
+                ChatUtils.serializer().serialize(plugin.parse(plugin.getPrefix() + "&r &7Command not found, use &8/rocketjoin help&7 for a command list")),
+                ChatUtils.serializer().serialize(plugin.parse(plugin.getPrefix() + "&r &7Use &8/rocketjoin help&7 for a command list"))
         );
         new RocketJoinCommand(plugin,"rocketjoin",customization);
     }

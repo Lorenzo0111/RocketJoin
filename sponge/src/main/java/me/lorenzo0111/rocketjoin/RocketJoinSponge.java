@@ -28,41 +28,43 @@ import com.google.inject.Inject;
 import me.lorenzo0111.rocketjoin.command.RocketJoinSpongeCommand;
 import me.lorenzo0111.rocketjoin.common.ChatUtils;
 import me.lorenzo0111.rocketjoin.common.ConfigExtractor;
+import me.lorenzo0111.rocketjoin.common.RocketJoin;
 import me.lorenzo0111.rocketjoin.common.conditions.ConditionHandler;
 import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.file.FileConfiguration;
 import me.lorenzo0111.rocketjoin.common.exception.LoadException;
-import me.lorenzo0111.rocketjoin.common.hex.HexUtils;
+import me.lorenzo0111.rocketjoin.common.utils.IScheduler;
 import me.lorenzo0111.rocketjoin.listener.JoinListener;
 import me.lorenzo0111.rocketjoin.listener.LeaveListener;
-import me.lorenzo0111.rocketjoin.utilities.UpdateChecker;
+import net.kyori.adventure.text.Component;
+import org.apache.logging.log4j.Logger;
+import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.bstats.sponge.Metrics;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.command.args.GenericArguments;
-import org.spongepowered.api.command.spec.CommandSpec;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.Command;
+import org.spongepowered.api.command.parameter.Parameter;
 import org.spongepowered.api.config.ConfigDir;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.game.state.GameStartedServerEvent;
-import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.plugin.PluginContainer;
-import org.spongepowered.api.text.Text;
+import org.spongepowered.api.event.lifecycle.ConstructPluginEvent;
+import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
+import org.spongepowered.plugin.PluginContainer;
+import org.spongepowered.plugin.builtin.jvm.Plugin;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Optional;
 
-@Plugin(id = "rocketjoin", name = "RocketJoin", version = "@version@",
-        description = "Custom Join Messages Plugin", authors = {"Lorenzo0111"})
-public class RocketJoinSponge {
+@Plugin("rocketjoin")
+public class RocketJoinSponge implements RocketJoin {
+    private IScheduler scheduler;
     @Inject private Logger logger;
     @ConfigDir(sharedRoot = false) @Inject private Path path;
     private IConfiguration conf;
     @Inject private Game game;
     private PluginContainer plugin;
-    private UpdateChecker updater;
     private ConditionHandler handler;
 
     @Inject
@@ -71,8 +73,8 @@ public class RocketJoinSponge {
     }
 
     @Listener
-    public void onServerStart(GameStartedServerEvent event) {
-        final Optional<PluginContainer> pluginContainer = game.getPluginManager().fromInstance(this);
+    public void onServerStart(ConstructPluginEvent event) {
+        final Optional<PluginContainer> pluginContainer = game.pluginManager().fromInstance(this);
 
         if (!pluginContainer.isPresent()) {
             try {
@@ -84,9 +86,20 @@ public class RocketJoinSponge {
         }
 
         this.plugin = pluginContainer.get();
+        this.scheduler = new IScheduler() {
+            @Override
+            public void async(Runnable runnable) {
+                Sponge.game()
+                        .asyncScheduler()
+                        .executor(plugin)
+                        .execute(runnable);
+            }
 
-        this.updater = new UpdateChecker(this,"rocketjoin", "https://bit.ly/RocketJoin");
-        this.updater.fetch().thenAccept((available) -> this.updater.sendUpdateCheck(this.game.getServer().getConsole(),available));
+            @Override
+            public void sync(Runnable runnable) {
+                runnable.run();
+            }
+        };
 
         File config = new ConfigExtractor(this.getClass(),path.toFile(), "config.yml")
                 .extract();
@@ -101,18 +114,28 @@ public class RocketJoinSponge {
 
         this.reloadConfig();
 
-        game.getEventManager().registerListeners(this, new JoinListener(this));
-        game.getEventManager().registerListeners(this, new LeaveListener(this));
+        game.eventManager().registerListeners(plugin, new JoinListener(this));
+        game.eventManager().registerListeners(plugin, new LeaveListener(this));
 
-        CommandSpec myCommandSpec = CommandSpec.builder()
-                .description(Text.of("RocketJoin main command"))
-                .arguments(GenericArguments.optional(GenericArguments.string(Text.of("subcommand"))))
-                .executor(new RocketJoinSpongeCommand(this))
-                .build();
 
-        this.getGame().getCommandManager().register(plugin, myCommandSpec, "rj", "rocketjoin", "rjs");
 
         logger.info("RocketJoin loaded!");
+    }
+
+    @Listener
+    public void registerCommands(@NotNull RegisterCommandEvent<Command.Parameterized> event) {
+        Parameter.Value<String> subcommand = Parameter.string()
+                .key("subcommand")
+                .optional()
+                .build();
+
+        Command.Parameterized command = Command.builder()
+                .extendedDescription(Component.text("RocketJoin main command"))
+                .executor(new RocketJoinSpongeCommand(this, subcommand))
+                .addParameter(subcommand)
+                .build();
+
+        event.register(plugin,command,"rj", "rjs", "rocketjoin");
     }
 
     public void reloadConfig() {
@@ -140,31 +163,26 @@ public class RocketJoinSponge {
         return plugin;
     }
 
-    public UpdateChecker getUpdater() {
-        return updater;
-    }
-
     public String getVersion() {
-        final Optional<String> s = this.getPlugin().getVersion();
-        if (!s.isPresent()) {
-            try {
-                throw new LoadException("Version cannot be null.");
-            } catch (LoadException e) {
-                this.getLogger().error(e.getMessage());
-            }
+        final ArtifactVersion s = this.getPlugin().metadata().version();
 
-            return null;
-        }
-
-        return s.get();
+        return s.getMajorVersion() + "." + s.getMinorVersion();
     }
 
-    public Text parse(String string, CommandSource source) {
-        String str = string.replace("{player}", source.getName());
+    @Override
+    public IScheduler getScheduler() {
+        return scheduler;
+    }
 
-        str = ChatUtils.colorize(str);
-        str = HexUtils.translateHexColorCodes(str);
-        return Text.of(str);
+    @Override
+    public IConfiguration getConfiguration() {
+        return conf;
+    }
+
+    public Component parse(@NotNull String string, @NotNull Player source) {
+        String str = string.replace("{player}", source.name());
+
+        return ChatUtils.colorize(str);
     }
 
     public ConditionHandler getHandler() {

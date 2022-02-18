@@ -29,14 +29,17 @@ import me.lorenzo0111.rocketjoin.audience.WrappedPlayer;
 import me.lorenzo0111.rocketjoin.common.config.ConditionConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
 import me.lorenzo0111.rocketjoin.utilities.FireworkSpawner;
+import net.kyori.adventure.sound.Sound;
+import net.kyori.adventure.title.Title;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.effect.sound.SoundType;
+import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.network.ClientConnectionEvent;
-import org.spongepowered.api.text.title.Title;
+import org.spongepowered.api.event.network.ServerSideConnectionEvent;
 import org.spongepowered.configurate.serialize.SerializationException;
 
+import java.time.Duration;
 import java.util.List;
 
 public class JoinListener {
@@ -47,8 +50,8 @@ public class JoinListener {
     }
 
     @Listener
-    public void onJoin(ClientConnectionEvent.Join e) {
-        Player p = e.getTargetEntity();
+    public void onJoin(ServerSideConnectionEvent.Join e) {
+        ServerPlayer p = e.player();
 
         IConfiguration configuration = plugin.getConfig();
         String welcome = configuration.welcome();
@@ -67,8 +70,8 @@ public class JoinListener {
 
         try {
             this.executeCommands(condition, p);
-        } catch (SerializationException serializationException) {
-            serializationException.printStackTrace();
+        } catch (SerializationException | CommandException ex) {
+            ex.printStackTrace();
         }
 
         if (condition == null) {
@@ -78,15 +81,10 @@ public class JoinListener {
                 e.setMessage(plugin.parse(message, p));
             }
             if (configuration.join().enableTitle()) {
-                Title title = Title.builder()
-                        .title(plugin.parse(configuration.join().title(),p))
-                        .subtitle(plugin.parse(configuration.join().subTitle(),p))
-                        .fadeIn(15)
-                        .stay(40)
-                        .fadeOut(15)
-                        .build();
+                Title title = Title.title(plugin.parse(configuration.join().title(),p),
+                                plugin.parse(configuration.join().subTitle(),p), Title.Times.of(Duration.ofMillis(500), Duration.ofSeconds(2), Duration.ofMillis(500)));
 
-                p.sendTitle(title);
+                p.showTitle(title);
             }
             return;
         }
@@ -96,28 +94,27 @@ public class JoinListener {
         ConditionConfiguration section = configuration.condition(condition);
 
         if (section.sound()) {
-            SoundType type = SoundType.of(section.soundType());
-
-            for (Player player : Sponge.getServer().getOnlinePlayers())
-                player.playSound(type,player.getPosition(), 60f);
+            Sound sound = section.soundType();
+            for (Player player : Sponge.server().onlinePlayers())
+                player.playSound(sound);
         }
 
         if (section.fireworks()) {
-            FireworkSpawner.spawnFireworks(p.getLocation(), section.fireworksAmount());
+            FireworkSpawner.spawnFireworks(p.location(), section.fireworksAmount());
         }
     }
 
-    private void handleUpdate(ClientConnectionEvent.Join event) {
-        if (event.getTargetEntity().hasPermission("rocketjoin.update") && plugin.getConfig().update()) {
-            plugin.getUpdater().sendUpdateCheck(event.getTargetEntity());
+    private void handleUpdate(ServerSideConnectionEvent.Join event) {
+        if (event.player().hasPermission("rocketjoin.update") && plugin.getConfig().update()) {
+            plugin.getUpdater().sendUpdateCheck(event.player());
         }
     }
 
-    private void executeCommands(String condition, Player player) throws SerializationException {
+    private void executeCommands(String condition, Player player) throws SerializationException, CommandException {
         List<String> commands = condition == null ? plugin.getConfig().commands() : plugin.getConfig().commands(condition);
 
         for (String command : commands) {
-            plugin.getGame().getCommandManager().process(plugin.getGame().getServer().getConsole(), command.replace("{player}", player.getName()));
+            plugin.getGame().server().commandManager().process(plugin.getGame().systemSubject(), command.replace("{player}", player.name()));
         }
     }
 

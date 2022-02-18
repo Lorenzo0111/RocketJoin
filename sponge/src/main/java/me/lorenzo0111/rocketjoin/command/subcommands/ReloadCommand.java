@@ -27,9 +27,8 @@ package me.lorenzo0111.rocketjoin.command.subcommands;
 import me.lorenzo0111.rocketjoin.command.RocketJoinSpongeCommand;
 import me.lorenzo0111.rocketjoin.command.SubCommand;
 import me.lorenzo0111.rocketjoin.common.ChatUtils;
-import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.text.Text;
+import net.kyori.adventure.text.Component;
+import org.spongepowered.api.command.parameter.CommandContext;
 
 public class ReloadCommand extends SubCommand {
 
@@ -43,8 +42,8 @@ public class ReloadCommand extends SubCommand {
     }
 
     @Override
-    public void perform(CommandSource sender, CommandContext args) {
+    public void perform(CommandContext args) {
         this.getCommand().getPlugin().reloadConfig();
-        sender.sendMessage(Text.of(ChatUtils.colorize(this.getCommand().getPlugin().getConfig().prefix() + "&r &7Plugin reloaded!")));
+        args.cause().audience().sendMessage(ChatUtils.colorize(this.getCommand().getPlugin().getConfig().prefix() + "&r &7Plugin reloaded!"));
     }
 }

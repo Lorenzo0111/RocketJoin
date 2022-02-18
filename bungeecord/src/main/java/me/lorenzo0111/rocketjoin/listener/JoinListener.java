@@ -24,19 +24,20 @@
 
 package me.lorenzo0111.rocketjoin.listener;
 
+import me.lorenzo0111.pluginslib.updater.UpdateChecker;
 import me.lorenzo0111.rocketjoin.RocketJoinBungee;
 import me.lorenzo0111.rocketjoin.audience.WrappedPlayer;
 import me.lorenzo0111.rocketjoin.common.database.PlayersDatabase;
-import me.lorenzo0111.rocketjoin.updater.UpdateChecker;
+import me.lorenzo0111.rocketjoin.utilities.BungeeUtilities;
 import me.lorenzo0111.rocketjoin.utilities.PluginLoader;
-import net.md_5.bungee.api.Title;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.title.Title;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import org.spongepowered.configurate.serialize.SerializationException;
 
+import java.time.Duration;
 import java.util.List;
 
 public class JoinListener implements Listener {
@@ -51,15 +52,14 @@ public class JoinListener implements Listener {
     @EventHandler
     public void onJoin(PostLoginEvent e) {
         ProxiedPlayer p = e.getPlayer();
-        PlayersDatabase.add(p.getUniqueId());
 
         if (plugin.getConfiguration().update() && p.hasPermission("rocketjoin.update")) {
-            updateChecker.sendUpdateCheck(p);
+            updateChecker.sendUpdateCheck(plugin.getAudiences().player(p));
         }
 
         String welcome = plugin.getConfiguration().welcome();
         if (!welcome.equalsIgnoreCase("disable")) {
-            p.sendMessage(new TextComponent(plugin.parse(welcome, p)));
+            plugin.sendMessage(p,plugin.parse(welcome, p));
         }
 
         if (plugin.getConfiguration().hide() && p.hasPermission(plugin.getConfiguration().hidePermission()))
@@ -77,21 +77,20 @@ public class JoinListener implements Listener {
             boolean join = plugin.getConfiguration().join().enabled();
             String message = plugin.getConfiguration().join().message();
             if (join) {
-                plugin.getProxy().broadcast(plugin.parse(message,p));
+                BungeeUtilities.broadcast(plugin,message,p);
             }
             if (plugin.getConfiguration().join().enableTitle()) {
-                Title title = plugin.getProxy().createTitle()
-                        .title(plugin.parse(plugin.getConfiguration().join().title(), p))
-                        .subTitle(plugin.parse(plugin.getConfiguration().join().subTitle(), p))
-                        .fadeIn(15)
-                        .stay(40)
-                        .fadeOut(15);
-                p.sendTitle(title);
+                Title title = Title.title(
+                                plugin.parse(plugin.getConfiguration().join().title(), p),
+                                plugin.parse(plugin.getConfiguration().join().subTitle(), p),
+                                Title.Times.of(Duration.ofMillis(500), Duration.ofSeconds(2), Duration.ofMillis(500)));
+                plugin.getAudiences().player(p).showTitle(title);
             }
             return;
         }
 
-        plugin.getProxy().broadcast(plugin.parse(plugin.getConfiguration().join(condition),p));
+        BungeeUtilities.broadcast(plugin,plugin.getConfiguration().join(condition),p);
+        PlayersDatabase.add(p.getUniqueId());
     }
 
     private void executeCommands(String condition, ProxiedPlayer player) throws SerializationException {

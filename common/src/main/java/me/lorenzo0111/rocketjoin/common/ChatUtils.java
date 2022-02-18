@@ -24,23 +24,23 @@
 
 package me.lorenzo0111.rocketjoin.common;
 
-import me.lorenzo0111.pluginslib.ChatColor;
-import me.lorenzo0111.rocketjoin.common.hex.HexUtils;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.TextColor;
-import org.jetbrains.annotations.Nullable;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.jetbrains.annotations.NotNull;
 
 public class ChatUtils {
-    public static String colorize(String textToTranslate) {
-        String text = HexUtils.translateHexColorCodes(textToTranslate);
-        return ChatColor.translateAlternateColorCodes('&', text);
+    private static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.builder().character('&').hexColors().hexCharacter('#').build();
+    private static final MiniMessage FORMATTER = MiniMessage.get();
+
+    public static @NotNull Component colorize(String textToTranslate) {
+        // Yes, that's cringe.
+
+        String text = FORMATTER.serialize(SERIALIZER.deserialize(textToTranslate));
+        return FORMATTER.deserialize(text);
     }
 
-    public static TextComponent colorize(String textToTranslate, @Nullable TextColor color) {
-        String result = colorize(textToTranslate);
-
-        return Component.text(result, color);
+    public static LegacyComponentSerializer serializer() {
+        return SERIALIZER;
     }
-
 }

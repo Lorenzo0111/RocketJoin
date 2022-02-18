@@ -1,9 +1,0 @@
-[{
-  "modid": "rocketjoin",
-  "name": "RocketJoin",
-  "version": "@version@",
-  "description": "Custom Join Messages Plugin",
-  "authorList": [
-    "Lorenzo0111"
-  ]
-}]

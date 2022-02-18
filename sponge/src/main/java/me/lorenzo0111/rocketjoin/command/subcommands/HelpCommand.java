@@ -27,9 +27,10 @@ package me.lorenzo0111.rocketjoin.command.subcommands;
 import me.lorenzo0111.rocketjoin.command.RocketJoinSpongeCommand;
 import me.lorenzo0111.rocketjoin.command.SubCommand;
 import me.lorenzo0111.rocketjoin.common.ChatUtils;
-import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.text.Text;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.NotNull;
+import org.spongepowered.api.command.parameter.CommandContext;
 
 public class HelpCommand extends SubCommand {
 
@@ -43,8 +44,10 @@ public class HelpCommand extends SubCommand {
     }
 
     @Override
-    public void perform(CommandSource sender, CommandContext args) {
-        sender.sendMessage(Text.of(ChatUtils.colorize(this.getCommand().getPlugin().getConfig().prefix() + "&r &8/rocketjoin help » &7Show this message!")));
-        sender.sendMessage(Text.of(ChatUtils.colorize(this.getCommand().getPlugin().getConfig().prefix() + "&r &8/rocketjoin reload » &7Reload the plugin!")));
+    public void perform(@NotNull CommandContext args) {
+        Audience sender = args.cause().audience();
+
+        sender.sendMessage(ChatUtils.colorize(this.getCommand().getPlugin().getConfig().prefix() + "&r &8/rocketjoin help » &7Show this message!"));
+        sender.sendMessage(ChatUtils.colorize(this.getCommand().getPlugin().getConfig().prefix() + "&r &8/rocketjoin reload » &7Reload the plugin!"));
     }
 }

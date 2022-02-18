@@ -30,6 +30,7 @@ import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.SingleConfiguration;
 import me.lorenzo0111.rocketjoin.common.exception.LoadException;
 import me.lorenzo0111.rocketjoin.common.platform.Platform;
+import net.kyori.adventure.text.Component;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -61,11 +62,11 @@ public class FileConfiguration implements IConfiguration {
 
     @Override
     public String prefix() {
-        return ChatUtils.colorize(config.node("prefix").getString());
+        return config.node("prefix").getString();
     }
 
     @Override
-    public String noPermission() {
+    public Component noPermission() {
         return ChatUtils.colorize(config.node("no_permission").getString());
     }
 
@@ -118,7 +119,7 @@ public class FileConfiguration implements IConfiguration {
             return this.join().message();
         }
 
-        return ChatUtils.colorize(config.node("conditions",conditionKey,"join").getString());
+        return condition(conditionKey).join();
     }
 
     @Override
@@ -127,7 +128,7 @@ public class FileConfiguration implements IConfiguration {
             return this.leave().message();
         }
 
-        return ChatUtils.colorize(config.node("conditions",conditionKey,"leave").getString());
+        return condition(conditionKey).leave();
     }
 
     @Override
@@ -168,7 +169,7 @@ public class FileConfiguration implements IConfiguration {
 
     @Override
     public String welcome() {
-        return ChatUtils.colorize(config.node("welcome").getString("disable"));
+        return config.node("welcome").getString("disable");
     }
 
     @Override

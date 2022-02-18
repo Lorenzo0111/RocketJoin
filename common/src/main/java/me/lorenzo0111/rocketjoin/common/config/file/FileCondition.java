@@ -25,6 +25,8 @@
 package me.lorenzo0111.rocketjoin.common.config.file;
 
 import me.lorenzo0111.rocketjoin.common.config.ConditionConfiguration;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -66,8 +68,8 @@ public class FileCondition implements ConditionConfiguration {
     }
 
     @Override
-    public String soundType() {
-        return configuration.node("sound-type").getString();
+    public Sound soundType() {
+        return Sound.sound(Key.key(configuration.node("sound-type").getString("")), Sound.Source.AMBIENT, 60f,1f);
     }
 
     @Override

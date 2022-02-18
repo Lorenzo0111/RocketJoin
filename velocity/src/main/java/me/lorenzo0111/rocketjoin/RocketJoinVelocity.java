@@ -35,15 +35,16 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import me.lorenzo0111.rocketjoin.command.RocketJoinVelocityCommand;
 import me.lorenzo0111.rocketjoin.common.ChatUtils;
 import me.lorenzo0111.rocketjoin.common.ConfigExtractor;
+import me.lorenzo0111.rocketjoin.common.RocketJoin;
 import me.lorenzo0111.rocketjoin.common.conditions.ConditionHandler;
 import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.file.FileConfiguration;
 import me.lorenzo0111.rocketjoin.common.database.PlayersDatabase;
 import me.lorenzo0111.rocketjoin.common.exception.LoadException;
+import me.lorenzo0111.rocketjoin.common.utils.IScheduler;
 import me.lorenzo0111.rocketjoin.listener.JoinListener;
 import me.lorenzo0111.rocketjoin.listener.LeaveListener;
 import me.lorenzo0111.rocketjoin.listener.SwitchListener;
-import me.lorenzo0111.rocketjoin.utilities.UpdateChecker;
 import net.kyori.adventure.text.Component;
 import org.bstats.charts.SimplePie;
 import org.bstats.velocity.Metrics;
@@ -56,13 +57,13 @@ import java.util.Objects;
 
 @Plugin(id = "rocketjoin", name = "RocketJoin", version = "@version@",
         description = "Custom Join Messages Plugin", authors = {"Lorenzo0111"})
-public class RocketJoinVelocity {
+public class RocketJoinVelocity implements RocketJoin {
     private final Logger logger;
     private final Path path;
     private final ProxyServer server;
     private final Metrics.Factory metricsFactory;
 
-    private UpdateChecker updater;
+    private IScheduler scheduler;
     private IConfiguration config;
     private ConditionHandler handler;
 
@@ -76,8 +77,17 @@ public class RocketJoinVelocity {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        this.updater = new UpdateChecker(this,82520, "https://bit.ly/RocketJoin");
-        this.updater.fetch().thenAccept((available) -> this.updater.sendUpdateCheck(this.server.getConsoleCommandSource(),available));
+        this.scheduler = new IScheduler() {
+            @Override
+            public void async(Runnable runnable) {
+                getServer().getScheduler().buildTask(RocketJoinVelocity.this, runnable).schedule();
+            }
+
+            @Override
+            public void sync(Runnable runnable) {
+                runnable.run();
+            }
+        };
 
         File conf = new ConfigExtractor(this.getClass(),path.toFile(), "config.yml")
                 .extract();
@@ -126,10 +136,6 @@ public class RocketJoinVelocity {
         return server;
     }
 
-    public UpdateChecker getUpdater() {
-        return updater;
-    }
-
     public IConfiguration getConfig() {
         return config;
     }
@@ -138,10 +144,19 @@ public class RocketJoinVelocity {
         return "@version@";
     }
 
+    @Override
+    public IScheduler getScheduler() {
+        return scheduler;
+    }
+
+    @Override
+    public IConfiguration getConfiguration() {
+        return config;
+    }
+
     public Component parse(@Nullable String string, Player player) {
         String str = string == null ? "" : string.replace("{player}", player.getUsername());
-        str = ChatUtils.colorize(str);
-        return Component.text(str);
+        return ChatUtils.colorize(str);
     }
 
     public void reloadConfig() {

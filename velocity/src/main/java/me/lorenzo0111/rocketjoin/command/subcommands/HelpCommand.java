@@ -42,8 +42,8 @@ public class HelpCommand extends SubCommand {
 
     @Override
     public void perform(CommandSource sender, String[] args) {
-        sender.sendMessage(ChatUtils.colorize(this.getCommand().getPlugin().getConfig().prefix() + "&r &8/rocketjoin help » &7Show this message!", null));
-        sender.sendMessage(ChatUtils.colorize(this.getCommand().getPlugin().getConfig().prefix() + "&r &8/rocketjoin reload » &7Reload the plugin!", null));
-        sender.sendMessage(ChatUtils.colorize(this.getCommand().getPlugin().getConfig().prefix() + "&r &8/rocketjoin debug » &7Print debug message!", null));
+        sender.sendMessage(ChatUtils.colorize(this.getCommand().getPlugin().getConfig().prefix() + "&r &8/rocketjoin help » &7Show this message!"));
+        sender.sendMessage(ChatUtils.colorize(this.getCommand().getPlugin().getConfig().prefix() + "&r &8/rocketjoin reload » &7Reload the plugin!"));
+        sender.sendMessage(ChatUtils.colorize(this.getCommand().getPlugin().getConfig().prefix() + "&r &8/rocketjoin debug » &7Print debug message!"));
     }
 }

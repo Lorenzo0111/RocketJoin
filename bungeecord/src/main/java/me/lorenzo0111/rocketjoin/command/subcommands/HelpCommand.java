@@ -41,8 +41,8 @@ public class HelpCommand extends SubCommand {
 
     @Override
     public void perform(CommandSender sender, String[] args) {
-        sender.sendMessage(getCommand().getPlugin().parse(getCommand().getPlugin().getPrefix() + "&r &8/rocketjoin help » &7Show this message!"));
-        sender.sendMessage(getCommand().getPlugin().parse(getCommand().getPlugin().getPrefix() + "&r &8/rocketjoin reload » &7Reload the plugin!"));
-        sender.sendMessage(getCommand().getPlugin().parse(getCommand().getPlugin().getPrefix() + "&r &8/rocketjoin debug » &7Print debug message!"));
+        this.getCommand().getPlugin().sendMessage(sender, getCommand().getPlugin().parse(getCommand().getPlugin().getPrefix() + "&r &8/rocketjoin help » &7Show this message!"));
+        this.getCommand().getPlugin().sendMessage(sender, getCommand().getPlugin().parse(getCommand().getPlugin().getPrefix() + "&r &8/rocketjoin reload » &7Reload the plugin!"));
+        this.getCommand().getPlugin().sendMessage(sender, getCommand().getPlugin().parse(getCommand().getPlugin().getPrefix() + "&r &8/rocketjoin debug » &7Print debug message!"));
     }
 }

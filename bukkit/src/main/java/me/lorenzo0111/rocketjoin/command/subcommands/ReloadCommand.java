@@ -26,7 +26,7 @@ package me.lorenzo0111.rocketjoin.command.subcommands;
 
 import me.lorenzo0111.pluginslib.audience.User;
 import me.lorenzo0111.pluginslib.command.SubCommand;
-import me.lorenzo0111.rocketjoin.RocketJoin;
+import me.lorenzo0111.rocketjoin.RocketJoinBukkit;
 import me.lorenzo0111.rocketjoin.command.RocketJoinCommand;
 
 public class ReloadCommand extends SubCommand {
@@ -42,9 +42,9 @@ public class ReloadCommand extends SubCommand {
 
     @Override
     public void handleSubcommand(User<?> user, String[] strings) {
-        RocketJoin plugin = (RocketJoin) this.getCommand().getPlugin();
+        RocketJoinBukkit plugin = (RocketJoinBukkit) this.getCommand().getPlugin();
         plugin.reloadConfig();
-        user.audience().sendMessage(plugin.parseComponent(plugin.getPrefix() + "&r &7Plugin reloaded!"));
+        user.audience().sendMessage(plugin.parse(plugin.getPrefix() + "&r &7Plugin reloaded!"));
     }
 
 }

@@ -26,47 +26,48 @@ package me.lorenzo0111.rocketjoin.listener;
 
 import me.lorenzo0111.pluginslib.audience.BukkitAudienceManager;
 import me.lorenzo0111.pluginslib.updater.UpdateChecker;
-import me.lorenzo0111.rocketjoin.RocketJoin;
+import me.lorenzo0111.rocketjoin.RocketJoinBukkit;
 import me.lorenzo0111.rocketjoin.audience.WrappedPlayer;
+import me.lorenzo0111.rocketjoin.common.ChatUtils;
 import me.lorenzo0111.rocketjoin.common.config.ConditionConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
 import me.lorenzo0111.rocketjoin.utilities.FireworkSpawner;
 import me.lorenzo0111.rocketjoin.utilities.PluginLoader;
 import me.lorenzo0111.rocketjoin.utilities.VanishUtils;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
+import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.time.Duration;
 import java.util.List;
 
 public class JoinListener implements Listener {
-    private final RocketJoin plugin;
+    private final RocketJoinBukkit plugin;
     private final FireworkSpawner fireworkSpawner = new FireworkSpawner();
     private final UpdateChecker updateChecker;
 
-    public JoinListener(RocketJoin plugin, PluginLoader loader) {
+    public JoinListener(RocketJoinBukkit plugin, @NotNull PluginLoader loader) {
         this.plugin = plugin;
         this.updateChecker = loader.getUpdater();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onJoin(PlayerJoinEvent e) {
+    public void onJoin(@NotNull PlayerJoinEvent e) {
 
         Player p = e.getPlayer();
 
         IConfiguration configuration = plugin.getConfiguration();
         String welcome = configuration.welcome();
         if (!welcome.equalsIgnoreCase("disable")) {
-            p.sendMessage(plugin.parse(welcome, p));
+            BukkitAudienceManager.audience(e.getPlayer()).sendMessage(plugin.parse(welcome, p));
         }
 
         e.setJoinMessage(null);
@@ -92,26 +93,26 @@ public class JoinListener implements Listener {
         if (condition == null) {
             boolean join = configuration.join().enabled();
             if (join) {
-                e.setJoinMessage(plugin.parse(configuration.join().message(), p));
+                e.setJoinMessage(ChatUtils.serializer().serialize(plugin.parse(configuration.join().message(), p)));
             }
             if (configuration.join().enableTitle()) {
                 Audience audience = BukkitAudienceManager.audience(p);
-                audience.showTitle(Title.title(Component.text(plugin.parse(configuration.join().title(),p)),
-                        Component.text(plugin.parse(configuration.join().subTitle(),p)),
+                audience.showTitle(Title.title(plugin.parse(configuration.join().title(),p),
+                        plugin.parse(configuration.join().subTitle(),p),
                         Title.Times.of(Duration.ofMillis(500), Duration.ofSeconds(2), Duration.ofMillis(500))));
             }
             return;
         }
 
-        e.setJoinMessage(plugin.parse(configuration.join(condition),p));
+        e.setJoinMessage(ChatUtils.serializer().serialize(plugin.parse(configuration.join(condition),p)));
 
         ConditionConfiguration section = configuration.condition(condition);
 
         if (section.sound()) {
-            Sound sound = Sound.valueOf(section.soundType());
+            Sound sound = section.soundType();
 
             for (Player player : Bukkit.getOnlinePlayers())
-                player.playSound(player.getLocation(), sound, 60f, 1f);
+                BukkitAudienceManager.audience(player).playSound(sound);
         }
 
         if (section.fireworks()) {
