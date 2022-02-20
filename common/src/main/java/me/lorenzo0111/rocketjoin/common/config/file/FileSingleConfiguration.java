@@ -45,6 +45,21 @@ public class FileSingleConfiguration implements SingleConfiguration {
     }
 
     @Override
+    public String otherServerMessage()  {
+        return node.node("otherServerMessage").getString();
+    }
+
+    @Override
+    public String messageFrom()  {
+        return node.node("messageFrom").getString();
+    }
+
+    @Override
+    public String messageTo()  {
+        return node.node("messageTo").getString();
+    }
+
+    @Override
     public boolean enableTitle() {
         return node.node("enable-title").getBoolean();
     }

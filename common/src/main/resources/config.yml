@@ -23,24 +23,30 @@ update-message: true
 # PlaceholderAPI Support! Download it from tinyurl.com/PlaceholderAPI
 
 # Join message
+# Note:
+# otherServerMessage is only available in a proxy( Velocity or Bungeecord)
+# Additional placeholders: {server}
 join:
   enabled: true
   message: "&a{player} &7joined!"
+  otherServerMessage: "&a{player} &7joined &a{server}!"
   enable-title: true
-  # Send a title to the player when he join the server!
+  # Send a title to the player when they join the server!
   title: "&a&lWelcome {player}!"
   subtitle: "&7Welcome in ServerName Server!"
 
 leave:
   enabled: true
   message: "&c{player} &7left!"
+  otherServerMessage: "&c{player} &7left &a{server}!"
 
 # Only available in a proxy( Velocity or Bungeecord)
 # Called on server switch
 # Additional placeholders: {oldServer} {newServer}
 serverSwitch:
   enabled: false
-  message: "&a{player} &7switched to &a{newServer}"
+  messageFrom: "&a{player} &7switched to &a{newServer}"
+  messageTo: "&a{player} &7came from &a{oldServer}"
 
 # Commands that will be executed from console when an user joins the server
 # If you want to disable this just set it to []
