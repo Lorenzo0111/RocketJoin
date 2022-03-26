@@ -31,12 +31,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class ChatUtils {
     private static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.builder().character('&').hexColors().hexCharacter('#').build();
-    private static final MiniMessage FORMATTER = MiniMessage.get();
+    private static final MiniMessage FORMATTER = MiniMessage.miniMessage();
 
     public static @NotNull Component colorize(String textToTranslate) {
-        // Yes, that's cringe.
-
-        String text = FORMATTER.serialize(SERIALIZER.deserialize(textToTranslate));
+        String text = FORMATTER.serialize(SERIALIZER.deserialize(textToTranslate)).replace("\\", "");
         return FORMATTER.deserialize(text);
     }
 

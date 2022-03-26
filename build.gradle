@@ -38,7 +38,7 @@ ext {
     deps = "me.lorenzo0111.rocketjoin.libraries."
 }
 
-version = '2.4'
+version = '2.4.1'
 
 subprojects {
     apply plugin: 'java'
@@ -55,7 +55,6 @@ subprojects {
         maven { url 'https://nexus.velocitypowered.com/repository/maven-public/' }
         maven { url 'https://repo.spongepowered.org/repository/maven-public/' }
         maven { url 'https://repo.repsy.io/mvn/lorenzo0111/public/' }
-        maven { url 'https://repo.vshnv.tech/releases/' }
     }
 
     dependencies {
@@ -100,6 +99,10 @@ subprojects {
             inputs.property 'version', version
             filter ReplaceTokens, tokens: [version: version]
         }
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
     }
 
     tasks.build.dependsOn tasks.shadowJar

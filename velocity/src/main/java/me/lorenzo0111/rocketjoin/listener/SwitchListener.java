@@ -38,7 +38,7 @@ public class SwitchListener {
 
     @Subscribe
     public void onSwitch(ServerConnectedEvent event) {
-        if (event.getPreviousServer().isEmpty()) return;
+        if (!event.getPreviousServer().isPresent()) return;
 
         if (plugin.getConfig().hide() && event.getPlayer().hasPermission(plugin.getConfig().hidePermission())) {
             return;

@@ -56,7 +56,7 @@ public class LeaveListener {
 
         String condition = plugin.getHandler().getCondition(WrappedPlayer.wrap(p));
         if (condition == null) {
-            if (e.getPlayer().getCurrentServer().isEmpty()) return;
+            if (!e.getPlayer().getCurrentServer().isPresent()) return;
             ArrayList<RegisteredServer> otherServers = new ArrayList<>(plugin.getServer().getAllServers());
             otherServers.remove(p.getCurrentServer().get().getServer());
 
