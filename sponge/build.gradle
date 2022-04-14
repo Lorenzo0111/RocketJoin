@@ -29,5 +29,4 @@ dependencies {
     implementation project(':common')
     implementation('org.bstats:bstats-sponge:3.0.0')
     compileOnly('org.spongepowered:spongeapi:8.0.0')
-    annotationProcessor('org.spongepowered:spongeapi:8.0.0')
 }

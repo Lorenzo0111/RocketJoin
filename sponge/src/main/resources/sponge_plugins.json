@@ -1,0 +1,34 @@
+{
+  "loader": {
+    "name": "java_plain",
+    "version": "1.0"
+  },
+  "license": "MIT",
+  "global": {
+    "version": "@version@",
+    "links": {
+      "source": "https://github.com/Lorenzo0111/RocketJoin",
+      "issues": "https://github.com/Lorenzo0111/RocketJoin/issues"
+    },
+    "contributors": [
+      {
+        "name": "Lorenzo0111",
+        "description": "Lead Developer"
+      }
+    ],
+    "dependencies": [
+      {
+        "id": "spongeapi",
+        "version": "8.0.0"
+      }
+    ]
+  },
+  "plugins": [
+    {
+      "id": "rocketjoin",
+      "name": "RocketJoin",
+      "entrypoint": "me.lorenzo0111.rocketjoin.RocketJoinSponge",
+      "description": "Custom join messages plugin"
+    }
+  ]
+}
