@@ -45,5 +45,5 @@ dependencies {
     }
     compileOnly 'org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.11.1'
-    implementation 'net.kyori:adventure-api:4.10.1'
+    implementation 'net.kyori:adventure-api:4.11.0'
 }
