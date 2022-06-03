@@ -59,6 +59,8 @@ public class JoinListener {
 
     @Subscribe
     public void onJoin(ServerPostConnectEvent e) {
+        if (e.getPreviousServer() != null) return;
+
         Player p = e.getPlayer();
 
         if (plugin.getConfig().update() && p.hasPermission("rocketjoin.update")) {
@@ -92,8 +94,7 @@ public class JoinListener {
             if (join) {
                 plugin.getServer().getScheduler().buildTask(plugin, () -> {
                     for (Audience audience : p.getCurrentServer().get().getServer().getPlayersConnected()) {
-                        if (e.getPreviousServer() != null) return;
-                        else audience.sendMessage(message);
+                        audience.sendMessage(message);
                     }
                     for (Audience audience : otherServers) {
                         audience.sendMessage(otherServerMessage);
