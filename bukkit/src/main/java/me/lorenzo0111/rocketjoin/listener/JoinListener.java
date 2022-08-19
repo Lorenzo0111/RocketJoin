@@ -38,6 +38,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -93,18 +94,24 @@ public class JoinListener implements Listener {
         if (condition == null) {
             boolean join = configuration.join().enabled();
             if (join) {
-                e.setJoinMessage(ChatUtils.serializer().serialize(plugin.parse(configuration.join().message(), p)));
+                e.setJoinMessage(
+                        ChatColor.translateAlternateColorCodes('&',
+                                ChatUtils.serializer().serialize(plugin.parse(configuration.join().message(), p))
+                        ));
             }
             if (configuration.join().enableTitle()) {
                 Audience audience = BukkitAudienceManager.audience(p);
                 audience.showTitle(Title.title(plugin.parse(configuration.join().title(),p),
                         plugin.parse(configuration.join().subTitle(),p),
-                        Title.Times.of(Duration.ofMillis(500), Duration.ofSeconds(2), Duration.ofMillis(500))));
+                        Title.Times.times(Duration.ofMillis(500), Duration.ofSeconds(2), Duration.ofMillis(500))));
             }
             return;
         }
 
-        e.setJoinMessage(ChatUtils.serializer().serialize(plugin.parse(configuration.join(condition),p)));
+        e.setJoinMessage(
+                ChatColor.translateAlternateColorCodes('&',
+                        ChatUtils.serializer().serialize(plugin.parse(configuration.join(condition),p)))
+        );
 
         ConditionConfiguration section = configuration.condition(condition);
 

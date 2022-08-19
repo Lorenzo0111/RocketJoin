@@ -28,6 +28,7 @@ import me.lorenzo0111.rocketjoin.RocketJoinBukkit;
 import me.lorenzo0111.rocketjoin.audience.WrappedPlayer;
 import me.lorenzo0111.rocketjoin.common.ChatUtils;
 import me.lorenzo0111.rocketjoin.utilities.VanishUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -58,11 +59,18 @@ public class LeaveListener implements Listener {
         String condition = plugin.getHandler().getCondition(WrappedPlayer.wrap(p));
         if (condition == null) {
             if (plugin.getConfiguration().leave().enabled())
-                e.setQuitMessage(ChatUtils.serializer().serialize(plugin.parse(plugin.getConfiguration().leave().message(),p)));
+                e.setQuitMessage(
+                        ChatColor.translateAlternateColorCodes('&',
+                            ChatUtils.serializer().serialize(plugin.parse(plugin.getConfiguration().leave().message(),p)
+                            ))
+                );
             return;
         }
 
-        e.setQuitMessage(ChatUtils.serializer().serialize(plugin.parse(plugin.getConfiguration().leave(condition),p)));
+        e.setQuitMessage(
+                ChatColor.translateAlternateColorCodes('&',
+                    ChatUtils.serializer().serialize(plugin.parse(plugin.getConfiguration().leave(condition),p))
+                ));
     }
 
 }
