@@ -69,7 +69,7 @@ conditions:
     join: "&e&l» &6&lVIP &7{player} joined!"
     leave: "&e&l» &6&lVIP &7{player} left!"
     sound: true
-    sound-type: "ENTITY_EXPERIENCE_ORB_PICKUP"
+    sound-type: "entity.experience_orb.pickup"
     fireworks: false
     fireworks-amount: 3
     commands: []
