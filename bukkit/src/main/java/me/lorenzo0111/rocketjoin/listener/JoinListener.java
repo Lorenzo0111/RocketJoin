@@ -96,7 +96,7 @@ public class JoinListener implements Listener {
             if (join) {
                 e.setJoinMessage(
                         ChatColor.translateAlternateColorCodes('&',
-                                ChatUtils.serializer().serialize(plugin.parse(configuration.join().message(), p))
+                                ChatUtils.serializer().serialize(plugin.parse(configuration.join().message(), p)).replace("&", "§")
                         ));
             }
             if (configuration.join().enableTitle()) {
