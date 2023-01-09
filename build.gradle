@@ -59,7 +59,7 @@ subprojects {
 
     dependencies {
         compileOnly('org.jetbrains:annotations:23.0.0')
-        implementation('com.google.code.gson:gson:2.10')
+        implementation('com.google.code.gson:gson:2.10.1')
         implementation('org.spongepowered:configurate-yaml:4.1.2')
         implementation('space.rocketplugins.pluginslib:common:2.0.3.2') {
             exclude module: 'slimjar'
