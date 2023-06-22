@@ -30,10 +30,18 @@ function version() {
 
 v=$(version)
 
-rm -r release/
+# if release directory is present, delete it
+if [[ -d release ]]; then
+  rm -rf release
+fi
+
+
 mkdir release
 cp ./*/build/libs/RocketJoin-*.jar release/
 rm release/RocketJoin-common-*.jar
 cp .release/* release/
+if [[ "$1" == "--no-zip" ]]; then
+  exit
+fi
 cd release || exit
 7z a "RocketJoin-${v}.zip"
