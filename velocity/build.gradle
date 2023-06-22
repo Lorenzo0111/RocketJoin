@@ -26,7 +26,7 @@ dependencies {
     implementation project(':common')
     annotationProcessor('com.velocitypowered:velocity-api:3.1.0')
     compileOnly('com.velocitypowered:velocity-api:3.0.1')
-    implementation('org.bstats:bstats-velocity:3.0.0')
+    implementation('org.bstats:bstats-velocity:3.0.2')
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens
