@@ -24,9 +24,7 @@
 
 package me.lorenzo0111.rocketjoin.utilities;
 
-import me.lorenzo0111.pluginslib.audience.BukkitAudienceManager;
 import me.lorenzo0111.pluginslib.command.Customization;
-import me.lorenzo0111.pluginslib.scheduler.BukkitScheduler;
 import me.lorenzo0111.pluginslib.updater.UpdateChecker;
 import me.lorenzo0111.rocketjoin.RocketJoinBukkit;
 import me.lorenzo0111.rocketjoin.command.RocketJoinCommand;

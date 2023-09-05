@@ -83,7 +83,7 @@ public class JoinListener implements Listener {
                 Title title = Title.title(
                                 plugin.parse(plugin.getConfiguration().join().title(), p),
                                 plugin.parse(plugin.getConfiguration().join().subTitle(), p),
-                                Title.Times.of(Duration.ofMillis(500), Duration.ofSeconds(2), Duration.ofMillis(500)));
+                                Title.Times.times(Duration.ofMillis(500), Duration.ofSeconds(2), Duration.ofMillis(500)));
                 plugin.getAudiences().player(p).showTitle(title);
             }
             return;
