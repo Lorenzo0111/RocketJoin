@@ -6,10 +6,10 @@ labels: bug
 
 ---
 
-**Type /rj bugreport and paste here the result.**
+**Type /rj dump and paste here the result.**
 
 
 **Explain your issue.**
 
 
-**Are there any errors in the console? Use: link.rocketplugins.space/paste**
+**Are there any errors in the console? Use: paste.lorenzo0111.me**

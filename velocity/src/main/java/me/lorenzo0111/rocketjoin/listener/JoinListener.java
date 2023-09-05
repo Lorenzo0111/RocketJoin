@@ -86,7 +86,7 @@ public class JoinListener {
         if (condition == null && e.getPlayer().getCurrentServer().isPresent()) {
             boolean join = plugin.getConfig().join().enabled();
             Component message = plugin.parse(plugin.getConfig().join().message(),p);
-            Component otherServerMessage =
+            Component otherServerMessage = plugin.getConfig().join().otherServerMessage().isEmpty() ? null :
                     plugin.parse(plugin.getConfig().join().otherServerMessage()
                             .replace("{server}", p.getCurrentServer().get().getServerInfo().getName()), p);
             ArrayList<RegisteredServer> otherServers = new ArrayList<>(plugin.getServer().getAllServers());
@@ -96,8 +96,10 @@ public class JoinListener {
                     for (Audience audience : p.getCurrentServer().get().getServer().getPlayersConnected()) {
                         audience.sendMessage(message);
                     }
-                    for (Audience audience : otherServers) {
-                        audience.sendMessage(otherServerMessage);
+                    if (otherServerMessage != null) {
+                        for (Audience audience : otherServers) {
+                            audience.sendMessage(otherServerMessage);
+                        }
                     }
                 }).schedule();
             }
