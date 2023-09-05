@@ -26,17 +26,13 @@ package me.lorenzo0111.rocketjoin.listener;
 
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
-import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import me.lorenzo0111.rocketjoin.RocketJoinVelocity;
 import me.lorenzo0111.rocketjoin.audience.WrappedPlayer;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 
 public class LeaveListener {
