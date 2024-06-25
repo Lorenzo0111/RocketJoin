@@ -35,7 +35,6 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
-import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.time.Duration;
 import java.util.List;
@@ -69,8 +68,8 @@ public class JoinListener implements Listener {
 
         try {
             this.executeCommands(condition, e.getPlayer());
-        } catch (SerializationException serializationException) {
-            serializationException.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
 
         if (condition == null) {
@@ -93,7 +92,7 @@ public class JoinListener implements Listener {
         PlayersDatabase.add(p.getUniqueId());
     }
 
-    private void executeCommands(String condition, ProxiedPlayer player) throws SerializationException {
+    private void executeCommands(String condition, ProxiedPlayer player) throws Exception {
         List<String> commands = condition == null ? plugin.getConfiguration().commands() : plugin.getConfiguration().commands(condition);
 
         for (String command : commands) {

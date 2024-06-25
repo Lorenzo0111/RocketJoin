@@ -22,7 +22,7 @@ You can read the plugin wiki [here](https://wiki.lorenzo0111.me/rocketjoin/start
 
 [issues]: https://github.com/Lorenzo0111/RocketJoin/issues
 
-[discord]: https://bit.ly/RocketServer_DS
+[discord]: https://discord.gg/HT47UQXBqG
 
 [spigot]: https://www.spigotmc.org/resources/rocketjoin-custom-join-message.82520/
 

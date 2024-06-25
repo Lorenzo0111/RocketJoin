@@ -32,12 +32,10 @@ import me.lorenzo0111.rocketjoin.utilities.FireworkSpawner;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.title.Title;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ServerSideConnectionEvent;
-import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.time.Duration;
 import java.util.List;
@@ -70,7 +68,7 @@ public class JoinListener {
 
         try {
             this.executeCommands(condition, p);
-        } catch (SerializationException | CommandException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 
@@ -82,7 +80,7 @@ public class JoinListener {
             }
             if (configuration.join().enableTitle()) {
                 Title title = Title.title(plugin.parse(configuration.join().title(),p),
-                                plugin.parse(configuration.join().subTitle(),p), Title.Times.of(Duration.ofMillis(500), Duration.ofSeconds(2), Duration.ofMillis(500)));
+                                plugin.parse(configuration.join().subTitle(),p), Title.Times.times(Duration.ofMillis(500), Duration.ofSeconds(2), Duration.ofMillis(500)));
 
                 p.showTitle(title);
             }
@@ -110,7 +108,7 @@ public class JoinListener {
         }
     }
 
-    private void executeCommands(String condition, Player player) throws SerializationException, CommandException {
+    private void executeCommands(String condition, Player player) throws Exception {
         List<String> commands = condition == null ? plugin.getConfig().commands() : plugin.getConfig().commands(condition);
 
         for (String command : commands) {

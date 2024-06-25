@@ -43,13 +43,16 @@ dependencies {
     implementation('me.lorenzo0111.pluginslib:bukkit:2.0.4') {
         exclude module: 'slimjar'
     }
+    implementation 'net.kyori:adventure-api:4.17.0'
+    implementation 'com.github.cryptomorin:XSeries:11.1.0'
     compileOnly 'org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.11.6'
-    implementation 'net.kyori:adventure-api:4.17.0'
 }
 
 shadowJar {
     relocate("me.lorenzo0111.pluginslib", "me.lorenzo0111.rocketjoin.pluginslib")
+    relocate("com.cryptomorin.xseries", "me.lorenzo0111.rocketjoin.libraries.xseries")
+    relocate("net.kyori", "me.lorenzo0111.rocketjoin.libraries.kyori")
 }
 
 compileJava.dependsOn ':common:shadowJar'

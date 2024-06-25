@@ -35,12 +35,12 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.util.Ticks;
-import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("UnstableApiUsage")
 public class JoinListener {
     private final RocketJoinVelocity plugin;
 
@@ -70,8 +70,8 @@ public class JoinListener {
 
         try {
             this.executeCommands(condition, e.getPlayer());
-        } catch (SerializationException serializationException) {
-            serializationException.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
 
         if (condition == null && e.getPlayer().getCurrentServer().isPresent()) {
@@ -96,7 +96,7 @@ public class JoinListener {
             }
 
             if (plugin.getConfig().join().enableTitle()) {
-                final Title.Times times = Title.Times.of(Ticks.duration(15), Duration.ofMillis(3000), Ticks.duration(20));
+                final Title.Times times = Title.Times.times(Ticks.duration(15), Duration.ofMillis(3000), Ticks.duration(20));
                 final Title title = Title.title(
                         plugin.parse(plugin.getConfig().join().title(),p),
                         plugin.parse(plugin.getConfig().join().subTitle(),p),
@@ -117,7 +117,7 @@ public class JoinListener {
         PlayersDatabase.add(p.getUniqueId());
     }
 
-    private void executeCommands(String condition, Player player) throws SerializationException {
+    private void executeCommands(String condition, Player player) throws Exception {
         List<String> commands = condition == null ? plugin.getConfig().commands() : plugin.getConfig().commands(condition);
 
         for (String command : commands) {

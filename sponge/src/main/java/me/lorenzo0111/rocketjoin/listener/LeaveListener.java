@@ -39,7 +39,7 @@ public class LeaveListener {
     }
 
     @Listener
-    public void onQuit(ServerSideConnectionEvent.Disconnect e) {
+    public void onQuit(ServerSideConnectionEvent.Leave e) {
         ServerPlayer p = e.player();
 
         if (plugin.getConfig().hide() && p.hasPermission(plugin.getConfig().hidePermission())) {

@@ -25,10 +25,10 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id 'java'
-    id "com.github.johnrengelman.shadow" version "8.1.1"
+    id "io.github.goooler.shadow" version "8.1.7"
 }
 
-//java.sourceCompatibility = JavaVersion.VERSION_1_8
+java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 ext {
     deps = "me.lorenzo0111.rocketjoin.libraries."
@@ -38,7 +38,7 @@ version = '2.4.2'
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'com.github.johnrengelman.shadow'
+    apply plugin: 'io.github.goooler.shadow'
 
     group = 'me.lorenzo0111'
     version = rootProject.version
@@ -66,7 +66,6 @@ subprojects {
     }
 
     shadowJar {
-        relocate("net.kyori.examination", "${deps}examination")
         relocate("org.checkerframework", "${deps}checkerframework")
         relocate("io.github.slimjar", "${deps}slimjar")
         relocate("org.yaml", "${deps}yaml")
@@ -76,6 +75,7 @@ subprojects {
         relocate("com.google.errorprone", "${deps}google.errorprone")
         relocate("com.google.common", "${deps}google.common")
         relocate("javax", "${deps}javax")
+        relocate("org.spongepowered.configurate", "${deps}configurate")
         relocate("org.bstats", "${deps}bstats") {
             exclude('org.bstats.sponge')
         }

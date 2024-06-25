@@ -45,7 +45,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.time.Duration;
 import java.util.List;
@@ -87,8 +86,8 @@ public class JoinListener implements Listener {
 
         try {
             this.executeCommands(condition, e.getPlayer());
-        } catch (SerializationException serializationException) {
-            serializationException.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
 
         if (condition == null) {
@@ -101,8 +100,8 @@ public class JoinListener implements Listener {
             }
             if (configuration.join().enableTitle()) {
                 Audience audience = BukkitAudienceManager.audience(p);
-                audience.showTitle(Title.title(plugin.parse(configuration.join().title(),p),
-                        plugin.parse(configuration.join().subTitle(),p),
+                audience.showTitle(Title.title(plugin.parse(configuration.join().title(), p),
+                        plugin.parse(configuration.join().subTitle(), p),
                         Title.Times.times(Duration.ofMillis(500), Duration.ofSeconds(2), Duration.ofMillis(500))));
             }
             return;
@@ -110,7 +109,7 @@ public class JoinListener implements Listener {
 
         e.setJoinMessage(
                 ChatColor.translateAlternateColorCodes('&',
-                        ChatUtils.serializer().serialize(plugin.parse(configuration.join(condition),p)))
+                        ChatUtils.serializer().serialize(plugin.parse(configuration.join(condition), p)))
         );
 
         ConditionConfiguration section = configuration.condition(condition);
@@ -136,7 +135,7 @@ public class JoinListener implements Listener {
         }
     }
 
-    private void executeCommands(String condition, Player player) throws SerializationException {
+    private void executeCommands(String condition, Player player) throws Exception {
         List<String> commands = condition == null ? plugin.getConfiguration().commands() : plugin.getConfiguration().commands(condition);
 
         for (String command : commands) {
