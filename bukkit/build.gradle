@@ -40,12 +40,12 @@ repositories {
 dependencies {
     implementation project(':common')
     implementation 'org.bstats:bstats-bukkit:3.0.2'
-    implementation('space.rocketplugins.pluginslib:bukkit:2.0.3.2') {
+    implementation('me.lorenzo0111.pluginslib:bukkit:2.0.4') {
         exclude module: 'slimjar'
     }
-    compileOnly 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
-    compileOnly 'me.clip:placeholderapi:2.11.2'
-    implementation 'net.kyori:adventure-api:4.12.0'
+    compileOnly 'org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT'
+    compileOnly 'me.clip:placeholderapi:2.11.6'
+    implementation 'net.kyori:adventure-api:4.17.0'
 }
 
 shadowJar {

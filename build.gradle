@@ -28,17 +28,13 @@ plugins {
     id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
-java.sourceCompatibility = JavaVersion.VERSION_1_8
-
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
+//java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 ext {
     deps = "me.lorenzo0111.rocketjoin.libraries."
 }
 
-version = '2.4.1'
+version = '2.4.2'
 
 subprojects {
     apply plugin: 'java'
@@ -51,17 +47,16 @@ subprojects {
     repositories {
         mavenCentral()
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-        maven { url 'https://repo.repsy.io/mvn/lorenzo0111/public' }
         maven { url 'https://nexus.velocitypowered.com/repository/maven-public/' }
         maven { url 'https://repo.spongepowered.org/repository/maven-public/' }
-        maven { url 'https://repo.repsy.io/mvn/lorenzo0111/public/' }
+        maven { url 'https://dl.lorenzo0111.me/releases' }
     }
 
     dependencies {
-        compileOnly('org.jetbrains:annotations:24.0.1')
-        implementation('com.google.code.gson:gson:2.10.1')
+        compileOnly('org.jetbrains:annotations:24.1.0')
+        implementation('com.google.code.gson:gson:2.11.0')
         implementation('org.spongepowered:configurate-yaml:4.1.2')
-        implementation('space.rocketplugins.pluginslib:common:2.0.3.2') {
+        implementation('me.lorenzo0111.pluginslib:common:2.0.4') {
             exclude module: 'slimjar'
         }
     }
@@ -78,11 +73,10 @@ subprojects {
         relocate("io.leangen", "${deps}leangen")
         relocate("com.google.thirdparty", "${deps}google.thirdparty")
         relocate("com.google.j2objc", "${deps}google.j2objc")
-        relocate("com.google.gson", "${deps}google.gson")
         relocate("com.google.errorprone", "${deps}google.errorprone")
         relocate("com.google.common", "${deps}google.common")
         relocate("javax", "${deps}javax")
-        relocate("org.bstats","${deps}bstats") {
+        relocate("org.bstats", "${deps}bstats") {
             exclude('org.bstats.sponge')
         }
 
@@ -100,7 +94,7 @@ subprojects {
         }
     }
 
-    tasks.withType(JavaCompile) {
+    tasks.withType(JavaCompile).configureEach {
         options.encoding = 'UTF-8'
     }
 

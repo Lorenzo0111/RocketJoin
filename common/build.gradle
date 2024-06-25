@@ -23,7 +23,7 @@
  */
 
 dependencies {
-    implementation('net.kyori:adventure-text-serializer-legacy:4.12.0')
-    implementation('net.kyori:adventure-text-minimessage:4.12.0')
-    compileOnly('net.kyori:adventure-api:4.12.0')
+    implementation('net.kyori:adventure-text-serializer-legacy:4.17.0')
+    implementation('net.kyori:adventure-text-minimessage:4.17.0')
+    compileOnly('net.kyori:adventure-api:4.17.0')
 }
