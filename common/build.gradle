@@ -27,3 +27,6 @@ dependencies {
     implementation('net.kyori:adventure-text-minimessage:4.17.0')
     compileOnly('net.kyori:adventure-api:4.17.0')
 }
+
+java.sourceCompatibility = 1.8
+java.targetCompatibility = 1.8

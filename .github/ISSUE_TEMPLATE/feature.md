@@ -13,4 +13,12 @@ _Put an x in a option, like [x]_
 - [ ] Config option
 - [ ] Other
 
+**What platform is it for?**
+_Put an x in a option, like [x]_
+
+- [ ] Bukkit
+- [ ] Bungeecord
+- [ ] Velocity
+- [ ] Sponge
+
 **Describe your feature**

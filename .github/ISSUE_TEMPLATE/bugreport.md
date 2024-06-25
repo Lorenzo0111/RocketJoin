@@ -6,10 +6,17 @@ labels: bug
 
 ---
 
-**Type /rj dump and paste here the result.**
+**Type /rj debug and paste here the result.**
 
 
 **Explain your issue.**
 
+**What platform is it for?**
+_Put an x in a option, like [x]_
 
-**Are there any errors in the console? Use: paste.lorenzo0111.me**
+- [ ] Bukkit
+- [ ] Bungeecord
+- [ ] Velocity
+- [ ] Sponge
+
+**Are there any errors in the console? Use: paste.gg**

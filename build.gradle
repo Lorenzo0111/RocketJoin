@@ -44,6 +44,10 @@ subprojects {
     version = rootProject.version
     description = "Create custom join messages with groups, commands on join, sounds and more. PlaceholderAPI support"
 
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+    }
+
     repositories {
         mavenCentral()
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
@@ -61,10 +65,6 @@ subprojects {
         }
     }
 
-    jar {
-        archiveFileName = "RocketJoin-${project.name}-${project.version}.jar"
-    }
-
     shadowJar {
         relocate("org.checkerframework", "${deps}checkerframework")
         relocate("io.github.slimjar", "${deps}slimjar")
@@ -80,9 +80,6 @@ subprojects {
             exclude('org.bstats.sponge')
         }
 
-        // Remove META-INF
-        exclude 'META-INF', 'META-INF/**'
-
         archiveFileName = "RocketJoin-${project.name}-${project.version}.jar"
     }
 
@@ -93,10 +90,4 @@ subprojects {
             filter ReplaceTokens, tokens: [version: version]
         }
     }
-
-    tasks.withType(JavaCompile).configureEach {
-        options.encoding = 'UTF-8'
-    }
-
-    tasks.build.dependsOn tasks.shadowJar
 }

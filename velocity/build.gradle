@@ -43,4 +43,3 @@ tasks.register('processSources', Sync) {
 }
 
 compileJava.source = processSources.outputs
-compileJava.dependsOn ':common:shadowJar'

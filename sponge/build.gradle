@@ -34,5 +34,3 @@ dependencies {
 shadowJar {
     relocate("me.lorenzo0111.pluginslib", "me.lorenzo0111.rocketjoin.pluginslib")
 }
-
-compileJava.dependsOn ':common:shadowJar'

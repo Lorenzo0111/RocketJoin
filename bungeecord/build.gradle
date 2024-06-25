@@ -34,4 +34,5 @@ shadowJar {
     relocate("me.lorenzo0111.pluginslib", "me.lorenzo0111.rocketjoin.pluginslib")
 }
 
-compileJava.dependsOn ':common:shadowJar'
+java.sourceCompatibility = 1.8
+java.targetCompatibility = 1.8

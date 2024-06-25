@@ -55,4 +55,5 @@ shadowJar {
     relocate("net.kyori", "me.lorenzo0111.rocketjoin.libraries.kyori")
 }
 
-compileJava.dependsOn ':common:shadowJar'
+java.sourceCompatibility = 1.8
+java.targetCompatibility = 1.8
