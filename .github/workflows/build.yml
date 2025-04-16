@@ -10,17 +10,32 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'adopt'
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y p7zip-full
+
       - name: Build with Gradle
         run: ./gradlew shadowJar
-      - name: Upload artifact
+
+      - name: Run release script
+        run: chmod +x ./release.sh && ./release.sh
+      
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: RocketJoin
+          name: RocketJoin-Build
           path: |
             **/build/libs/*.jar
             !build/libs/*.jar
+
+      - name: Upload release package
+        uses: actions/upload-artifact@v4
+        with:
+          name: RocketJoin-Release
+          path: release/*.zip
