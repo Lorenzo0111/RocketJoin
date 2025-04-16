@@ -46,9 +46,13 @@ public class SwitchListener implements Listener {
         }
 
         if (plugin.getConfiguration().serverSwitch().enabled()) {
-            BungeeUtilities.broadcast(plugin, plugin.parse(plugin.getConfiguration().serverSwitch().message()
+            BungeeUtilities.broadcastFor(plugin, event.getFrom().getName(), plugin.parse(plugin.getConfiguration().serverSwitch().messageFrom()
                     .replace("{oldServer}", event.getFrom().getName())
-                    .replace("{newServer}", event.getPlayer().getServer().getInfo().getName()), event.getPlayer()), event.getPlayer());
+                    .replace("{newServer}", event.getPlayer().getServer().getInfo().getName()), event.getPlayer()));
+
+            BungeeUtilities.broadcastFor(plugin, event.getPlayer().getServer().getInfo().getName(), plugin.parse(plugin.getConfiguration().serverSwitch().messageTo()
+                    .replace("{oldServer}", event.getFrom().getName())
+                    .replace("{newServer}", event.getPlayer().getServer().getInfo().getName()), event.getPlayer()));
         }
     }
 }

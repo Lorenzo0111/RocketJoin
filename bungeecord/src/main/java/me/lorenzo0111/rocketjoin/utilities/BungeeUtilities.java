@@ -13,7 +13,7 @@ public class BungeeUtilities {
 
         ProxyServer.getInstance().getScheduler().runAsync(plugin, () -> {
             for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
-                plugin.sendMessage(player,text);
+                plugin.sendMessage(player, text);
             }
         });
     }
@@ -21,7 +21,16 @@ public class BungeeUtilities {
     public static void broadcast(@NotNull RocketJoinBungee plugin, Component text, ProxiedPlayer p) {
         ProxyServer.getInstance().getScheduler().runAsync(plugin, () -> {
             for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
-                plugin.sendMessage(player,text);
+                plugin.sendMessage(player, text);
+            }
+        });
+    }
+
+    public static void broadcastFor(@NotNull RocketJoinBungee plugin, String server, Component text) {
+        ProxyServer.getInstance().getScheduler().runAsync(plugin, () -> {
+            for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+                if (player.getServer().getInfo().getName().equalsIgnoreCase(server))
+                    plugin.sendMessage(player, text);
             }
         });
     }
