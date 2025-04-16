@@ -23,9 +23,9 @@
  */
 
 dependencies {
-    implementation('net.kyori:adventure-text-serializer-legacy:4.17.0')
-    implementation('net.kyori:adventure-text-minimessage:4.17.0')
-    compileOnly('net.kyori:adventure-api:4.17.0')
+    implementation('net.kyori:adventure-text-serializer-legacy:4.20.0')
+    implementation('net.kyori:adventure-text-minimessage:4.20.0')
+    compileOnly('net.kyori:adventure-api:4.20.0')
 }
 
 java.sourceCompatibility = 1.8

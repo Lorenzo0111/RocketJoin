@@ -39,13 +39,13 @@ repositories {
 
 dependencies {
     implementation project(':common')
-    implementation 'org.bstats:bstats-bukkit:3.0.2'
-    implementation('me.lorenzo0111.pluginslib:bukkit:2.0.4') {
+    implementation 'org.bstats:bstats-bukkit:3.1.0'
+    implementation('me.lorenzo0111.pluginslib:bukkit:2.0.5') {
         exclude module: 'slimjar'
     }
-    implementation 'net.kyori:adventure-api:4.17.0'
-    implementation 'com.github.cryptomorin:XSeries:11.1.0'
-    compileOnly 'org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT'
+    implementation 'net.kyori:adventure-api:4.20.0'
+    implementation 'com.github.cryptomorin:XSeries:13.2.0'
+    compileOnly 'org.spigotmc:spigot-api:1.21.5-R0.1-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.11.6'
 }
 
