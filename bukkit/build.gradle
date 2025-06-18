@@ -43,7 +43,7 @@ dependencies {
     implementation('me.lorenzo0111.pluginslib:bukkit:2.0.5') {
         exclude module: 'slimjar'
     }
-    implementation 'net.kyori:adventure-api:4.20.0'
+    implementation 'net.kyori:adventure-api:4.22.0'
     implementation 'com.github.cryptomorin:XSeries:13.2.0'
     compileOnly 'org.spigotmc:spigot-api:1.21.5-R0.1-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.11.6'
