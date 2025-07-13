@@ -33,7 +33,6 @@ import me.lorenzo0111.rocketjoin.common.config.ConditionConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
 import me.lorenzo0111.rocketjoin.utilities.FireworkSpawner;
 import me.lorenzo0111.rocketjoin.utilities.PluginLoader;
-import me.lorenzo0111.rocketjoin.utilities.VanishUtils;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.title.Title;
@@ -72,9 +71,7 @@ public class JoinListener implements Listener {
 
         e.setJoinMessage(null);
 
-        if (VanishUtils.isVanished(p)) {
-            return;
-        }
+        if (plugin.isVanished(p.getUniqueId())) return;
 
         this.handleUpdate(e);
 

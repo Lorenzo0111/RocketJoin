@@ -38,10 +38,12 @@ import me.lorenzo0111.rocketjoin.utilities.PluginLoader;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.UUID;
 
 public class RocketJoinBukkit extends JavaPlugin implements RocketJoin {
     private IScheduler scheduler;
@@ -51,7 +53,7 @@ public class RocketJoinBukkit extends JavaPlugin implements RocketJoin {
 
     @Override
     public void onEnable() {
-        File file = new ConfigExtractor(this.getClass(),this.getDataFolder(), "config.yml")
+        File file = new ConfigExtractor(this.getClass(), this.getDataFolder(), "config.yml")
                 .extract();
 
         this.scheduler = new IScheduler() {
@@ -101,6 +103,18 @@ public class RocketJoinBukkit extends JavaPlugin implements RocketJoin {
     }
 
     @Override
+    public boolean isVanished(UUID uuid) {
+        Player player = Bukkit.getPlayer(uuid);
+        if (player == null) return false;
+
+        for (MetadataValue meta : player.getMetadata("vanished")) {
+            if (meta.asBoolean()) return true;
+        }
+
+        return false;
+    }
+
+    @Override
     public String getVersion() {
         return this.getDescription().getVersion();
     }
@@ -127,7 +141,7 @@ public class RocketJoinBukkit extends JavaPlugin implements RocketJoin {
         if (string == null) return null;
         String str = string.replace("{player}", player.getName()).replace("{DisplayPlayer}", player.getDisplayName());
         if (loader.isPlaceholderapi()) {
-            str = PlaceholderAPI.setPlaceholders(player,str);
+            str = PlaceholderAPI.setPlaceholders(player, str);
         }
 
         return ChatUtils.colorize(str);

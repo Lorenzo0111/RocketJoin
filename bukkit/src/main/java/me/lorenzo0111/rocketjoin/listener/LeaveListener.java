@@ -27,7 +27,6 @@ package me.lorenzo0111.rocketjoin.listener;
 import me.lorenzo0111.rocketjoin.RocketJoinBukkit;
 import me.lorenzo0111.rocketjoin.audience.WrappedPlayer;
 import me.lorenzo0111.rocketjoin.common.ChatUtils;
-import me.lorenzo0111.rocketjoin.utilities.VanishUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -48,9 +47,7 @@ public class LeaveListener implements Listener {
 
         e.setQuitMessage(null);
 
-        if (VanishUtils.isVanished(p)) {
-            return;
-        }
+        if (plugin.isVanished(p.getUniqueId())) return;
 
         if (plugin.getConfiguration().hide() && p.hasPermission(plugin.getConfiguration().hidePermission())) {
             return;
@@ -61,15 +58,15 @@ public class LeaveListener implements Listener {
             if (plugin.getConfiguration().leave().enabled())
                 e.setQuitMessage(
                         ChatColor.translateAlternateColorCodes('&',
-                            ChatUtils.serializer().serialize(plugin.parse(plugin.getConfiguration().leave().message(),p)
-                            ))
+                                ChatUtils.serializer().serialize(plugin.parse(plugin.getConfiguration().leave().message(), p)
+                                ))
                 );
             return;
         }
 
         e.setQuitMessage(
                 ChatColor.translateAlternateColorCodes('&',
-                    ChatUtils.serializer().serialize(plugin.parse(plugin.getConfiguration().leave(condition),p))
+                        ChatUtils.serializer().serialize(plugin.parse(plugin.getConfiguration().leave(condition), p))
                 ));
     }
 

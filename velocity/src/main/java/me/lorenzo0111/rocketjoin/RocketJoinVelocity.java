@@ -51,17 +51,20 @@ import net.kyori.adventure.text.Component;
 import org.bstats.charts.SimplePie;
 import org.bstats.velocity.Metrics;
 import org.jetbrains.annotations.Nullable;
+import org.sayandev.sayanvanish.api.SayanVanishAPI;
 import org.slf4j.Logger;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Plugin(id = "rocketjoin", name = "RocketJoin", version = "@version@",
         description = "Custom Join Messages Plugin", authors = {"Lorenzo0111"},
         dependencies = {
-                @Dependency(id = "papiproxybridge", optional = true)
+                @Dependency(id = "papiproxybridge", optional = true),
+                @Dependency(id = "sayanvanish", optional = true)
         })
 public class RocketJoinVelocity implements RocketJoin {
     private final Logger logger;
@@ -158,6 +161,12 @@ public class RocketJoinVelocity implements RocketJoin {
     @Override
     public IConfiguration getConfiguration() {
         return config;
+    }
+
+    @Override
+    public boolean isVanished(UUID player) {
+        return server.getPluginManager().isLoaded("sayanvanish") &&
+                SayanVanishAPI.getInstance().isVanished(player);
     }
 
     public CompletableFuture<Component> parse(@Nullable String string, Player player) {

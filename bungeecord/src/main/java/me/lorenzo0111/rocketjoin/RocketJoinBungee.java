@@ -41,8 +41,10 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
+import org.sayandev.sayanvanish.api.SayanVanishAPI;
 
 import java.io.File;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class RocketJoinBungee extends Plugin implements RocketJoin {
@@ -50,7 +52,6 @@ public class RocketJoinBungee extends Plugin implements RocketJoin {
     private ConditionHandler handler;
     private BungeeAudiences audiences;
     private IScheduler scheduler;
-
 
     @Override
     public void onEnable() {
@@ -111,6 +112,12 @@ public class RocketJoinBungee extends Plugin implements RocketJoin {
 
     public IConfiguration getConfiguration() {
         return configuration;
+    }
+
+    @Override
+    public boolean isVanished(UUID player) {
+        return this.getProxy().getPluginManager().getPlugin("SayanVanish") != null &&
+                SayanVanishAPI.getInstance().isVanished(player);
     }
 
     public void reloadConfig() {

@@ -56,6 +56,7 @@ import org.spongepowered.plugin.builtin.jvm.Plugin;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.UUID;
 
 @Plugin("rocketjoin")
 public class RocketJoinSponge implements RocketJoin {
@@ -177,6 +178,11 @@ public class RocketJoinSponge implements RocketJoin {
     @Override
     public IConfiguration getConfiguration() {
         return conf;
+    }
+
+    @Override
+    public boolean isVanished(UUID player) {
+        return false;
     }
 
     public Component parse(@NotNull String string, @NotNull Player source) {

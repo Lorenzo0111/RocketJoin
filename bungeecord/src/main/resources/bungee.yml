@@ -4,3 +4,4 @@ main: me.lorenzo0111.rocketjoin.RocketJoinBungee
 version: "@version@"
 softDepends:
   - PAPIProxyBridge
+  - SayanVanish
