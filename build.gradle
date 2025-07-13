@@ -34,7 +34,7 @@ ext {
     deps = "me.lorenzo0111.rocketjoin.libraries."
 }
 
-version = '2.4.4-SNAPSHOT'
+version = '2.5'
 
 subprojects {
     apply plugin: 'java'
