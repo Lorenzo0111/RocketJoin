@@ -28,6 +28,7 @@ import com.google.inject.Inject;
 import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.Player;
@@ -41,6 +42,7 @@ import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.file.FileConfiguration;
 import me.lorenzo0111.rocketjoin.common.database.PlayersDatabase;
 import me.lorenzo0111.rocketjoin.common.exception.LoadException;
+import me.lorenzo0111.rocketjoin.common.platform.hooks.PlaceholderProxyHook;
 import me.lorenzo0111.rocketjoin.common.utils.IScheduler;
 import me.lorenzo0111.rocketjoin.listener.JoinListener;
 import me.lorenzo0111.rocketjoin.listener.LeaveListener;
@@ -54,9 +56,13 @@ import org.slf4j.Logger;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 @Plugin(id = "rocketjoin", name = "RocketJoin", version = "@version@",
-        description = "Custom Join Messages Plugin", authors = {"Lorenzo0111"})
+        description = "Custom Join Messages Plugin", authors = {"Lorenzo0111"},
+        dependencies = {
+                @Dependency(id = "papiproxybridge", optional = true)
+        })
 public class RocketJoinVelocity implements RocketJoin {
     private final Logger logger;
     private final Path path;
@@ -89,7 +95,7 @@ public class RocketJoinVelocity implements RocketJoin {
             }
         };
 
-        File conf = new ConfigExtractor(this.getClass(),path.toFile(), "config.yml")
+        File conf = new ConfigExtractor(this.getClass(), path.toFile(), "config.yml")
                 .extract();
 
         try {
@@ -123,7 +129,7 @@ public class RocketJoinVelocity implements RocketJoin {
                 .aliases("rjv")
                 .build();
 
-        server.getCommandManager().register(meta,new RocketJoinVelocityCommand(this));
+        server.getCommandManager().register(meta, new RocketJoinVelocityCommand(this));
 
         logger.info("RocketJoin loaded!");
     }
@@ -154,9 +160,14 @@ public class RocketJoinVelocity implements RocketJoin {
         return config;
     }
 
-    public Component parse(@Nullable String string, Player player) {
+    public CompletableFuture<Component> parse(@Nullable String string, Player player) {
         String str = string == null ? "" : string.replace("{player}", player.getUsername());
-        return ChatUtils.colorize(str);
+
+        if (server.getPluginManager().isLoaded("papiproxybridge"))
+            return PlaceholderProxyHook.replacePlaceholders(str, player.getUniqueId())
+                    .thenApply(ChatUtils::colorize);
+
+        return CompletableFuture.completedFuture(ChatUtils.colorize(str));
     }
 
     public void reloadConfig() {

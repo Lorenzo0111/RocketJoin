@@ -32,6 +32,7 @@ import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.file.FileConfiguration;
 import me.lorenzo0111.rocketjoin.common.database.PlayersDatabase;
 import me.lorenzo0111.rocketjoin.common.exception.LoadException;
+import me.lorenzo0111.rocketjoin.common.platform.hooks.PlaceholderProxyHook;
 import me.lorenzo0111.rocketjoin.common.utils.IScheduler;
 import me.lorenzo0111.rocketjoin.utilities.PluginLoader;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
@@ -42,6 +43,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.concurrent.CompletableFuture;
 
 public class RocketJoinBungee extends Plugin implements RocketJoin {
     private IConfiguration configuration;
@@ -124,9 +126,15 @@ public class RocketJoinBungee extends Plugin implements RocketJoin {
         return ChatUtils.colorize(string);
     }
 
-    public Component parse(@Nullable String string, ProxiedPlayer player) {
-        String str = string == null ? "" : string.replace("{player}", player.getName()).replace("{DisplayPlayer}", player.getDisplayName());
-        return parse(str);
+    public CompletableFuture<Component> parse(@Nullable String string, ProxiedPlayer player) {
+        String str = string == null ? "" : string.replace("{player}", player.getName())
+                .replace("{DisplayPlayer}", player.getDisplayName());
+
+        if (this.getProxy().getPluginManager().getPlugin("PAPIProxyBridge") != null)
+            return PlaceholderProxyHook.replacePlaceholders(str, player.getUniqueId())
+                    .thenApply(this::parse);
+
+        return CompletableFuture.completedFuture(parse(str));
     }
 
     public ConditionHandler getHandler() {

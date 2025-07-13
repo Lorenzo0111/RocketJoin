@@ -46,16 +46,23 @@ public class SwitchListener {
 
         if (plugin.getConfig().serverSwitch().enabled()) {
             plugin.getServer().getScheduler().buildTask(plugin, () -> {
-                for (Player audience : event.getPreviousServer().get().getPlayersConnected()) {
-                    audience.sendMessage(plugin.parse(plugin.getConfig().serverSwitch().messageFrom()
-                            .replace("{oldServer}", event.getPreviousServer().get().getServerInfo().getName())
-                            .replace("{newServer}", event.getServer().getServerInfo().getName()), event.getPlayer()));
-                }
-                for (Player audience : event.getServer().getPlayersConnected()) {
-                    audience.sendMessage(plugin.parse(plugin.getConfig().serverSwitch().messageTo()
-                            .replace("{oldServer}", event.getPreviousServer().get().getServerInfo().getName())
-                            .replace("{newServer}", event.getServer().getServerInfo().getName()), event.getPlayer()));
-                }
+                plugin.parse(plugin.getConfig().serverSwitch().messageFrom()
+                                .replace("{oldServer}", event.getPreviousServer().get().getServerInfo().getName())
+                                .replace("{newServer}", event.getServer().getServerInfo().getName()), event.getPlayer())
+                        .thenAccept(message -> {
+                            for (Player audience : event.getPreviousServer().get().getPlayersConnected()) {
+                                audience.sendMessage(message);
+                            }
+                        });
+
+                plugin.parse(plugin.getConfig().serverSwitch().messageTo()
+                                .replace("{oldServer}", event.getPreviousServer().get().getServerInfo().getName())
+                                .replace("{newServer}", event.getServer().getServerInfo().getName()), event.getPlayer())
+                        .thenAccept(message -> {
+                            for (Player audience : event.getServer().getPlayersConnected()) {
+                                audience.sendMessage(message);
+                            }
+                        });
             }).schedule();
         }
     }

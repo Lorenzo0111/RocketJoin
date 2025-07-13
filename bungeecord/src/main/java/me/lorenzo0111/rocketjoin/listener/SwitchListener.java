@@ -46,13 +46,15 @@ public class SwitchListener implements Listener {
         }
 
         if (plugin.getConfiguration().serverSwitch().enabled()) {
-            BungeeUtilities.broadcastFor(plugin, event.getFrom().getName(), plugin.parse(plugin.getConfiguration().serverSwitch().messageFrom()
-                    .replace("{oldServer}", event.getFrom().getName())
-                    .replace("{newServer}", event.getPlayer().getServer().getInfo().getName()), event.getPlayer()));
+            plugin.parse(plugin.getConfiguration().serverSwitch().messageFrom()
+                            .replace("{oldServer}", event.getFrom().getName())
+                            .replace("{newServer}", event.getPlayer().getServer().getInfo().getName()), event.getPlayer())
+                    .thenAccept(message -> BungeeUtilities.broadcastFor(plugin, event.getFrom().getName(), message));
 
-            BungeeUtilities.broadcastFor(plugin, event.getPlayer().getServer().getInfo().getName(), plugin.parse(plugin.getConfiguration().serverSwitch().messageTo()
-                    .replace("{oldServer}", event.getFrom().getName())
-                    .replace("{newServer}", event.getPlayer().getServer().getInfo().getName()), event.getPlayer()));
+            plugin.parse(plugin.getConfiguration().serverSwitch().messageTo()
+                            .replace("{oldServer}", event.getFrom().getName())
+                            .replace("{newServer}", event.getPlayer().getServer().getInfo().getName()), event.getPlayer())
+                    .thenAccept(message -> BungeeUtilities.broadcastFor(plugin, event.getPlayer().getServer().getInfo().getName(), message));
         }
     }
 }

@@ -61,22 +61,27 @@ public class LeaveListener {
 
                 plugin.getServer().getScheduler().buildTask(plugin, () -> {
                     for (Audience audience : p.getCurrentServer().get().getServer().getPlayersConnected()) {
-                        audience.sendMessage(plugin.parse(plugin.getConfig().leave().message(), p));
+                        plugin.parse(plugin.getConfig().leave().message(), p).thenAccept(audience::sendMessage);
                     }
                     if (!plugin.getConfig().leave().otherServerMessage().isEmpty()) {
-                        for (Audience audience : otherServers) {
-                            audience.sendMessage(plugin.parse(plugin.getConfig().leave().otherServerMessage()
-                                    .replace("{server}", e.getPlayer().getCurrentServer().get().getServerInfo().getName()), p));
-                        }
+                        plugin.parse(plugin.getConfig().leave().otherServerMessage()
+                                        .replace("{server}", e.getPlayer().getCurrentServer().get().getServerInfo().getName()), p)
+                                .thenAccept(message -> {
+                                    for (Audience audience : otherServers) {
+                                        audience.sendMessage(message);
+                                    }
+                                });
                     }
                 }).schedule();
             return;
         }
 
         plugin.getServer().getScheduler().buildTask(plugin, () -> {
-            for (Player audience : plugin.getServer().getAllPlayers()) {
-                audience.sendMessage(plugin.parse(plugin.getConfig().leave(condition), p));
-            }
+            plugin.parse(plugin.getConfig().leave(condition), p).thenAccept(message -> {
+                for (Audience audience : plugin.getServer().getAllPlayers()) {
+                    audience.sendMessage(message);
+                }
+            });
         }).schedule();
     }
 

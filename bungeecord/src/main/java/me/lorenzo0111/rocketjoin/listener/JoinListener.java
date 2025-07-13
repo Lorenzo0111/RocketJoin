@@ -58,7 +58,7 @@ public class JoinListener implements Listener {
 
         String welcome = plugin.getConfiguration().welcome();
         if (!welcome.equalsIgnoreCase("disable")) {
-            plugin.sendMessage(p,plugin.parse(welcome, p));
+            plugin.parse(welcome, p).thenAccept(message -> plugin.sendMessage(p, message));
         }
 
         if (plugin.getConfiguration().hide() && p.hasPermission(plugin.getConfiguration().hidePermission()))
@@ -76,19 +76,21 @@ public class JoinListener implements Listener {
             boolean join = plugin.getConfiguration().join().enabled();
             String message = plugin.getConfiguration().join().message();
             if (join) {
-                BungeeUtilities.broadcast(plugin,message,p);
+                BungeeUtilities.broadcast(plugin, message, p);
             }
             if (plugin.getConfiguration().join().enableTitle()) {
-                Title title = Title.title(
-                                plugin.parse(plugin.getConfiguration().join().title(), p),
-                                plugin.parse(plugin.getConfiguration().join().subTitle(), p),
-                                Title.Times.times(Duration.ofMillis(500), Duration.ofSeconds(2), Duration.ofMillis(500)));
-                plugin.getAudiences().player(p).showTitle(title);
+                plugin.parse(plugin.getConfiguration().join().title(), p)
+                        .thenCombine(plugin.parse(plugin.getConfiguration().join().subTitle(), p),
+                                (title, subTitle) -> Title.title(
+                                        title,
+                                        subTitle,
+                                        Title.Times.times(Duration.ofMillis(500), Duration.ofSeconds(2), Duration.ofMillis(500))))
+                        .thenAccept(title -> plugin.getAudiences().player(p).showTitle(title));
             }
             return;
         }
 
-        BungeeUtilities.broadcast(plugin,plugin.getConfiguration().join(condition),p);
+        BungeeUtilities.broadcast(plugin, plugin.getConfiguration().join(condition), p);
         PlayersDatabase.add(p.getUniqueId());
     }
 

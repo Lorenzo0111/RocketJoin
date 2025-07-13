@@ -31,16 +31,16 @@ import com.velocitypowered.api.proxy.server.RegisteredServer;
 import me.lorenzo0111.rocketjoin.RocketJoinVelocity;
 import me.lorenzo0111.rocketjoin.audience.WrappedPlayer;
 import me.lorenzo0111.rocketjoin.common.database.PlayersDatabase;
+import me.lorenzo0111.rocketjoin.common.utils.Pair;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.util.Ticks;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
-@SuppressWarnings("UnstableApiUsage")
 public class JoinListener {
     private final RocketJoinVelocity plugin;
 
@@ -60,7 +60,7 @@ public class JoinListener {
 
         String welcome = plugin.getConfig().welcome();
         if (!welcome.equalsIgnoreCase("disable")) {
-            p.sendMessage(plugin.parse(welcome,p));
+            plugin.parse(welcome, p).thenAccept(p::sendMessage);
         }
 
         if (plugin.getConfig().hide() && p.hasPermission(plugin.getConfig().hidePermission()))
@@ -69,49 +69,59 @@ public class JoinListener {
         String condition = plugin.getHandler().getCondition(WrappedPlayer.wrap(p));
 
         try {
-            this.executeCommands(condition, e.getPlayer());
+            this.executeCommands(condition, p);
         } catch (Exception exception) {
             exception.printStackTrace();
         }
 
-        if (condition == null && e.getPlayer().getCurrentServer().isPresent()) {
+        if (condition == null && p.getCurrentServer().isPresent()) {
             boolean join = plugin.getConfig().join().enabled();
-            Component message = plugin.parse(plugin.getConfig().join().message(),p);
-            Component otherServerMessage = plugin.getConfig().join().otherServerMessage().isEmpty() ? null :
-                    plugin.parse(plugin.getConfig().join().otherServerMessage()
-                            .replace("{server}", p.getCurrentServer().get().getServerInfo().getName()), p);
+
             ArrayList<RegisteredServer> otherServers = new ArrayList<>(plugin.getServer().getAllServers());
             otherServers.remove(p.getCurrentServer().get().getServer());
-            if (join) {
-                plugin.getServer().getScheduler().buildTask(plugin, () -> {
-                    for (Audience audience : p.getCurrentServer().get().getServer().getPlayersConnected()) {
-                        audience.sendMessage(message);
-                    }
-                    if (otherServerMessage != null) {
-                        for (Audience audience : otherServers) {
-                            audience.sendMessage(otherServerMessage);
-                        }
-                    }
-                }).schedule();
-            }
+
+            if (join)
+                plugin.parse(plugin.getConfig().join().message(), p)
+                        .thenCombine(plugin.getConfig().join().otherServerMessage().isEmpty() ? CompletableFuture.completedFuture(null) :
+                                        plugin.parse(plugin.getConfig().join().otherServerMessage()
+                                                .replace("{server}", p.getCurrentServer().get().getServerInfo().getName()), p),
+                                Pair::new)
+                        .thenAccept(pair -> {
+                            plugin.getServer().getScheduler().buildTask(plugin, () -> {
+                                for (Audience audience : p.getCurrentServer().get().getServer().getPlayersConnected()) {
+                                    audience.sendMessage(pair.getKey());
+                                }
+
+                                if (pair.getValue() != null)
+                                    for (Audience audience : otherServers) {
+                                        audience.sendMessage(pair.getValue());
+                                    }
+                            }).schedule();
+                        });
+
 
             if (plugin.getConfig().join().enableTitle()) {
                 final Title.Times times = Title.Times.times(Ticks.duration(15), Duration.ofMillis(3000), Ticks.duration(20));
-                final Title title = Title.title(
-                        plugin.parse(plugin.getConfig().join().title(),p),
-                        plugin.parse(plugin.getConfig().join().subTitle(),p),
-                        times
-                );
-
-                p.showTitle(title);
+                plugin.parse(plugin.getConfig().join().title(), p)
+                        .thenCombine(plugin.parse(plugin.getConfig().join().subTitle(), p),
+                                (title, subtitle) ->
+                                        Title.title(
+                                                title,
+                                                subtitle,
+                                                times
+                                        )
+                        )
+                        .thenAccept(p::showTitle);
             }
             return;
         }
 
         plugin.getServer().getScheduler().buildTask(plugin, () -> {
-            for (Audience audience : plugin.getServer().getAllPlayers()) {
-                audience.sendMessage(plugin.parse(plugin.getConfig().join(condition),p));
-            }
+            plugin.parse(plugin.getConfig().join(condition), p).thenAccept(message -> {
+                for (Audience audience : plugin.getServer().getAllPlayers()) {
+                    audience.sendMessage(message);
+                }
+            });
         }).schedule();
 
         PlayersDatabase.add(p.getUniqueId());

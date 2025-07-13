@@ -2,3 +2,5 @@ name: RocketJoin
 author: Lorenzo0111
 main: me.lorenzo0111.rocketjoin.RocketJoinBungee
 version: "@version@"
+softDepends:
+  - PAPIProxyBridge

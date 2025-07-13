@@ -9,13 +9,11 @@ import org.jetbrains.annotations.NotNull;
 public class BungeeUtilities {
 
     public static void broadcast(@NotNull RocketJoinBungee plugin, String message, ProxiedPlayer p) {
-        Component text = plugin.parse(message, p);
-
-        ProxyServer.getInstance().getScheduler().runAsync(plugin, () -> {
+        plugin.parse(message, p).thenAccept(text -> ProxyServer.getInstance().getScheduler().runAsync(plugin, () -> {
             for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
                 plugin.sendMessage(player, text);
             }
-        });
+        }));
     }
 
     public static void broadcast(@NotNull RocketJoinBungee plugin, Component text, ProxiedPlayer p) {
