@@ -25,6 +25,7 @@
 package me.lorenzo0111.rocketjoin.common.config.file;
 
 import me.lorenzo0111.rocketjoin.common.config.SingleConfiguration;
+import me.lorenzo0111.rocketjoin.common.utils.ConfigUtils;
 import org.spongepowered.configurate.ConfigurationNode;
 
 public class FileSingleConfiguration implements SingleConfiguration {
@@ -41,22 +42,22 @@ public class FileSingleConfiguration implements SingleConfiguration {
 
     @Override
     public String message() {
-        return node.node("message").getString();
+        return ConfigUtils.getRandomNode(node.node("message"));
     }
 
     @Override
-    public String otherServerMessage()  {
-        return node.node("otherServerMessage").getString();
+    public String otherServerMessage() {
+        return ConfigUtils.getRandomNode(node.node("otherServerMessage"));
     }
 
     @Override
-    public String messageFrom()  {
-        return node.node("messageFrom").getString();
+    public String messageFrom() {
+        return ConfigUtils.getRandomNode(node.node("messageFrom"));
     }
 
     @Override
-    public String messageTo()  {
-        return node.node("messageTo").getString();
+    public String messageTo() {
+        return ConfigUtils.getRandomNode(node.node("messageTo"));
     }
 
     @Override
@@ -66,11 +67,11 @@ public class FileSingleConfiguration implements SingleConfiguration {
 
     @Override
     public String title() {
-        return node.node("title").getString();
+        return ConfigUtils.getRandomNode(node.node("title"));
     }
 
     @Override
     public String subTitle() {
-        return node.node("subtitle").getString();
+        return ConfigUtils.getRandomNode(node.node("subtitle"));
     }
 }

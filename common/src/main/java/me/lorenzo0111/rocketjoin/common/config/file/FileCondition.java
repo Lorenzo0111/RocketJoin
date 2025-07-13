@@ -25,6 +25,7 @@
 package me.lorenzo0111.rocketjoin.common.config.file;
 
 import me.lorenzo0111.rocketjoin.common.config.ConditionConfiguration;
+import me.lorenzo0111.rocketjoin.common.utils.ConfigUtils;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.jetbrains.annotations.NotNull;
@@ -54,12 +55,12 @@ public class FileCondition implements ConditionConfiguration {
 
     @Override
     public String join() {
-        return configuration.node("join").getString();
+        return ConfigUtils.getRandomNode(configuration.node("join"));
     }
 
     @Override
     public String leave() {
-        return configuration.node("leave").getString();
+        return ConfigUtils.getRandomNode(configuration.node("leave"));
     }
 
     @Override

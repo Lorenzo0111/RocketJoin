@@ -14,7 +14,6 @@ already-asked: false
 # Start of the configuration
 
 prefix: "&8&l»"
-no_permission: "&cYou do not have permission to use this command!"
 
 # Enable Update Message on Join. Default: true
 update-message: true

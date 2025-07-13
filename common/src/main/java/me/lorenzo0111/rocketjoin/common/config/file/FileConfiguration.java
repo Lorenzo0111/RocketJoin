@@ -24,13 +24,11 @@
 
 package me.lorenzo0111.rocketjoin.common.config.file;
 
-import me.lorenzo0111.rocketjoin.common.ChatUtils;
 import me.lorenzo0111.rocketjoin.common.config.ConditionConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.IConfiguration;
 import me.lorenzo0111.rocketjoin.common.config.SingleConfiguration;
 import me.lorenzo0111.rocketjoin.common.exception.LoadException;
 import me.lorenzo0111.rocketjoin.common.platform.Platform;
-import net.kyori.adventure.text.Component;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -63,11 +61,6 @@ public class FileConfiguration implements IConfiguration {
     @Override
     public String prefix() {
         return config.node("prefix").getString();
-    }
-
-    @Override
-    public Component noPermission() {
-        return ChatUtils.colorize(config.node("no_permission").getString());
     }
 
     @Override
