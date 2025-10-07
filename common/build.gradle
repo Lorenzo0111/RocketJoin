@@ -27,9 +27,9 @@ repositories {
 }
 
 dependencies {
-    implementation('net.kyori:adventure-text-serializer-legacy:4.23.0')
-    implementation('net.kyori:adventure-text-minimessage:4.23.0')
-    compileOnly('net.kyori:adventure-api:4.23.0')
+    implementation('net.kyori:adventure-text-serializer-legacy:4.25.0')
+    implementation('net.kyori:adventure-text-minimessage:4.25.0')
+    compileOnly('net.kyori:adventure-api:4.25.0')
     compileOnly('net.william278:papiproxybridge:1.8.4')
 }
 
